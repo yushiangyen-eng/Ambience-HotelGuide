@@ -167,7 +167,7 @@
       </div>
 
       <div class="bg-stone-50 border-t border-stone-200/80 px-5 py-3.5 flex items-center justify-between gap-3 shrink-0">
-        <span class="text-xs text-slate-500" data-i18n="itinFooterTip">提示：點擊各站美食標籤可直接查看店家介紹</span>
+        <span class="text-xs text-slate-500" data-i18n="itinFooterTip">提示：點擊各站推薦店家標籤可直接查看介紹</span>
         <button onclick="closeItineraryModal()" class="px-4 py-2 rounded-xl bg-[#1E293B] hover:bg-slate-800 text-white text-xs font-semibold transition" data-i18n="closeBtn">
           關閉行程表
         </button>
@@ -228,8 +228,8 @@
         <button onclick="toggleSetupModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold">✕</button>
       </div>
       <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
-        <p><strong>目前狀態：</strong>「推薦半日遊」分頁已暫時隱藏（程式碼與內建行程資料完整保留）。</p>
-        <p><strong>重新開啟方式：</strong>等資料更新完成後，將程式碼第 218 行的 <code>const ENABLE_ITINERARY_TAB = false ;</code> 改為 <code>true</code>，網頁就會立刻恢復顯示「🗺️ 推薦半日遊」分頁。</p>
+        <p><strong>目前狀態：</strong>「推薦半日遊」分頁已暫時隱藏（程式碼與內建行程資料完整保留，並已整合通用順遊店家標題與自動切換分類圖示）。</p>
+        <p><strong>重新開啟方式：</strong>等資料更新完成後，將程式碼第 229 行的 <code>const ENABLE_ITINERARY_TAB = false;</code> 改為 <code>true</code>，網頁就會立刻恢復顯示「🗺️ 推薦半日遊」分頁。</p>
       </div>
       <div class="pt-2 flex flex-wrap gap-2">
         <button onclick="downloadItineraryCSV()" class="px-3.5 py-2 bg-stone-100 hover:bg-stone-200 text-slate-700 rounded-lg text-xs font-medium transition">
@@ -246,7 +246,7 @@
     // =========================================================================
     // 0. 半日遊分頁總開關（false = 暫時隱藏關閉；資料準備好後改為 true 即可重新開啟）
     // =========================================================================
-    const ENABLE_ITINERARY_TAB = true;
+    const ENABLE_ITINERARY_TAB = false;
 
     // =========================================================================
     // 1. 飯店周邊步行圈 CSV 網址（已綁定您的工作表1）
@@ -256,7 +256,7 @@
     // =========================================================================
     // 2. 推薦半日遊 CSV 網址（在試算表新增半日遊分頁並發佈後，把 CSV 網址貼在雙引號內）
     // =========================================================================
-    const ITINERARY_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWlyzIGNyylZRVgFo_33AIShQXGJngkbN7MqkbwlWk-X5jsKiqa81A73jttrRIETcxs1tzPnyjVvxM/pub?gid=607351244&single=true&output=csv";
+    const ITINERARY_SHEET_CSV_URL = "";
 
     // =========================================================================
     // 3. 包車接駁 CSV 網址（選填）
@@ -288,7 +288,9 @@
       }
     ];
 
-    // 半日遊推薦店家專屬百科字典
+    // =========================================================================
+    // 半日遊推薦店家與體驗場所專屬百科字典（包含美食、咖啡廳、溫泉湯屋等）
+    // =========================================================================
     const SPOT_FOOD_DIRECTORY = {
       "福大山東蒸餃大王": {
         category: "food",
@@ -484,6 +486,36 @@
         desc_ja: "新北投公園そばの行列店。サクサクの台湾風豚スペアリブ揚げが乗った「排骨ラーメン」や、とろとろの温泉卵・温泉豆腐が人気です。",
         hours: "11:30 - 20:30",
         map_url: "https://maps.google.com/?q=滿來溫泉拉麵"
+      },
+      "瀧乃湯": {
+        category: "hotspring",
+        walk_mins: "新北投站步行 6 分",
+        name_zh: "瀧乃湯浴室",
+        name_en: "Longnice Hot Spring Bathhouse",
+        name_ja: "瀧乃湯（タキノユ）",
+        tag_zh: "百年日式木造大眾湯 · 皇太子曾造訪的天然青磺泉",
+        tag_en: "Century-Old Bathhouse · Historic Green Sulfur Spring",
+        tag_ja: "創業100年以上の老舗浴場・希少な天然ラジウム青硫黄泉",
+        desc_zh: "北投現存最古老的日式湯屋，保留日治時期石造浴池與木造建築，提供平價道地的天然青磺泉（鐳泉）大眾裸湯與雙人湯屋體驗。",
+        desc_en: "Beitou's oldest surviving Japanese-era bathhouse featuring historic stone tubs and rare natural green sulfur radium spring water.",
+        desc_ja: "北投に現存する最古の日本式公衆浴場。歴史ある石造りの湯船で希少な天然青硫黄泉を気軽に体験できます。",
+        hours: "06:30 - 21:00 (週三公休)",
+        map_url: "https://maps.google.com/?q=瀧乃湯浴室"
+      },
+      "日勝生加賀屋": {
+        category: "hotspring",
+        walk_mins: "新北投站步行 5 分",
+        name_zh: "日勝生加賀屋國際溫泉飯店",
+        name_en: "Radium Kagaya International Hotel",
+        name_ja: "日勝生加賀屋 国際温泉ホテル",
+        tag_zh: "日本加賀屋海外唯一分館 · 正統日式女將服務與白磺泉湯屋",
+        tag_en: "Official Kagaya Branch · Authentic Japanese Hospitality & Private Onsen",
+        tag_ja: "日本の老舗「加賀屋」唯一の海外分館・極上の貸切白硫黄温泉",
+        desc_zh: "承襲日本石川縣和倉溫泉加賀屋的數寄屋建築美學與貼心服務，提供獨立景觀雙人湯屋，在檜木與天然石材浴池中享受滑順白磺泉。",
+        desc_en: "Bringing Japan's renowned Kagaya hospitality to Beitou, offering serene private cypress and stone hot spring suites fed by milky white sulfur water.",
+        desc_ja: "石川県和倉温泉「加賀屋」のおもてなしを受け継ぐ温泉旅館。檜や天然石を用いた上質な貸切風呂（湯屋）で白硫黄泉を満喫できます。",
+        hours: "湯屋 07:30 - 23:00 (建議預約)",
+        map_url: "https://maps.google.com/?q=日勝生加賀屋國際溫泉飯店"
       },
       "矮仔財滷肉飯": {
         category: "food",
@@ -691,9 +723,9 @@
             spot_desc_zh: "挑選北投溫泉區內的質感湯屋（如日勝生加賀屋、水美溫泉會館或瀧乃湯），享受有「牛奶湯」美譽的天然白磺泉消除疲勞。",
             spot_desc_en: "Unwind in a private hot spring room with Beitou's milky-white sulfur water to recharge before dinner.",
             spot_desc_ja: "「美人の湯」とも呼ばれる乳白色の白硫黄泉の貸切風呂（湯屋）でゆっくり入浴し、旅の疲れをリフレッシュ。",
-            food_zh: "",
-            food_en: "",
-            food_ja: "",
+            food_zh: "瀧乃湯 / 日勝生加賀屋",
+            food_en: "Longnice Bathhouse / Radium Kagaya",
+            food_ja: "瀧乃湯 / 日勝生加賀屋",
             map_url: "https://maps.google.com/?q=新北投溫泉"
           },
           {
@@ -763,7 +795,22 @@
         map_url: "",
         image_url: ""
       },
-      
+      {
+        category: "charter",
+        walk_mins: "包車 8 小時",
+        name_zh: "宜蘭礁溪溫泉・幾米公園・傳統藝術中心 蘭陽一日遊",
+        name_en: "Yilan Jiaoxi Hot Spring & Traditional Arts Day Tour",
+        name_ja: "宜蘭・礁渓温泉・幾米公園・伝統芸術センター 1日チャーター",
+        tag_zh: "穿越雪山隧道 · 親子同遊與碳酸氫鈉美人湯",
+        tag_en: "Family-Friendly · Cultural Park & Hot Springs",
+        tag_ja: "雪山トンネルを抜けて・家族連れに人気の温泉と文化体験",
+        desc_zh: "從台北出發約 50 分鐘穿過雪山隧道抵達宜蘭，走訪國立傳統藝術中心體驗傳統工藝、幾米主題公園拍照，最後在礁溪溫泉公園享受足湯與蘭陽美食。",
+        desc_en: "Cross the Hsuehshan Tunnel into Yilan in 50 mins to explore the National Center for Traditional Arts, Jimmy Park, and Jiaoxi's famous foot hot springs.",
+        desc_ja: "台北から車で約50分。国立伝統芸術センターでの文化体験や絵本作家ジミーの公園散策、礁渓温泉での足湯と地元グルメを楽しめる快適ドライブ旅。",
+        hours: "建議 09:00 飯店出發 (約 8–9 小時)",
+        map_url: "",
+        image_url: ""
+      }
     ];
 
     const CATEGORY_CONFIG = {
@@ -798,7 +845,7 @@
       culture:   { badge: "bg-amber-50 text-amber-900 border-amber-200/80", icon: "🏛️", labelZh: "歷史街區文創", labelEn: "Heritage & Culture", labelJa: "歴史・カルチャー" },
       scenic:    { badge: "bg-indigo-50 text-indigo-800 border-indigo-200/80", icon: "🌆", labelZh: "美食與夜景", labelEn: "Eats & Skyline", labelJa: "グルメ＆夜景" },
       charter:   { badge: "bg-amber-50 text-amber-900 border-amber-300/80", icon: "🚐", labelZh: "經典包車一日遊", labelEn: "Classic Charter", labelJa: "定番チャーター" },
-      hotspring: { badge: "bg-rose-50 text-rose-800 border-rose-200/80", icon: "♨️", labelZh: "溫泉與自然", labelEn: "Hot Springs", labelJa: "温泉・自然" },
+      hotspring: { badge: "bg-rose-50 text-rose-800 border-rose-200/80", icon: "♨️", labelZh: "溫泉與湯屋", labelEn: "Hot Springs", labelJa: "温泉・湯屋" },
       railway:   { badge: "bg-orange-50 text-orange-800 border-orange-200/80", icon: "🏮", labelZh: "懷舊鐵道老街", labelEn: "Heritage Railway", labelJa: "レトロ鉄道" }
     };
 
@@ -811,8 +858,8 @@
         modeItinerary: "推薦半日遊",
         modeTour: "包車接駁",
         searchPlaceholderLocal: "搜尋店名、料理或特色（例：豬腳、咖啡、調酒）...",
-        searchPlaceholderItinerary: "搜尋半日遊主題、景點或美食（例：大稻埕、101、北投溫泉）...",
-        searchPlaceholderTour: "搜尋包車路線（例：九份、陽明山）...",
+        searchPlaceholderItinerary: "搜尋半日遊主題、景點或店家（例：大稻埕、101、北投溫泉）...",
+        searchPlaceholderTour: "搜尋包車路線（例：九份、陽明山、宜蘭）...",
         walkAll: "全部距離",
         walk5: "步行 5 分鐘內",
         walk15: "步行 15 分鐘內",
@@ -823,15 +870,15 @@
         tourCardBtn: "洽詢預約包車",
         viewItineraryBtn: "查看 {n} 站完整行程",
         stopsCountLabel: "共 {n} 個精選停靠站",
-        nearbyFoodLabel: "附近必吃美食（點擊店家看介紹）",
+        nearbyFoodLabel: "順遊推薦店家（點擊查看介紹）",
         stopMapBtn: "地圖定位",
-        itinFooterTip: "提示：點擊各站美食標籤可直接查看店家介紹",
+        itinFooterTip: "提示：點擊各站推薦店家標籤可直接查看介紹",
         closeBtn: "關閉行程表",
         backBtn: "返回",
         showingCount: "共顯示",
         placesUnit: "個精選項目",
         clickTip: "（點擊卡片可檢視照片與詳細介紹）",
-        clickTipItinerary: "（點擊半日遊卡片可展開時間軸與附近美食介紹）",
+        clickTipItinerary: "（點擊半日遊卡片可展開時間軸與順遊推薦店家）",
         walkMins: "步行約 {m} 分鐘",
         openMap: "Google 地圖導航",
         viewPhoto: "查看照片",
@@ -847,7 +894,7 @@
         modeItinerary: "Half-Day Trips",
         modeTour: "Private Charter",
         searchPlaceholderLocal: "Search name, cuisine, or tag (e.g. Goose, Cafe, Cocktail)...",
-        searchPlaceholderItinerary: "Search half-day trip, landmark, or food (e.g. Dadaocheng, 101, Beitou)...",
+        searchPlaceholderItinerary: "Search half-day trip, landmark, or spot (e.g. Dadaocheng, 101, Beitou)...",
         searchPlaceholderTour: "Search charter destination (e.g. Jiufen, Yangmingshan, Yilan)...",
         walkAll: "All Distances",
         walk5: "Within 5 mins",
@@ -859,15 +906,15 @@
         tourCardBtn: "Inquire / Book Tour",
         viewItineraryBtn: "View {n}-Stop Timeline",
         stopsCountLabel: "{n} Curated Stops",
-        nearbyFoodLabel: "Nearby Must-Eats (Tap for details)",
+        nearbyFoodLabel: "Recommended Spots & Eats (Tap for details)",
         stopMapBtn: "Google Maps",
-        itinFooterTip: "Tip: Tap any food badge to view restaurant details",
+        itinFooterTip: "Tip: Tap any recommended spot badge to view details",
         closeBtn: "Close Itinerary",
         backBtn: "Back",
         showingCount: "Showing",
         placesUnit: "curated picks",
         clickTip: "(Tap a card for photos & details)",
-        clickTipItinerary: "(Tap a card to view the timeline & nearby eats)",
+        clickTipItinerary: "(Tap a card to view the timeline & recommended stops)",
         walkMins: "{m} min walk",
         openMap: "Open in Google Maps",
         viewPhoto: "Photo",
@@ -884,7 +931,7 @@
         modeTour: "貸切チャーター",
         searchPlaceholderLocal: "店名・料理名で検索（例：小籠包、カフェ、バー）...",
         searchPlaceholderItinerary: "半日コース・観光地で検索（例：大稲埕、101、北投温泉）...",
-        searchPlaceholderTour: "チャーター目的地で検索（例：九份、陽明山）...",
+        searchPlaceholderTour: "チャーター目的地で検索（例：九份、陽明山、宜蘭）...",
         walkAll: "すべての距離",
         walk5: "徒歩 5 分以内",
         walk15: "徒歩 15 分以内",
@@ -895,15 +942,15 @@
         tourCardBtn: "チャーター予約・相談",
         viewItineraryBtn: "全{n}スポット行程表を見る",
         stopsCountLabel: "全 {n} スポット巡り",
-        nearbyFoodLabel: "周辺のおすすめグルメ（タップで詳細）",
+        nearbyFoodLabel: "立ち寄りおすすめスポット・グルメ（タップで詳細）",
         stopMapBtn: "地図を開く",
-        itinFooterTip: "ヒント：グルメタグをタップするとお店の詳細が表示されます",
+        itinFooterTip: "ヒント：タグをタップするとお店・施設の詳細が表示されます",
         closeBtn: "行程表を閉じる",
         backBtn: "戻る",
         showingCount: "全",
         placesUnit: "件のおすすめ",
         clickTip: "（カードをタップすると写真と詳細を表示）",
-        clickTipItinerary: "（カードをタップすると時間ごとの行程と周辺グルメを表示）",
+        clickTipItinerary: "（カードをタップすると時間ごとの行程とおすすめスポットを表示）",
         walkMins: "徒歩約 {m} 分",
         openMap: "Google マップで開く",
         viewPhoto: "写真あり",
@@ -927,7 +974,6 @@
 
     document.getElementById("charterBannerBtn").href = HOTEL_LINE_URL;
 
-    // 依據 ENABLE_ITINERARY_TAB 動態顯示或隱藏「推薦半日遊」按鈕
     function applyItineraryTabVisibility() {
       const container = document.getElementById("mainModeTabs");
       const itinBtn = document.getElementById("tabItinerary");
@@ -1249,16 +1295,16 @@
       }
 
       const fallbackItem = {
-        category: "food",
+        category: "spot",
         walk_mins: "",
         name_zh: rawFoodName,
         name_en: fallbackQueryName || rawFoodName,
         name_ja: fallbackQueryName || rawFoodName,
-        tag_zh: "半日遊順路推薦美食",
+        tag_zh: "半日遊順遊推薦地點",
         tag_en: "Recommended Stop Along Half-Day Route",
-        tag_ja: "半日コース立ち寄りおすすめグルメ",
-        desc_zh: `點擊下方按鈕可直接開啟 Google 地圖查看「${rawFoodName}」的最新營業時間、菜單與旅客評論。`,
-        desc_en: `Tap the button below to view hours, menu, and reviews for "${fallbackQueryName || rawFoodName}" on Google Maps.`,
+        tag_ja: "半日コース立ち寄りおすすめスポット",
+        desc_zh: `點擊下方按鈕可直接開啟 Google 地圖查看「${rawFoodName}」的最新營業時間、介紹與旅客評論。`,
+        desc_en: `Tap the button below to view hours, details, and reviews for "${fallbackQueryName || rawFoodName}" on Google Maps.`,
         desc_ja: `下のボタンから「${fallbackQueryName || rawFoodName}」の営業時間や口コミをGoogleマップで確認できます。`,
         hours: "",
         map_url: `https://maps.google.com/?q=${encodeURIComponent(rawFoodName)}`,
@@ -1300,11 +1346,23 @@
           const lookupKey = zhNames[fIdx] || dispName;
           const safeLookup = lookupKey.replace(/'/g, "\\'");
           const safeDisp = dispName.replace(/'/g, "\\'");
+          const cleanKey = lookupKey.replace(/（.*?）|\(.*?\)/g, "").trim();
+
+          // 自動偵測該店家屬於美食、咖啡還是溫泉/景點，決定按鈕圖示
+          const matchedLocal = localPlacesData.find(p =>
+            [p.name_zh, p.name_en, p.name_ja].filter(Boolean).join(" ").toLowerCase().includes(cleanKey.toLowerCase())
+          );
+          const dictKey = Object.keys(SPOT_FOOD_DIRECTORY).find(k =>
+            k.toLowerCase().includes(cleanKey.toLowerCase()) || cleanKey.toLowerCase().includes(k.toLowerCase())
+          );
+          const detectedCat = (matchedLocal?.category || SPOT_FOOD_DIRECTORY[dictKey]?.category || "spot").toLowerCase();
+          const btnIcon = (CATEGORY_STYLES[detectedCat] && CATEGORY_STYLES[detectedCat].icon) || "📍";
+
           return `
             <button type="button"
                     onclick="openSpotFoodDetail('${safeLookup}', '${safeDisp}')"
                     class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-[#B48A5A] text-amber-900 hover:text-white border border-amber-300/90 hover:border-[#B48A5A] text-xs font-semibold shadow-xs transition">
-              <span>🍜</span>
+              <span>${btnIcon}</span>
               <span>${dispName}</span>
               <span class="opacity-70">›</span>
             </button>

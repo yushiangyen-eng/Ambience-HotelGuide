@@ -1146,6 +1146,7 @@
         const stopsText = Array.isArray(item.stops)
           ? item.stops.map(s => `${s.spot_zh} ${s.spot_en} ${s.spot_ja} ${s.food_zh} ${s.food_en} ${s.food_ja}`).join(" ")
           : "";
+        const isHiddenInLocal = currentMode === "local" && (item.show_in_local || "").toLowerCase() === "no"; if (isHiddenInLocal) return false;
         const searchable = `${item.name_zh} ${item.name_en} ${item.name_ja || ""} ${item.tag_zh} ${item.tag_en} ${item.tag_ja || ""} ${item.desc_zh} ${item.desc_en} ${item.desc_ja || ""} ${stopsText}`.toLowerCase();
         const matchQuery = !query || searchable.includes(query);
         return matchCat && matchWalk && matchQuery;

@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>喜瑞飯店 Ambience Hotel｜周邊美食與包車景點探索指南</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans TC', 'Noto Sans JP', sans-serif;
+      background-color: #FAF9F6;
+      color: #1E293B;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- 頂部品牌視覺區 -->
+  <header class="bg-[#1E293B] text-white pt-7 pb-8 px-4 sm:px-6 relative overflow-hidden">
+    <div class="max-w-5xl mx-auto relative z-10 space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#B48A5A]/20 border border-[#B48A5A]/40 text-[#E6C79C] text-xs font-medium mb-2.5">
+            <span>AMBIENCE HOTEL TAIPEI</span>
+            <span>•</span>
+            <span data-i18n="originTag">出發點：台北市中山區長安東路一段64號</span>
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-bold tracking-tight" data-i18n="title">
+            喜瑞飯店｜旅遊與周邊探索指南
+          </h1>
+          <p class="text-slate-300 text-sm sm:text-base mt-1.5 max-w-xl" data-i18n="subtitle">
+            步行可達的道地台式美食與條通酒吧，以及精選北台灣包車一日遊路線。
+          </p>
+        </div>
+
+        <!-- 三語切換按鈕組（繁中 / EN / 日本語） -->
+        <div class="self-start sm:self-center inline-flex rounded-xl bg-white/10 p-1 border border-white/15 shrink-0">
+          <button onclick="setLanguage('zh')" data-lang="zh" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#B48A5A] text-white transition">
+            繁中
+          </button>
+          <button onclick="setLanguage('en')" data-lang="en" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-200 hover:text-white transition">
+            EN
+          </button>
+          <button onclick="setLanguage('ja')" data-lang="ja" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-200 hover:text-white transition">
+            日本語
+          </button>
+        </div>
+      </div>
+
+      <!-- 主頻道切換 Tabs：周邊步行圈 vs 景點與包車行程 -->
+      <div class="grid grid-cols-2 gap-2.5 sm:max-w-md pt-1">
+        <button onclick="switchMode('local')" id="tabLocal"
+                class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold bg-[#B48A5A] text-white shadow-md transition">
+          <span>🚶</span>
+          <span data-i18n="modeLocal">飯店周邊步行圈</span>
+        </button>
+        <button onclick="switchMode('tour')" id="tabTour"
+                class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold bg-white/10 hover:bg-white/15 text-slate-200 border border-white/15 transition">
+          <span>🚐</span>
+          <span data-i18n="modeTour">景點與包車行程</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 置頂篩選與搜尋列 -->
+  <div class="sticky top-0 z-30 bg-[#FAF9F6]/95 backdrop-blur-md border-b border-stone-200/80 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 space-y-3">
+      <div class="flex flex-col sm:flex-row gap-2.5">
+        <!-- 關鍵字搜尋 -->
+        <div class="relative flex-1">
+          <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <input id="searchInput" type="text" oninput="renderPlaces()" placeholder="搜尋店名、料理或特色（例：豬腳、咖啡、調酒）..." class="w-full pl-10 pr-4 py-2 bg-white border border-stone-200 rounded-xl text-sm focus:outline-none focus:border-[#B48A5A] focus:ring-1 focus:ring-[#B48A5A]" />
+        </div>
+        <!-- 步行距離篩選（僅在「飯店周邊步行圈」模式顯示） -->
+        <div id="walkFilterGroup" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+          <button onclick="setWalkFilter('all')" data-walk="all" class="walk-btn active px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap bg-[#1E293B] text-white transition" data-i18n="walkAll">全部距離</button>
+          <button onclick="setWalkFilter(5)" data-walk="5" class="walk-btn px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap bg-white border border-stone-200 text-slate-600 hover:bg-stone-100 transition" data-i18n="walk5">步行 5 分鐘內</button>
+          <button onclick="setWalkFilter(15)" data-walk="15" class="walk-btn px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap bg-white border border-stone-200 text-slate-600 hover:bg-stone-100 transition" data-i18n="walk15">步行 15 分鐘內</button>
+        </div>
+      </div>
+
+      <!-- 動態分類標籤列（依模式自動切換） -->
+      <div id="categoryTabsContainer" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5"></div>
+    </div>
+  </div>
+
+  <!-- 主要卡片列表區 -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6">
+    <!-- 包車專屬服務提示橫幅（僅在「景點與包車行程」模式顯示） -->
+    <div id="charterBanner" class="hidden mb-5 p-4 rounded-2xl bg-gradient-to-r from-[#1E293B] to-slate-800 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+      <div class="space-y-0.5">
+        <p class="text-xs font-semibold text-[#E6C79C]" data-i18n="charterBadge">AMBIENCE CONCIERGE｜飯店合作專車接駁</p>
+        <p class="text-sm font-bold" data-i18n="charterTitle">飯店門口出發・中文／日文／英文司機包車一日遊</p>
+        <p class="text-xs text-slate-300" data-i18n="charterDesc">支援 4 人座轎車／7～9 人座商務休旅，可依需求客製路線，歡迎洽詢一樓櫃檯或透過 LINE 預約。</p>
+      </div>
+      <a href="https://line.me/" target="_blank" rel="noopener noreferrer"
+         class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#B48A5A] hover:bg-[#9E7649] text-white text-xs font-bold transition shrink-0">
+        <span>💬</span>
+        <span data-i18n="charterCta">洽詢櫃檯 / LINE 預約</span>
+      </a>
+    </div>
+
+    <div class="flex items-center justify-between mb-4">
+      <p class="text-xs sm:text-sm text-slate-500">
+        <span data-i18n="showingCount">共顯示</span> <strong id="resultCount" class="text-slate-800">0</strong> <span data-i18n="placesUnit">個精選地點</span>
+        <span class="hidden sm:inline text-slate-400 ml-1" data-i18n="clickTip">（點擊卡片可檢視照片與詳細介紹）</span>
+      </p>
+      <span id="dataSourceBadge" class="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-medium">正在載入資料...</span>
+    </div>
+
+    <!-- 卡片網格 -->
+    <div id="placesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+
+    <!-- 無結果提示 -->
+    <div id="emptyState" class="hidden text-center py-16 bg-white rounded-2xl border border-stone-200/80">
+      <p class="text-slate-500 text-sm" data-i18n="noResults">找不到符合條件的地點，請嘗試清除篩選條件。</p>
+      <button onclick="resetFilters()" class="mt-3 px-4 py-2 bg-[#1E293B] text-white text-xs font-medium rounded-lg hover:bg-slate-800 transition" data-i18n="resetBtn">重設篩選</button>
+    </div>
+  </main>
+
+  <!-- 頁尾 -->
+  <footer class="bg-white border-t border-stone-200/80 py-6 px-4 sm:px-6 mt-10">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+      <p>© 2026 喜瑞飯店 Ambience Hotel Taipei. All rights reserved.</p>
+      <button onclick="toggleSetupModal()" class="text-[#B48A5A] hover:underline font-medium">
+        ⚙️ 檢視試算表串接狀態 / 下載包車行程範本
+      </button>
+    </div>
+  </footer>
+
+  <!-- 點擊卡片跳出的「詳情與實景照片視窗」 -->
+  <div id="placeModal" onclick="if(event.target === this) closePlaceModal()" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-stone-200">
+      <div id="modalImageContainer" class="relative bg-stone-100">
+        <img id="modalImage" src="" alt="" class="w-full max-h-72 object-cover hidden" />
+        <div id="modalNoImage" class="h-36 w-full flex flex-col items-center justify-center bg-gradient-to-br from-stone-100 to-amber-50/60 text-slate-400">
+          <span id="modalFallbackIcon" class="text-4xl mb-1.5">🚐</span>
+          <span class="text-xs" data-i18n="noPhotoText">尚無實景照片</span>
+        </div>
+        <button onclick="closePlaceModal()" aria-label="關閉" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-900/70 hover:bg-slate-900 text-white flex items-center justify-center text-sm font-bold transition shadow">
+          ✕
+        </button>
+        <div class="absolute bottom-3 left-3 flex items-center gap-2">
+          <span id="modalCatBadge" class="px-2.5 py-1 rounded-lg bg-white/95 backdrop-blur-sm text-xs font-semibold text-slate-700 shadow-sm"></span>
+          <span id="modalWalkBadge" class="px-2.5 py-1 rounded-lg bg-[#1E293B]/90 text-white text-xs font-medium shadow-sm"></span>
+        </div>
+      </div>
+
+      <div class="p-6 space-y-3">
+        <div>
+          <h3 id="modalTitle" class="text-xl font-bold text-slate-900 leading-snug"></h3>
+          <p id="modalSubTitle" class="text-xs text-slate-400 mt-0.5"></p>
+        </div>
+
+        <p id="modalTag" class="text-xs font-semibold text-[#B48A5A]"></p>
+
+        <p id="modalDesc" class="text-sm text-slate-600 leading-relaxed whitespace-pre-line"></p>
+
+        <div class="pt-4 border-t border-stone-100 flex items-center justify-between gap-3">
+          <span id="modalHours" class="text-xs text-slate-500"></span>
+          <a id="modalMapBtn" href="#" target="_blank" rel="noopener noreferrer"
+             class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#B48A5A] hover:bg-[#9E7649] text-white text-xs font-semibold transition shadow-sm shrink-0">
+            <span data-i18n="openMap">Google 地圖導航</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 試算表狀態與設定說明彈窗 -->
+  <div id="setupModal" onclick="if(event.target === this) toggleSetupModal()" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-stone-200 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-base text-slate-800">雙分頁 Google 試算表設定說明</h3>
+        <button onclick="toggleSetupModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold">✕</button>
+      </div>
+      <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
+        <p><strong>1. 飯店周邊步行圈</strong>：自動讀取您原本的「工作表1」。</p>
+        <p><strong>2. 景點與包車行程</strong>：只要在同一份 Google 試算表下方按 <code>+</code> 新增工作表，點擊「檔案 ＞ 共用 ＞ 發佈到網路」取得該工作表的 CSV 網址，貼進程式碼的 <code>TOUR_SHEET_CSV_URL</code> 即可自動同步！</p>
+        <p>包車分頁的 <code>category</code> 代碼可使用：<code>charter</code>（包車路線）、<code>railway</code>（鐵道老街）、<code>hotspring</code>（溫泉山城）、<code>city</code>（市區必訪）。</p>
+      </div>
+      <div class="pt-2 flex flex-wrap gap-2">
+        <button onclick="downloadTourCSV()" class="px-3.5 py-2 bg-stone-100 hover:bg-stone-200 text-slate-700 rounded-lg text-xs font-medium transition">
+          📥 下載包車行程 CSV 範本
+        </button>
+        <button onclick="reloadAllSheets()" class="px-3.5 py-2 bg-[#B48A5A] hover:bg-[#9E7649] text-white rounded-lg text-xs font-medium transition">
+          🔄 立即重新同步試算表
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. 飯店周邊步行圈 CSV 網址（已綁定您的工作表1）
+    // =========================================================================
+    const LOCAL_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWlyzIGNyylZRVgFo_33AIShQXGJngkbN7MqkbwlWk-X5jsKiqa81A73jttrRIETcxs1tzPnyjVvxM/pub?gid=0&single=true&output=csv";
+
+    // =========================================================================
+    // 2. 景點與包車行程 CSV 網址（在試算表新增分頁並發佈後，把網址貼在雙引號內）
+    // =========================================================================
+    const TOUR_SHEET_CSV_URL = "";
+
+    // 飯店周邊預設備援資料
+    const DEFAULT_LOCAL_PLACES = [
+      {
+        category: "food",
+        walk_mins: 12,
+        name_zh: "阜杭豆漿",
+        name_en: "Fuhang Soy Milk",
+        name_ja: "阜杭豆漿（フーハンドウジャン）",
+        tag_zh: "米其林必比登 · 經典台式早餐",
+        tag_en: "Michelin Bib Gourmand · Iconic Breakfast",
+        tag_ja: "ミシュランビブグルマン・定番台湾朝ごはん",
+        desc_zh: "位於華山市場二樓的排隊名店，必點炭火現烤厚餅夾蛋、香濃鹹豆漿與焦糖甜餅，建議平日十點半後前往避開長龍。",
+        desc_en: "Legendary Taipei breakfast spot on the 2nd floor of Huashan Market, famous for thick oven-baked flatbreads, savory soy milk, and sweet sesame pastries.",
+        desc_ja: "華山市場2階にある行列のできる人気朝食店。釜焼きの厚餅夾蛋（卵焼きパン）と濃厚な鹹豆漿（塩味豆乳スープ）は必食です。",
+        hours: "05:30 - 12:30 (週一公休)",
+        map_url: "https://maps.google.com/?q=阜杭豆漿",
+        image_url: "fuhang.jpg"
+      }
+    ];
+
+    // 景點與包車行程內建精選資料（未綁定第二個試算表前會直接顯示這組經典路線）
+    const DEFAULT_TOUR_PLACES = [
+      {
+        category: "charter",
+        walk_mins: "包車 8 小時",
+        name_zh: "九份老街・十分瀑布・野柳地質公園 北海岸經典一日遊",
+        name_en: "Jiufen, Shifen Waterfall & Yehliu Geopark Day Tour",
+        name_ja: "九份・十分の滝・野柳地質公園 北海岸定番1日チャーター",
+        tag_zh: "最受歡迎路線 · 飯店專車直達免轉車",
+        tag_en: "Most Popular · Door-to-Door Private Charter",
+        tag_ja: "人気No.1コース・ホテル発着で乗り換えなし",
+        desc_zh: "喜瑞飯店門口出發！上午欣賞野柳女王頭奇岩與十分老街放天燈、十分瀑布，傍晚漫步山城九份紅燈籠夜景與品嚐芋圓，輕鬆暢遊北海岸免扛行李轉車。",
+        desc_en: "Depart right from Ambience Hotel! Visit Yehliu's Queen's Head, release sky lanterns at Shifen, and enjoy Jiufen's iconic lantern-lit alleys at dusk without transit hassles.",
+        desc_ja: "ホテル玄関前から出発！午前は野柳のクイーンズヘッドと十分での天燈上げ・滝観光、夕暮れ時はノスタルジックな九份の提灯夜景を満喫できる王道ルートです。",
+        hours: "建議 09:00 飯店出發 (約 8 小時)",
+        map_url: "https://maps.google.com/?q=九份老街",
+        image_url: ""
+      },
+      {
+        category: "hotspring",
+        walk_mins: "車程約 35 分",
+        name_zh: "陽明山國家公園・竹子湖・北投溫泉半日／一日遊",
+        name_en: "Yangmingshan National Park & Beitou Hot Spring Tour",
+        name_ja: "陽明山国立公園・竹子湖・北投温泉 半日／1日コース",
+        tag_zh: "火山地熱奇景 · 季節花海與百年湯泉",
+        tag_en: "Volcanic Landscapes · Seasonal Blooms & Hot Springs",
+        tag_ja: "火山地熱の絶景・季節の花畑と歴史ある名湯",
+        desc_zh: "造訪小油坑硫磺噴氣孔、擎天崗大草原與竹子湖山產野菜，午後前往北投地熱谷、北投溫泉博物館並享受白磺泉湯屋，適合喜愛自然與放鬆的旅客。",
+        desc_en: "Explore Xiaoyoukeng fumaroles, Qingtiangang grasslands, and Zhuzihu, followed by Beitou Thermal Valley and a relaxing sulfur hot spring bath.",
+        desc_ja: "小油坑の噴気孔や擎天崗の草原、竹子湖での山菜料理を楽しんだ後、午後は北投の地熱谷散策と名湯・白硫黄泉の貸切風呂でリラックス。",
+        hours: "建議 09:30 或 13:00 出發 (約 6–8 小時)",
+        map_url: "https://maps.google.com/?q=北投地熱谷",
+        image_url: ""
+      },
+      {
+        category: "city",
+        walk_mins: "車程約 20 分",
+        name_zh: "象山步道觀景台（俯瞰台北101全景）",
+        name_en: "Xiangshan (Elephant Mountain) Taipei 101 Viewpoint",
+        name_ja: "象山歩道展望台（台北101パノラマ夜景）",
+        tag_zh: "世界級城市天際線 · 夕陽與百萬夜景",
+        tag_en: "Iconic Skyline · Sunset & Night View",
+        tag_ja: "世界屈指の都市絶景・夕日と100万ドルの夜景",
+        desc_zh: "台北最具代表性的觀景步道，搭車或捷運淡水信義線至象山站約 20 分鐘可達。登上六巨石觀景台僅需約 15 分鐘步程，將台北 101 與信義區夜景盡收眼底。",
+        desc_en: "Taipei's premier viewpoint for panoramic views of Taipei 101. Reachable in ~20 mins by taxi or MRT Red Line, followed by a 15-minute stair climb to the Six Giant Rocks.",
+        desc_ja: "ホテルからタクシーまたはMRT淡水信義線で約20分。登山口から階段を約15分登ると「六巨石」展望台に到着し、台北101と街並みを間近に一望できます。",
+        hours: "24 小時開放（建議日落前 30 分鐘抵達）",
+        map_url: "https://maps.google.com/?q=象山步道",
+        image_url: ""
+      },
+      {
+        category: "railway",
+        walk_mins: "車程約 50 分",
+        name_zh: "平溪線懷舊鐵道・猴硐貓村・菁桐老街漫遊",
+        name_en: "Pingxi Heritage Railway & Houtong Cat Village",
+        name_ja: "平渓線ローカル鉄道・猴硐猫村・菁桐レトロ散策",
+        tag_zh: "CNN 推薦賞貓景點 · 日治木造車站風情",
+        tag_en: "CNN Top Cat Destination · Historic Wooden Stations",
+        tag_ja: "CNN選出の猫スポット・日本統治時代の木造駅舎",
+        desc_zh: "造訪曾獲 CNN 推薦的猴硐貓村，與親人貓咪互動並品嚐貓村咖啡，接著前往平溪與菁桐日式木造車站掛許願竹筒，體驗慢步調的山城鐵道魅力。",
+        desc_en: "Visit CNN-featured Houtong Cat Village, then explore the historic wooden train stations and wish-hanging bamboo tubes of Pingxi and Jingtong.",
+        desc_ja: "CNNにも選ばれた「猴硐猫村」で可愛い猫たちと触れ合った後、平渓や菁桐の日本統治時代の木造駅舎で願い事の竹筒を掛けるノスタルジックな旅。",
+        hours: "建議 09:30 飯店出發 (約 6–8 小時)",
+        map_url: "https://maps.google.com/?q=猴硐貓村",
+        image_url: ""
+      },
+      {
+        category: "city",
+        walk_mins: "車程約 25 分",
+        name_zh: "國立故宮博物院・士林官邸・大稻埕迪化街文化巡禮",
+        name_en: "National Palace Museum & Dadaocheng Heritage Tour",
+        name_ja: "国立故宮博物院・士林官邸・大稲埕（迪化街）文化巡り",
+        tag_zh: "中華藝術瑰寶 · 百年巴洛克街屋與霞海城隍廟",
+        tag_en: "World-Class Museum · Historic Baroque Shophouses",
+        tag_ja: "世界四大博物館・レトロなバロック建築と縁結びの街",
+        desc_zh: "上午參觀世界四大博物館之一的國立故宮博物院（翠玉白菜、肉形石），午後前往大稻埕迪化街逛乾貨漢藥老舖、文創選物店並欣賞淡水河畔夕陽。",
+        desc_en: "Explore imperial treasures at the National Palace Museum in the morning, then stroll Dadaocheng's historic Dihua Street and enjoy sunset by Dadaocheng Wharf.",
+        desc_ja: "午前は世界四大博物館の一つ「国立故宮博物院」で国宝を鑑賞し、午後は歴史ある問屋街・迪化街での買い物や大稲埕埠頭の夕日を満喫する文化コース。",
+        hours: "故宮 09:00 - 17:00 (週一休館)",
+        map_url: "https://maps.google.com/?q=國立故宮博物院",
+        image_url: ""
+      },
+      {
+        category: "charter",
+        walk_mins: "包車 8 小時",
+        name_zh: "宜蘭礁溪溫泉・幾米公園・傳統藝術中心 蘭陽一日遊",
+        name_en: "Yilan Jiaoxi Hot Spring & Traditional Arts Day Tour",
+        name_ja: "宜蘭・礁渓温泉・幾米公園・伝統芸術センター 1日チャーター",
+        tag_zh: "穿越雪山隧道 · 親子同遊與碳酸氫鈉美人湯",
+        tag_en: "Family-Friendly · Cultural Park & Hot Springs",
+        tag_ja: "雪山トンネルを抜けて・家族連れに人気の温泉と文化体験",
+        desc_zh: "從台北出發約 50 分鐘穿過雪山隧道抵達宜蘭，走訪國立傳統藝術中心體驗傳統工藝、幾米主題公園拍照，最後在礁溪溫泉公園享受足湯與蘭陽美食。",
+        desc_en: "Cross the Hsuehshan Tunnel into Yilan in 50 mins to explore the National Center for Traditional Arts, Jimmy Park, and Jiaoxi's famous foot hot springs.",
+        desc_ja: "台北から車で約50分。国立伝統芸術センターでの文化体験や絵本作家ジミーの公園散策、礁渓温泉での足湯と地元グルメを楽しめる快適ドライブ旅。",
+        hours: "建議 09:00 飯店出發 (約 8–9 小時)",
+        map_url: "https://maps.google.com/?q=國立傳統藝術中心+宜蘭",
+        image_url: ""
+      }
+    ];
+
+    const CATEGORY_CONFIG = {
+      local: [
+        { id: "all",  zh: "全部推薦", en: "All Picks", ja: "すべて表示" },
+        { id: "food", zh: "🍜 在地美食", en: "🍜 Local Food", ja: "🍜 地元グルメ" },
+        { id: "cafe", zh: "☕ 咖啡甜點", en: "☕ Cafe & Sweets", ja: "☕ カフェ・スイーツ" },
+        { id: "bar",  zh: "🍸 微醺酒吧", en: "🍸 Bars & Speakeasy", ja: "🍸 バー・居酒屋" },
+        { id: "spot", zh: "🌿 景點散步", en: "🌿 Sightseeing", ja: "🌿 観光・散策" },
+        { id: "shop", zh: "🛍️ 伴手禮 / 生活", en: "🛍️ Shopping", ja: "🛍️ お土産・買い物" }
+      ],
+      tour: [
+        { id: "all",       zh: "全部行程", en: "All Tours", ja: "すべてのコース" },
+        { id: "charter",   zh: "🚐 經典包車一日遊", en: "🚐 Classic Charter", ja: "🚐 定番チャーター" },
+        { id: "hotspring", zh: "♨️ 溫泉與山林", en: "♨️ Hot Springs & Nature", ja: "♨️ 温泉・自然" },
+        { id: "railway",   zh: "🏮 懷舊鐵道老街", en: "🏮 Heritage Railway", ja: "🏮 レトロ鉄道・老街" },
+        { id: "city",      zh: "🌆 市區必訪景點", en: "🌆 City Highlights", ja: "🌆 市内定番スポット" }
+      ]
+    };
+
+    const CATEGORY_STYLES = {
+      food:      { badge: "bg-amber-50 text-amber-800 border-amber-200/80", icon: "🍜", labelZh: "在地美食", labelEn: "Local Food", labelJa: "地元グルメ" },
+      cafe:      { badge: "bg-stone-100 text-stone-700 border-stone-200", icon: "☕", labelZh: "咖啡甜點", labelEn: "Cafe & Sweets", labelJa: "カフェ・スイーツ" },
+      bar:       { badge: "bg-purple-50 text-purple-800 border-purple-200/80", icon: "🍸", labelZh: "微醺酒吧", labelEn: "Bars & Speakeasy", labelJa: "バー・居酒屋" },
+      spot:      { badge: "bg-emerald-50 text-emerald-800 border-emerald-200/80", icon: "🌿", labelZh: "景點散步", labelEn: "Sightseeing", labelJa: "観光・散策" },
+      shop:      { badge: "bg-sky-50 text-sky-800 border-sky-200/80", icon: "🛍️", labelZh: "伴手禮 / 生活", labelEn: "Shopping", labelJa: "お土産・買い物" },
+      charter:   { badge: "bg-amber-50 text-amber-900 border-amber-300/80", icon: "🚐", labelZh: "經典包車一日遊", labelEn: "Classic Charter", labelJa: "定番チャーター" },
+      hotspring: { badge: "bg-rose-50 text-rose-800 border-rose-200/80", icon: "♨️", labelZh: "溫泉與山林", labelEn: "Hot Springs", labelJa: "温泉・自然" },
+      railway:   { badge: "bg-orange-50 text-orange-800 border-orange-200/80", icon: "🏮", labelZh: "懷舊鐵道老街", labelEn: "Heritage Railway", labelJa: "レトロ鉄道" },
+      city:      { badge: "bg-indigo-50 text-indigo-800 border-indigo-200/80", icon: "🌆", labelZh: "市區必訪景點", labelEn: "City Highlights", labelJa: "市内定番" }
+    };
+
+    const I18N = {
+      zh: {
+        originTag: "出發點：台北市中山區長安東路一段64號",
+        title: "喜瑞飯店｜旅遊與周邊探索指南",
+        subtitle: "步行可達的道地台式美食與條通酒吧，以及精選北台灣包車一日遊路線。",
+        modeLocal: "飯店周邊步行圈",
+        modeTour: "景點與包車行程",
+        searchPlaceholderLocal: "搜尋店名、料理或特色（例：豬腳、咖啡、調酒）...",
+        searchPlaceholderTour: "搜尋景點或路線（例：九份、陽明山、故宮、包車）...",
+        walkAll: "全部距離",
+        walk5: "步行 5 分鐘內",
+        walk15: "步行 15 分鐘內",
+        charterBadge: "AMBIENCE CONCIERGE｜飯店合作專車接駁",
+        charterTitle: "飯店門口出發・中文／日文／英文司機包車一日遊",
+        charterDesc: "支援 4 人座轎車／7～9 人座商務休旅，可依需求客製路線，歡迎洽詢一樓櫃檯或透過 LINE 預約。",
+        charterCta: "洽詢櫃檯 / LINE 預約",
+        showingCount: "共顯示",
+        placesUnit: "個精選項目",
+        clickTip: "（點擊卡片可檢視照片與詳細介紹）",
+        walkMins: "步行約 {m} 分鐘",
+        openMap: "Google 地圖導航",
+        viewPhoto: "查看照片",
+        noPhotoText: "尚無實景照片",
+        noResults: "找不到符合條件的項目，請嘗試清除篩選條件。",
+        resetBtn: "重設篩選"
+      },
+      en: {
+        originTag: "Origin: No. 64, Sec. 1, Chang'an E. Rd., Zhongshan Dist.",
+        title: "Ambience Hotel｜Neighborhood & Day Tour Guide",
+        subtitle: "Walkable local eats and Tiaotong bars, plus curated Northern Taiwan private car tours.",
+        modeLocal: "Walking Distance",
+        modeTour: "Sightseeing & Charter Tours",
+        searchPlaceholderLocal: "Search name, cuisine, or tag (e.g. Goose, Cafe, Cocktail)...",
+        searchPlaceholderTour: "Search destination or tour (e.g. Jiufen, Beitou, Museum)...",
+        walkAll: "All Distances",
+        walk5: "Within 5 mins",
+        walk15: "Within 15 mins",
+        charterBadge: "AMBIENCE CONCIERGE｜PRIVATE CHARTER SERVICE",
+        charterTitle: "Hotel Door-to-Door Private Day Tours (EN / JP / ZH Drivers)",
+        charterDesc: "Available in 4-seater sedans or 7–9 seater vans with customizable itineraries. Contact our 1F Front Desk or LINE to book.",
+        charterCta: "Inquire at Desk / LINE",
+        showingCount: "Showing",
+        placesUnit: "curated picks",
+        clickTip: "(Tap a card for photos & details)",
+        walkMins: "{m} min walk",
+        openMap: "Open in Google Maps",
+        viewPhoto: "Photo",
+        noPhotoText: "No photo available",
+        noResults: "No matching items found. Try clearing your filters.",
+        resetBtn: "Reset Filters"
+      },
+      ja: {
+        originTag: "出発地：台北市中山区長安東路一段64号（アンビエンスホテル）",
+        title: "アンビエンスホテル｜周辺散策＆貸切チャーター案内",
+        subtitle: "ホテル徒歩圏内の本格台湾グルメ・条通バーから、九份・陽明山などの貸切観光チャーターまでご案内します。",
+        modeLocal: "ホテル周辺（徒歩圏内）",
+        modeTour: "観光スポット・貸切チャーター",
+        searchPlaceholderLocal: "店名・料理名で検索（例：小籠包、カフェ、バー）...",
+        searchPlaceholderTour: "観光地で検索（例：九份、陽明山、故宮、温泉）...",
+        walkAll: "すべての距離",
+        walk5: "徒歩 5 分以内",
+        walk15: "徒歩 15 分以内",
+        charterBadge: "AMBIENCE CONCIERGE｜ホテル発着・専用車チャーター",
+        charterTitle: "日本語・英語ドライバー対応 貸切観光チャーター（1日／半日）",
+        charterDesc: "セダン（1〜3名）からワゴン車（4〜8名）まで手配可能。ご希望のルートにアレンジできます。1階フロントまたはLINEでお気軽にご相談ください。",
+        charterCta: "フロント相談 / LINE予約",
+        showingCount: "全",
+        placesUnit: "件のおすすめ",
+        clickTip: "（カードをタップすると写真と詳細を表示）",
+        walkMins: "徒歩約 {m} 分",
+        openMap: "Google マップで開く",
+        viewPhoto: "写真あり",
+        noPhotoText: "写真は準備中です",
+        noResults: "条件に一致する項目が見つかりませんでした。",
+        resetBtn: "フィルターをリセット"
+      }
+    };
+
+    let currentLang = "zh";
+    let currentMode = "local"; // 'local' 或 'tour'
+    let currentCategory = "all";
+    let currentWalkFilter = "all";
+    let localPlacesData = [...DEFAULT_LOCAL_PLACES];
+    let tourPlacesData = [...DEFAULT_TOUR_PLACES];
+    let currentFilteredPlaces = [];
+    let localSyncStatus = "載入中...";
+    let tourSyncStatus = "內建精選行程 (6 筆)";
+
+    function switchMode(mode) {
+      currentMode = mode;
+      currentCategory = "all";
+      currentWalkFilter = "all";
+      document.getElementById("searchInput").value = "";
+
+      const tabLocal = document.getElementById("tabLocal");
+      const tabTour = document.getElementById("tabTour");
+      const walkGroup = document.getElementById("walkFilterGroup");
+      const charterBanner = document.getElementById("charterBanner");
+
+      if (mode === "local") {
+        tabLocal.className = "flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold bg-[#B48A5A] text-white shadow-md transition";
+        tabTour.className = "flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold bg-white/10 hover:bg-white/15 text-slate-200 border border-white/15 transition";
+        walkGroup.classList.remove("hidden");
+        charterBanner.classList.add("hidden");
+        document.getElementById("searchInput").placeholder = I18N[currentLang].searchPlaceholderLocal;
+        document.getElementById("dataSourceBadge").textContent = localSyncStatus;
+      } else {
+        tabTour.className = "flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold bg-[#B48A5A] text-white shadow-md transition";
+        tabLocal.className = "flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold bg-white/10 hover:bg-white/15 text-slate-200 border border-white/15 transition";
+        walkGroup.classList.add("hidden");
+        charterBanner.classList.remove("hidden");
+        document.getElementById("searchInput").placeholder = I18N[currentLang].searchPlaceholderTour;
+        document.getElementById("dataSourceBadge").textContent = tourSyncStatus;
+      }
+
+      renderCategoryTabs();
+      renderPlaces();
+    }
+
+    function renderCategoryTabs() {
+      const container = document.getElementById("categoryTabsContainer");
+      const tabs = CATEGORY_CONFIG[currentMode] || CATEGORY_CONFIG.local;
+      container.innerHTML = tabs.map(tab => {
+        const label = tab[currentLang] || tab.zh;
+        const isActive = currentCategory === tab.id;
+        const cls = isActive
+          ? "cat-btn active px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#B48A5A] text-white transition whitespace-nowrap"
+          : "cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-white border border-stone-200 text-slate-600 hover:border-[#B48A5A] transition whitespace-nowrap";
+        return `<button onclick="setCategory('${tab.id}')" data-cat="${tab.id}" class="${cls}">${label}</button>`;
+      }).join("");
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll(".lang-btn").forEach(btn => {
+        const isActive = btn.getAttribute("data-lang") === lang;
+        btn.className = isActive
+          ? "lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#B48A5A] text-white transition"
+          : "lang-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-200 hover:text-white transition";
+      });
+
+      document.getElementById("searchInput").placeholder = currentMode === "local"
+        ? I18N[currentLang].searchPlaceholderLocal
+        : I18N[currentLang].searchPlaceholderTour;
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (I18N[currentLang][key]) {
+          el.textContent = I18N[currentLang][key];
+        }
+      });
+
+      renderCategoryTabs();
+      renderPlaces();
+    }
+
+    function getLocalizedField(item, fieldBase) {
+      if (currentLang === "ja") {
+        return item[`${fieldBase}_ja`] || item[`${fieldBase}_en`] || item[`${fieldBase}_zh`] || "";
+      }
+      if (currentLang === "en") {
+        return item[`${fieldBase}_en`] || item[`${fieldBase}_zh`] || "";
+      }
+      return item[`${fieldBase}_zh`] || item[`${fieldBase}_en`] || "";
+    }
+
+    function getCategoryLabel(style) {
+      if (currentLang === "ja") return style.labelJa;
+      if (currentLang === "en") return style.labelEn;
+      return style.labelZh;
+    }
+
+    function formatDistanceBadge(walkMinsVal) {
+      const val = String(walkMinsVal || "").trim();
+      if (!val) return "";
+      // 若為純數字，代表步行分鐘數；若為文字（如「包車 8 小時」、「車程約 35 分」），直接顯示文字
+      if (/^\d+$/.test(val)) {
+        return `🚶 ${I18N[currentLang].walkMins.replace("{m}", val)}`;
+      }
+      return `🚐 ${val}`;
+    }
+
+    function setCategory(cat) {
+      currentCategory = cat;
+      renderCategoryTabs();
+      renderPlaces();
+    }
+
+    function setWalkFilter(mins) {
+      currentWalkFilter = mins;
+      document.querySelectorAll(".walk-btn").forEach(btn => {
+        const isActive = String(btn.getAttribute("data-walk")) === String(mins);
+        btn.className = isActive
+          ? "walk-btn active px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap bg-[#1E293B] text-white transition"
+          : "walk-btn px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap bg-white border border-stone-200 text-slate-600 hover:bg-stone-100 transition";
+      });
+      renderPlaces();
+    }
+
+    function resetFilters() {
+      document.getElementById("searchInput").value = "";
+      setCategory("all");
+      setWalkFilter("all");
+    }
+
+    function renderPlaces() {
+      const query = document.getElementById("searchInput").value.trim().toLowerCase();
+      const grid = document.getElementById("placesGrid");
+      const emptyState = document.getElementById("emptyState");
+      const activeDataset = currentMode === "local" ? localPlacesData : tourPlacesData;
+
+      currentFilteredPlaces = activeDataset.filter(item => {
+        const matchCat = currentCategory === "all" || (item.category || "").toLowerCase() === currentCategory;
+        const matchWalk = currentMode === "tour" || currentWalkFilter === "all" || Number(item.walk_mins) <= Number(currentWalkFilter);
+        const searchable = `${item.name_zh} ${item.name_en} ${item.name_ja || ""} ${item.tag_zh} ${item.tag_en} ${item.tag_ja || ""} ${item.desc_zh} ${item.desc_en} ${item.desc_ja || ""}`.toLowerCase();
+        const matchQuery = !query || searchable.includes(query);
+        return matchCat && matchWalk && matchQuery;
+      });
+
+      document.getElementById("resultCount").textContent = currentFilteredPlaces.length;
+
+      if (currentFilteredPlaces.length === 0) {
+        grid.innerHTML = "";
+        emptyState.classList.remove("hidden");
+        return;
+      }
+
+      emptyState.classList.add("hidden");
+      grid.innerHTML = currentFilteredPlaces.map((item, idx) => {
+        const defaultCat = currentMode === "local" ? "food" : "charter";
+        const catKey = (item.category || defaultCat).toLowerCase();
+        const style = CATEGORY_STYLES[catKey] || CATEGORY_STYLES[defaultCat];
+        const name = getLocalizedField(item, "name");
+        const subName = currentLang === "zh" ? item.name_en : item.name_zh;
+        const tag = getLocalizedField(item, "tag");
+        const desc = getLocalizedField(item, "desc");
+        const catLabel = getCategoryLabel(style);
+        const badgeRight = formatDistanceBadge(item.walk_mins);
+        const hasPhoto = Boolean((item.image_url || "").trim());
+
+        return `
+          <article onclick="openPlaceModal(${idx})"
+                   class="group cursor-pointer bg-white rounded-2xl border border-stone-200/90 hover:border-[#B48A5A] p-5 shadow-sm hover:shadow-md transition flex flex-col">
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border text-xs font-semibold ${style.badge}">
+                <span>${style.icon}</span>
+                <span>${catLabel}</span>
+              </span>
+              <div class="flex items-center gap-1.5">
+                ${hasPhoto ? `<span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[#FAF9F6] border border-stone-200 text-[#B48A5A] text-[11px] font-medium">📷 ${I18N[currentLang].viewPhoto}</span>` : ""}
+                ${badgeRight ? `<span class="px-2.5 py-1 rounded-lg bg-[#1E293B] text-white text-xs font-medium">${badgeRight}</span>` : ""}
+              </div>
+            </div>
+
+            <div class="mb-2">
+              <h2 class="font-bold text-lg text-slate-900 group-hover:text-[#B48A5A] transition leading-snug">${name}</h2>
+              ${subName && subName !== name ? `<p class="text-xs text-slate-400 mt-0.5">${subName}</p>` : ""}
+            </div>
+
+            ${tag ? `<p class="text-xs font-semibold text-[#B48A5A] mb-2">${tag}</p>` : ""}
+
+            <p class="text-sm text-slate-600 leading-relaxed flex-1 line-clamp-3">${desc}</p>
+
+            <div class="mt-4 pt-3.5 border-t border-stone-100 flex items-center justify-between gap-2">
+              <span class="text-xs text-slate-400 truncate max-w-[55%]" title="${item.hours || ''}">
+                ${item.hours ? `🕒 ${item.hours}` : ""}
+              </span>
+              <a href="${item.map_url}" target="_blank" rel="noopener noreferrer"
+                 onclick="event.stopPropagation()"
+                 class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF9F6] hover:bg-[#B48A5A] text-slate-800 hover:text-white border border-stone-200 hover:border-[#B48A5A] text-xs font-semibold transition shrink-0">
+                <span>${I18N[currentLang].openMap}</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function openPlaceModal(idx) {
+      const item = currentFilteredPlaces[idx];
+      if (!item) return;
+
+      const defaultCat = currentMode === "local" ? "food" : "charter";
+      const catKey = (item.category || defaultCat).toLowerCase();
+      const style = CATEGORY_STYLES[catKey] || CATEGORY_STYLES[defaultCat];
+      const name = getLocalizedField(item, "name");
+      const subName = currentLang === "zh" ? item.name_en : item.name_zh;
+      const tag = getLocalizedField(item, "tag");
+      const desc = getLocalizedField(item, "desc");
+      const catLabel = getCategoryLabel(style);
+      const badgeRight = formatDistanceBadge(item.walk_mins);
+      const cleanImgUrl = (item.image_url || "").trim();
+
+      document.getElementById("modalTitle").textContent = name;
+      document.getElementById("modalSubTitle").textContent = (subName && subName !== name) ? subName : "";
+      document.getElementById("modalTag").textContent = tag || "";
+      document.getElementById("modalDesc").textContent = desc || "";
+      document.getElementById("modalHours").textContent = item.hours ? `🕒 ${item.hours}` : "";
+      document.getElementById("modalMapBtn").href = item.map_url || "#";
+      document.getElementById("modalCatBadge").textContent = `${style.icon} ${catLabel}`;
+      document.getElementById("modalWalkBadge").textContent = badgeRight;
+      document.getElementById("modalFallbackIcon").textContent = style.icon;
+
+      const imgEl = document.getElementById("modalImage");
+      const noImgEl = document.getElementById("modalNoImage");
+
+      if (cleanImgUrl) {
+        imgEl.onload = () => {
+          imgEl.classList.remove("hidden");
+          noImgEl.classList.add("hidden");
+        };
+        imgEl.onerror = () => {
+          imgEl.classList.add("hidden");
+          noImgEl.classList.remove("hidden");
+        };
+        imgEl.src = cleanImgUrl;
+        imgEl.alt = name;
+      } else {
+        imgEl.src = "";
+        imgEl.classList.add("hidden");
+        noImgEl.classList.remove("hidden");
+      }
+
+      document.getElementById("placeModal").classList.remove("hidden");
+    }
+
+    function closePlaceModal() {
+      document.getElementById("placeModal").classList.add("hidden");
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closePlaceModal();
+        document.getElementById("setupModal").classList.add("hidden");
+      }
+    });
+
+    function parseCSV(text) {
+      const rows = [];
+      let currentRow = [];
+      let currentCell = "";
+      let inQuotes = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const nextChar = text[i + 1];
+
+        if (char === '"' && inQuotes && nextChar === '"') {
+          currentCell += '"';
+          i++;
+        } else if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          currentRow.push(currentCell.trim());
+          currentCell = "";
+        } else if ((char === '\n' || (char === '\r' && nextChar === '\n')) && !inQuotes) {
+          if (char === '\r') i++;
+          currentRow.push(currentCell.trim());
+          if (currentRow.some(c => c !== "")) rows.push(currentRow);
+          currentRow = [];
+          currentCell = "";
+        } else {
+          currentCell += char;
+        }
+      }
+      if (currentCell !== "" || currentRow.length > 0) {
+        currentRow.push(currentCell.trim());
+        if (currentRow.some(c => c !== "")) rows.push(currentRow);
+      }
+      return rows;
+    }
+
+    async function fetchSheetData(url) {
+      const fetchUrl = url + (url.includes("?") ? "&" : "?") + "_t=" + Math.floor(Date.now() / 60000);
+      const res = await fetch(fetchUrl);
+      if (!res.ok) throw new Error("Network response was not ok");
+      const csvText = await res.text();
+      const rows = parseCSV(csvText);
+      if (rows.length < 2) throw new Error("CSV has no data rows");
+
+      const headers = rows[0].map(h => h.replace(/^\uFEFF/, "").toLowerCase().trim());
+      return rows.slice(1).map(row => {
+        const obj = {};
+        headers.forEach((h, idx) => {
+          obj[h] = (row[idx] || "").trim();
+        });
+        return obj;
+      }).filter(item => item.name_zh || item.name_en || item.name_ja);
+    }
+
+    async function loadAllSheets() {
+      const badge = document.getElementById("dataSourceBadge");
+      if (LOCAL_SHEET_CSV_URL) {
+        try {
+          const parsedLocal = await fetchSheetData(LOCAL_SHEET_CSV_URL);
+          if (parsedLocal.length > 0) {
+            localPlacesData = parsedLocal;
+            localSyncStatus = `已同步 Google 試算表 (${parsedLocal.length} 筆)`;
+          }
+        } catch (e) {
+          localSyncStatus = "目前顯示內建備援資料";
+        }
+      }
+
+      if (TOUR_SHEET_CSV_URL) {
+        try {
+          const parsedTour = await fetchSheetData(TOUR_SHEET_CSV_URL);
+          if (parsedTour.length > 0) {
+            tourPlacesData = parsedTour;
+            tourSyncStatus = `已同步包車試算表 (${parsedTour.length} 筆)`;
+          }
+        } catch (e) {
+          tourSyncStatus = `內建精選行程 (${tourPlacesData.length} 筆)`;
+        }
+      } else {
+        tourSyncStatus = `內建精選行程 (${tourPlacesData.length} 筆)`;
+      }
+
+      badge.textContent = currentMode === "local" ? localSyncStatus : tourSyncStatus;
+      renderPlaces();
+    }
+
+    function reloadAllSheets() {
+      loadAllSheets();
+      toggleSetupModal();
+    }
+
+    function toggleSetupModal() {
+      document.getElementById("setupModal").classList.toggle("hidden");
+    }
+
+    function downloadTourCSV() {
+      const headers = ["category", "walk_mins", "name_zh", "name_en", "tag_zh", "tag_en", "desc_zh", "desc_en", "hours", "map_url", "image_url", "name_ja", "tag_ja", "desc_ja"];
+      const csvLines = [
+        headers.join(","),
+        ...tourPlacesData.map(p => headers.map(h => `"${String(p[h] || "").replace(/"/g, '""')}"`).join(","))
+      ];
+      const blob = new Blob(["\uFEFF" + csvLines.join("\n")], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "ambience_hotel_charter_tours.csv";
+      link.click();
+    }
+
+    // 啟動初始化
+    renderCategoryTabs();
+    renderPlaces();
+    loadAllSheets();
+  </script>
+</body>
+</html>

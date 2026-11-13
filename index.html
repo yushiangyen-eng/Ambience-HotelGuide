@@ -144,48 +144,8 @@
     </div>
   </footer>
 
-  <!-- 1. 店家 / 包車詳情視窗（Modal） -->
-  <div id="placeModal" onclick="if(event.target === this) closePlaceModal()" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-stone-200">
-      <div id="modalImageContainer" class="relative bg-stone-100">
-        <img id="modalImage" src="" alt="" class="w-full max-h-72 object-cover hidden" />
-        <div id="modalNoImage" class="h-36 w-full flex flex-col items-center justify-center bg-gradient-to-br from-stone-100 to-amber-50/60 text-slate-400">
-          <span id="modalFallbackIcon" class="text-4xl mb-1.5">🚐</span>
-          <span class="text-xs" data-i18n="noPhotoText">尚無實景照片</span>
-        </div>
-        <button onclick="closePlaceModal()" aria-label="關閉" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-900/70 hover:bg-slate-900 text-white flex items-center justify-center text-sm font-bold transition shadow">
-          ✕
-        </button>
-        <div class="absolute bottom-3 left-3 flex items-center gap-2">
-          <span id="modalCatBadge" class="px-2.5 py-1 rounded-lg bg-white/95 backdrop-blur-sm text-xs font-semibold text-slate-700 shadow-sm"></span>
-          <span id="modalWalkBadge" class="px-2.5 py-1 rounded-lg bg-[#1E293B]/90 text-white text-xs font-medium shadow-sm"></span>
-        </div>
-      </div>
-
-      <div class="p-6 space-y-3">
-        <div>
-          <h3 id="modalTitle" class="text-xl font-bold text-slate-900 leading-snug"></h3>
-          <p id="modalSubTitle" class="text-xs text-slate-400 mt-0.5"></p>
-        </div>
-
-        <p id="modalTag" class="text-xs font-semibold text-[#B48A5A]"></p>
-
-        <p id="modalDesc" class="text-sm text-slate-600 leading-relaxed whitespace-pre-line"></p>
-
-        <div class="pt-4 border-t border-stone-100 flex items-center justify-between gap-3">
-          <span id="modalHours" class="text-xs text-slate-500"></span>
-          <a id="modalActionBtn" href="#" target="_blank" rel="noopener noreferrer"
-             class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#B48A5A] hover:bg-[#9E7649] text-white text-xs font-semibold transition shadow-sm shrink-0">
-            <span id="modalActionText">Google 地圖導航</span>
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 2. 半日遊行程時間軸視窗（點開「推薦半日遊」卡片時彈出） -->
-  <div id="itineraryModal" onclick="if(event.target === this) closeItineraryModal()" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+  <!-- 1. 半日遊行程時間軸視窗（z-40，點開半日遊卡片時彈出） -->
+  <div id="itineraryModal" onclick="if(event.target === this) closeItineraryModal()" class="hidden fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[88vh] flex flex-col overflow-hidden shadow-2xl border border-stone-200">
       <!-- 彈窗頂部標題列 -->
       <div class="bg-[#1E293B] text-white p-5 sm:p-6 flex items-start justify-between gap-4 shrink-0">
@@ -212,10 +172,55 @@
 
       <!-- 彈窗底部 -->
       <div class="bg-stone-50 border-t border-stone-200/80 px-5 py-3.5 flex items-center justify-between gap-3 shrink-0">
-        <span class="text-xs text-slate-500" data-i18n="itinFooterTip">出發點：喜瑞飯店（長安東路一段64號）</span>
+        <span class="text-xs text-slate-500" data-i18n="itinFooterTip">點擊下方店家標籤可查看詳細介紹與地圖</span>
         <button onclick="closeItineraryModal()" class="px-4 py-2 rounded-xl bg-[#1E293B] hover:bg-slate-800 text-white text-xs font-semibold transition" data-i18n="closeBtn">
           關閉行程表
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 店家 / 包車詳情視窗（z-50，比時間軸更高一層，可在半日遊內點擊店家直接跳出！） -->
+  <div id="placeModal" onclick="if(event.target === this) closePlaceModal()" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-stone-200">
+      <div id="modalImageContainer" class="relative bg-stone-100">
+        <img id="modalImage" src="" alt="" class="w-full max-h-72 object-cover hidden" />
+        <div id="modalNoImage" class="h-36 w-full flex flex-col items-center justify-center bg-gradient-to-br from-stone-100 to-amber-50/60 text-slate-400">
+          <span id="modalFallbackIcon" class="text-4xl mb-1.5">🍜</span>
+          <span class="text-xs" data-i18n="noPhotoText">尚無實景照片</span>
+        </div>
+        <button onclick="closePlaceModal()" aria-label="關閉" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-900/70 hover:bg-slate-900 text-white flex items-center justify-center text-sm font-bold transition shadow">
+          ✕
+        </button>
+        <div class="absolute bottom-3 left-3 flex items-center gap-2">
+          <span id="modalCatBadge" class="px-2.5 py-1 rounded-lg bg-white/95 backdrop-blur-sm text-xs font-semibold text-slate-700 shadow-sm"></span>
+          <span id="modalWalkBadge" class="px-2.5 py-1 rounded-lg bg-[#1E293B]/90 text-white text-xs font-medium shadow-sm"></span>
+        </div>
+      </div>
+
+      <div class="p-6 space-y-3">
+        <div>
+          <h3 id="modalTitle" class="text-xl font-bold text-slate-900 leading-snug"></h3>
+          <p id="modalSubTitle" class="text-xs text-slate-400 mt-0.5"></p>
+        </div>
+
+        <p id="modalTag" class="text-xs font-semibold text-[#B48A5A]"></p>
+
+        <p id="modalDesc" class="text-sm text-slate-600 leading-relaxed whitespace-pre-line"></p>
+
+        <div class="pt-4 border-t border-stone-100 flex items-center justify-between gap-3">
+          <span id="modalHours" class="text-xs text-slate-500"></span>
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="closePlaceModal()" class="px-3.5 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs font-semibold transition" data-i18n="backBtn">
+              返回
+            </button>
+            <a id="modalActionBtn" href="#" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#B48A5A] hover:bg-[#9E7649] text-white text-xs font-semibold transition shadow-sm">
+              <span id="modalActionText">Google 地圖導航</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -228,9 +233,9 @@
         <button onclick="toggleSetupModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold">✕</button>
       </div>
       <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
-        <p><strong>步驟 1：</strong>點擊下方「下載半日遊 CSV 範本」，將檔案匯入原本的「喜瑞周邊店家」Google 試算表作為新工作表（支援最多 4 個停靠站 <code>stop1</code>～<code>stop4</code>，若只有 3 站則第 4 站留白即可）。</p>
-        <p><strong>步驟 2：</strong>在試算表上方點選「檔案 ＞ 共用 ＞ 發佈到網路」，選擇該工作表並以 <strong>CSV</strong> 格式發佈，複製網址。</p>
-        <p><strong>步驟 3：</strong>將複製的 CSV 網址貼入程式碼第 235 行的 <code>ITINERARY_SHEET_CSV_URL = "你的網址";</code> 即可由試算表即時新增或修改半日遊！</p>
+        <p><strong>1. 多間美食自動變按鈕：</strong>在半日遊試算表的 <code>stop1_food_zh</code> 欄位填入多間店名並用 <code>/</code> 分隔（例如：<code>福大山東蒸餃大王 / 茗香園冰室</code>），網頁會自動拆分成獨立的可點擊店家按鈕。</p>
+        <p><strong>2. 自動同步「工作表1」店家資料：</strong>點擊半日遊內的店家按鈕時，系統會自動比對您「工作表1」試算表是否已建檔該店家，若有則直接帶出完整介紹、照片與營業時間！</p>
+        <p><strong>3. 發佈半日遊工作表：</strong>下載下方 CSV 範本匯入試算表新增分頁，發佈為 CSV 後將網址貼入 <code>ITINERARY_SHEET_CSV_URL</code> 即可即時更新。</p>
       </div>
       <div class="pt-2 flex flex-wrap gap-2">
         <button onclick="downloadItineraryCSV()" class="px-3.5 py-2 bg-stone-100 hover:bg-stone-200 text-slate-700 rounded-lg text-xs font-medium transition">
@@ -255,12 +260,12 @@
     const ITINERARY_SHEET_CSV_URL = "";
 
     // =========================================================================
-    // 3. 包車接駁 CSV 網址（選填，未填寫時顯示內建精選包車路線）
+    // 3. 包車接駁 CSV 網址（選填）
     // =========================================================================
     const TOUR_SHEET_CSV_URL = "";
 
     // =========================================================================
-    // 4. 喜瑞飯店官方 LINE 預約網址（貼上飯店的 https://lin.ee/xxx 連結）
+    // 4. 喜瑞飯店官方 LINE 預約網址
     // =========================================================================
     const HOTEL_LINE_URL = "https://line.me/";
 
@@ -283,6 +288,222 @@
         image_url: "fuhang.jpg"
       }
     ];
+
+    // =========================================================================
+    // 半日遊推薦店家專屬百科字典（當點擊半日遊內的店家按鈕時，若工作表1尚未收錄，會自動讀取這裡的詳細介紹）
+    // =========================================================================
+    const SPOT_FOOD_DIRECTORY = {
+      "福大山東蒸餃大王": {
+        category: "food",
+        walk_mins: "中山站步行 2 分",
+        name_zh: "福大山東蒸餃大王",
+        name_en: "Fuda Shandong Steamed Dumplings",
+        name_ja: "福大山東蒸餃大王",
+        tag_zh: "中山商圈排隊名店 · 皮薄爆汁手工蒸餃",
+        tag_en: "Zhongshan Favorite · Juicy Handmade Steamed Dumplings",
+        tag_ja: "中山エリア人気店・肉汁あふれる手作り蒸し餃子",
+        desc_zh: "隱身在捷運中山站新光三越後方巷弄的人氣老店，現桿現包的手工蒸餃外皮Q彈、內餡飽滿多汁，推薦搭配酸辣湯或紅油抄手一起享用。",
+        desc_en: "Tucked behind Shin Kong Mitsukoshi near Zhongshan Station, famous for chewy handmade steamed dumplings paired with hot & sour soup.",
+        desc_ja: "MRT中山駅裏の路地にある老舗。注文後に蒸し上げるモチモチ皮のジューシーな蒸し餃子と酸辣湯の組み合わせが絶品です。",
+        hours: "11:30 - 20:30 (週日公休)",
+        map_url: "https://maps.google.com/?q=福大山東蒸餃大王"
+      },
+      "茗香園冰室": {
+        category: "food",
+        walk_mins: "中山站步行 1 分",
+        name_zh: "茗香園冰室（中山店）",
+        name_en: "Ming Xiang Yuan Hong Kong Cafe",
+        name_ja: "茗香園冰室（香港カフェ）",
+        tag_zh: "超人氣港式茶餐廳 · 爆漿流沙奶皇西多士",
+        tag_en: "Popular HK Cafe · Molten Salted Egg French Toast",
+        tag_ja: "行列のできる香港茶餐廳・とろけるカスタードフレンチトースト",
+        desc_zh: "中山站最具代表性的港式茶餐廳，必點切開會爆漿的「流沙奶皇西多士」、滑蛋蝦仁飯與絲襪奶茶，份量十足且口味道地。",
+        desc_en: "Iconic Hong Kong-style diner in Zhongshan. Must-orders include the molten salted egg yolk French toast, scrambled egg shrimp rice, and HK milk tea.",
+        desc_ja: "中山駅すぐの人気香港カフェ。ナイフを入れると塩卵カスタードが溢れ出すフレンチトーストや海老卵丼、香港ミルクティーが大人気。",
+        hours: "11:30 - 21:30",
+        map_url: "https://maps.google.com/?q=茗香園冰室+中山店"
+      },
+      "永樂旗魚米粉湯": {
+        category: "food",
+        walk_mins: "迪化街步行 1 分",
+        name_zh: "永樂旗魚米粉湯",
+        name_en: "Yongle Swordfish Rice Noodles",
+        name_ja: "永楽旗魚米粉湯（カジキビーフン）",
+        tag_zh: "大稻埕百年市場美食 · 鮮甜旗魚湯頭與酥炸紅燒肉",
+        tag_en: "Dadaocheng Classic · Savory Swordfish Broth & Crispy Pork",
+        tag_ja: "大稲埕の名物屋台・カジキ出汁ビーフン＆紅焼肉",
+        desc_zh: "位於永樂市場旁的經典台式小吃，以新鮮旗魚熬煮的清甜湯頭搭配細米粉，再點一盤現炸酥脆的紅燒肉、炸蝦仁與炸蚵仔，是最道地的大稻埕吃法。",
+        desc_en: "Classic street stall beside Yongle Market serving fragrant swordfish rice noodle soup alongside crispy deep-fried red yeast pork and shrimp.",
+        desc_ja: "永楽市場横の老舗屋台。カジキの旨味が溶け込んだ優しいスープのビーフンと、揚げたてサクサクの紅焼肉（台湾風豚唐揚げ）は必食。",
+        hours: "06:00 - 17:00",
+        map_url: "https://maps.google.com/?q=永樂旗魚米粉湯"
+      },
+      "妙口四神湯・肉包專賣店": {
+        category: "food",
+        walk_mins: "迪化街步行 2 分",
+        name_zh: "妙口四神湯・肉包專賣店",
+        name_en: "Miaokou Four-Herb Soup & Steamed Pork Buns",
+        name_ja: "妙口四神湯・肉包専売店",
+        tag_zh: "迪化街騎樓老字號 · 濃郁藥膳四神湯配黑胡椒洋蔥肉包",
+        tag_en: "Dihua St. Landmark · Herbal Pork Intestine Soup & Pepper Buns",
+        tag_ja: "迪化街の老舗・漢方四神湯＆黒胡椒玉ねぎ肉まん",
+        desc_zh: "屹立迪化街騎樓數十年的排隊老店，四神湯乳白濃郁、腸子處理得乾淨軟嫩，搭配帶有黑胡椒與洋蔥甜味的手工大肉包更是絕配。",
+        desc_en: "A decades-old Dihua Street institution famous for rich herbal four-herb soup and fluffy steamed buns filled with juicy pork, onion, and black pepper.",
+        desc_ja: "迪化街のアーケードで長年愛される老舗。臭みのない柔らかなモツ入り薬膳スープ「四神湯」と、黒胡椒が効いたジューシー肉まんのセットが定番。",
+        hours: "11:30 - 17:00 (週一公休)",
+        map_url: "https://maps.google.com/?q=妙口四神湯肉包專賣店"
+      },
+      "ASW Tea House": {
+        category: "cafe",
+        walk_mins: "迪化街步行 1 分",
+        name_zh: "ASW Tea House",
+        name_en: "ASW Tea House",
+        name_ja: "ASW Tea House（台湾茶サロン）",
+        tag_zh: "屈臣氏大藥房二樓 · 英倫圖書館風台灣茶沙龍",
+        tag_en: "2F Historic Watson's Bldg · British Library-Style Taiwanese Tea Salon",
+        tag_ja: "歴史建築2階・英国図書館風の台湾茶サロン",
+        desc_zh: "藏身於大稻埕古蹟「屈臣氏大藥房」二樓的質感茶館，深色木質書櫃與復古窗景充滿英倫書卷氣息，專賣台灣各地小農紅茶與烏龍茶，推薦搭配司康與鹹派。",
+        desc_en: "Located on the 2nd floor of the historic Watson's building in Dadaocheng, offering single-estate Taiwanese black and oolong teas in a moody, book-lined salon.",
+        desc_ja: "大稲埕の歴史建築「屈臣氏大薬房」2階にある隠れ家ティーサロン。重厚な木製本棚に囲まれた空間で、台湾産シングルオリジン紅茶や烏龍茶を味わえます。",
+        hours: "09:00 - 18:00",
+        map_url: "https://maps.google.com/?q=ASW+Tea+House"
+      },
+      "幻猻家珈琲 Pallas Café": {
+        category: "cafe",
+        walk_mins: "迪化街步行 3 分",
+        name_zh: "幻猻家珈琲 Pallas Café",
+        name_en: "Pallas Café",
+        name_ja: "幻猻家珈琲 Pallas Café",
+        tag_zh: "大稻埕老宅自烘咖啡 · 招牌手作焦糖布丁與乾咖哩",
+        tag_en: "Dadaocheng Roastery · Signature Caramel Pudding & Dry Curry",
+        tag_ja: "大稲埕の古民家自家焙煎カフェ・濃厚プリン＆ドライカレー",
+        desc_zh: "改建自大稻埕老街屋的自家烘焙咖啡館，木質暖光氛圍極具復古韻味。除了手沖單品咖啡外，每日限量的「焦糖布丁」與香料「招牌咖哩」更是饕客必點。",
+        desc_en: "A warm, vintage-styled roastery in Dadaocheng celebrated for its single-origin pour-overs, rich Japanese-style caramel pudding, and spiced dry curry.",
+        desc_ja: "大稲埕の古民家を改装した自家焙煎カフェ。レトロで落ち着いた店内で味わうハンドドリップコーヒーと、固めで濃厚なカラメルプリンが大人気です。",
+        hours: "10:00 - 18:00 (週一、二公休)",
+        map_url: "https://maps.google.com/?q=幻猻家珈琲"
+      },
+      "好丘 Good Cho's": {
+        category: "cafe",
+        walk_mins: "四四南村內",
+        name_zh: "好丘 Good Cho's（信義店）",
+        name_en: "Good Cho's (Four Four South Village)",
+        name_ja: "好丘 Good Cho's（四四南村店）",
+        tag_zh: "眷村文創貝果名店 · 結合台灣在地食材的手作貝果",
+        tag_en: "Artisanal Bagel Cafe · Infused with Local Taiwanese Ingredients",
+        tag_ja: "眷村アート空間内の人気店・台湾素材の手作りベーグル",
+        desc_zh: "位於四四南村眷村老屋內的人氣複合式餐飲與選物店，主打使用台灣在地水果、茶葉與地瓜製作的Q彈手作貝果，也能購買台灣文創設計伴手禮。",
+        desc_en: "Housed inside a restored military village cottage at Four Four South Village, famous for chewy bagels made with Taiwanese tea, sweet potato, and local fruits.",
+        desc_ja: "四四南村のレトロな平屋にあるベーグルカフェ＆雑貨ショップ。台湾茶やサツマイモ、フルーツを練り込んだモチモチの手作りベーグルが名物です。",
+        hours: "11:00 - 18:00",
+        map_url: "https://maps.google.com/?q=好丘+信義店"
+      },
+      "興波咖啡 Simple Kaffa": {
+        category: "cafe",
+        walk_mins: "台北101 88樓",
+        name_zh: "興波咖啡天空興波 Simple Kaffa Sola",
+        name_en: "Simple Kaffa Sola (Taipei 101 88F)",
+        name_ja: "Simple Kaffa Sola（台北101・88階天空カフェ）",
+        tag_zh: "世界咖啡師大賽冠軍 · 380 公尺高空雲端咖啡廳",
+        tag_en: "World Barista Champion · 88th-Floor Sky Cafe",
+        tag_ja: "バリスタ世界王者監修・地上88階の雲上カフェ",
+        desc_zh: "由世界咖啡師冠軍吳則霖打造的高空旗艦店，坐落於台北 101 第 88 樓，可一邊俯瞰大台北壯闊山河景致，一邊品嚐冠軍手沖咖啡與創意咖啡調飲。",
+        desc_en: "Founded by World Barista Champion Berg Wu on the 88th floor of Taipei 101, offering panoramic city views alongside world-class pour-overs and signature coffee mocktails.",
+        desc_ja: "バリスタ世界チャンピオンが手掛ける台北101・88階の天空カフェ。台北市街の絶景を見下ろしながら、世界最高峰のスペシャルティコーヒーを堪能できます。",
+        hours: "10:00 - 20:00",
+        map_url: "https://maps.google.com/?q=天空興波+Simple+Kaffa+Sola"
+      },
+      "鼎泰豐 101 店": {
+        category: "food",
+        walk_mins: "台北101 B1",
+        name_zh: "鼎泰豐（台北 101 店）",
+        name_en: "Din Tai Fung (Taipei 101)",
+        name_ja: "鼎泰豊（ディンタイフォン・台北101店）",
+        tag_zh: "台灣美食代名詞 · 黃金 18 摺小籠包與排骨蛋炒飯",
+        tag_en: "Taiwan's Culinary Icon · 18-Fold Xiaolongbao & Pork Chop Fried Rice",
+        tag_ja: "台湾グルメの代名詞・黄金18ヒダの小籠包＆排骨チャーハン",
+        desc_zh: "享譽國際的台灣小籠包名店，每顆小籠包皆堅持黃金 18 摺、皮薄湯鮮。除了原味與絲瓜蝦仁小籠包外，排骨蛋炒飯、紅油抄手與元盅雞湯也是必點經典。",
+        desc_en: "World-renowned for its delicate 18-fold soup dumplings. Beyond classic pork xiaolongbao, don't miss the pork chop fried rice, spicy wontons, and steamed chicken soup.",
+        desc_ja: "世界的に有名な小籠包の名店。職人が18のヒダで包み上げるジューシーな小籠包はもちろん、排骨チャーハンやピリ辛ワンタンも外せない逸品です。",
+        hours: "11:00 - 20:30",
+        map_url: "https://maps.google.com/?q=鼎泰豐+101店"
+      },
+      "解解渴愛玉": {
+        category: "cafe",
+        walk_mins: "象山登山口",
+        name_zh: "解解渴愛玉（象山店）",
+        name_en: "Jie Jie Ke Aiyu Jelly (Xiangshan)",
+        name_ja: "解解渇愛玉（象山登山口店）",
+        tag_zh: "象山步道必喝消暑聖品 · 野生愛玉手洗檸檬冰",
+        tag_en: "Xiangshan Trailhead Refreshment · Hand-Washed Wild Aiyu Jelly",
+        tag_ja: "象山ハイキングの定番・天然オーギョーチーレモンゼリー",
+        desc_zh: "位於象山步道登山口旁的文青甜品小店，採用台灣阿里山野生愛玉子手工搓洗出天然果膠，加入新鮮現榨檸檬汁與冬瓜茶，爬完象山來一碗清涼解渴。",
+        desc_en: "Located right at the Xiangshan trailhead, serving refreshing hand-washed wild mountain aiyu jelly topped with fresh squeezed lemon juice and winter melon tea.",
+        desc_ja: "象山登山口のすぐそばにある人気スイーツスタンド。台湾産天然愛玉子から手揉みで作るプルプルの愛玉ゼリーに、搾りたてレモンを加えた爽やかな一杯。",
+        hours: "11:00 - 21:00",
+        map_url: "https://maps.google.com/?q=解解渴愛玉"
+      },
+      "御品元冰火湯圓": {
+        category: "cafe",
+        walk_mins: "通化夜市內",
+        name_zh: "御品元冰火湯圓（台北總店）",
+        name_en: "Yu Pin Yuan Iced & Hot Tangyuan",
+        name_ja: "御品元氷火湯円（ミシュラン掲載スイーツ）",
+        tag_zh: "米其林必比登推薦 · 滾燙芝麻花生湯圓放上桂花剉冰",
+        tag_en: "Michelin Bib Gourmand · Hot Sesame/Peanut Dumplings over Osmanthus Ice",
+        tag_ja: "ミシュランビブグルマン・熱々胡麻団子×キンモクセイかき氷",
+        desc_zh: "通化夜市排隊名店，將剛煮好滾燙的手工芝麻與花生湯圓直接鋪在清涼剉冰上，淋上香甜桂花蜜與檸檬汁，冷熱交織的獨特口感讓人一吃難忘。",
+        desc_en: "Michelin-recognized dessert stall topping finely shaved ice with piping-hot sesame and peanut glutinous rice balls, drizzled with fragrant osmanthus syrup and lemon.",
+        desc_ja: "通化夜市の行列店。茹でたて熱々の黒胡麻＆ピーナッツ団子を冷たいかき氷の上に乗せ、香り高いキンモクセイ蜜をかけた温冷スイーツが絶品です。",
+        hours: "18:00 - 23:30",
+        map_url: "https://maps.google.com/?q=御品元冰火湯圓"
+      },
+      "高記茶莊": {
+        category: "cafe",
+        walk_mins: "北投市場旁",
+        name_zh: "高記茶莊",
+        name_en: "Gaoji Tea House (Beitou)",
+        name_ja: "高記茶荘（北投名物ドリンクスタンド）",
+        tag_zh: "北投在地人排隊茶飲 · 超大容量袋裝無憂茶與古早味紅茶",
+        tag_en: "Beitou Local Favorite · Giant Bagged Iced Oolong & Black Tea",
+        tag_ja: "北投の行列お茶スタンド・名物袋入りアイスウーロン茶＆紅茶",
+        desc_zh: "北投最具代表性的手搖茶老店，招牌「無憂茶」（烏龍綠茶）清香回甘不澀口，推薦點豪邁的「袋裝」版本提著邊走邊喝，充滿濃濃懷舊台味。",
+        desc_en: "Beitou's most beloved traditional tea stand. Try their signature 'Wuyou Tea' (oolong-green tea blend) served in a nostalgic giant plastic carry bag.",
+        desc_ja: "北投で絶大な人気を誇る老舗お茶スタンド。看板メニューの「無憂茶（烏龍緑茶）」はすっきりとした後味で、レトロなビニール袋入りスタイルが名物です。",
+        hours: "07:00 - 22:00",
+        map_url: "https://maps.google.com/?q=高記茶莊"
+      },
+      "滿來溫泉拉麵": {
+        category: "food",
+        walk_mins: "新北投站步行 4 分",
+        name_zh: "滿來溫泉拉麵",
+        name_en: "Manlai Hot Spring Ramen",
+        name_ja: "満来温泉ラーメン",
+        tag_zh: "新北投溫泉區人氣名店 · 招牌炸排骨拉麵與溫泉豆腐",
+        tag_en: "Xinbeitou Landmark · Signature Fried Pork Chop Ramen & Tofu",
+        tag_ja: "新北投温泉エリアの人気店・名物排骨ラーメン＆温泉豆腐",
+        desc_zh: "位於新北投公園旁的排隊名店，結合台式炸排骨與日式拉麵湯頭，推薦必點香酥厚實的「炸排骨拉麵」、滑嫩「溫泉蛋」與柴魚醬汁「溫泉豆腐」。",
+        desc_en: "A long-standing favorite beside Xinbeitou Park known for its hearty pork chop ramen, soft-boiled hot spring eggs, and silky bonito-topped hot spring tofu.",
+        desc_ja: "新北投公園そばの行列店。サクサクの台湾風豚スペアリブ揚げが乗った「排骨ラーメン」や、とろとろの温泉卵・温泉豆腐が人気です。",
+        hours: "11:30 - 20:30",
+        map_url: "https://maps.google.com/?q=滿來溫泉拉麵"
+      },
+      "矮仔財滷肉飯": {
+        category: "food",
+        walk_mins: "北投市場 2 樓",
+        name_zh: "矮仔財滷肉飯",
+        name_en: "Aizaicai Braised Pork Rice",
+        name_ja: "矮仔財魯肉飯（北投市場の人気ルーローハン）",
+        tag_zh: "CNN 推薦台北必吃滷肉飯 · 黑金膠質滷汁與紅燒蹄膀",
+        tag_en: "CNN Top Taipei Eats · Rich Caramelized Braised Pork Rice",
+        tag_ja: "CNN選出の絶品ルーローハン・濃厚黒金ダレ＆豚すね肉煮込み",
+        desc_zh: "曾獲 CNN 推薦為台北必吃美食的傳奇滷肉飯，深褐色的陳年滷汁充滿膠質卻鹹香不膩，建議加點一份入口即化的「紅燒蹄膀」與「滷豆腐」。",
+        desc_en: "Featured by CNN as a must-eat Taipei dish, famous for its glossy, deeply caramelized braised pork rice, melt-in-your-mouth pork knuckle, and braised tofu.",
+        desc_ja: "CNNでも「台北で必食のグルメ」に選ばれた伝説のルーローハン店。コラーゲンたっぷりの濃厚な黒ダレご飯に、トロトロの豚すね肉煮込みを添えるのが通の食べ方。",
+        hours: "07:00 - 13:00 (週一、四公休)",
+        map_url: "https://maps.google.com/?q=矮仔財滷肉飯"
+      }
+    };
 
     // =========================================================================
     // 推薦半日遊內建資料（每條半日遊含 3~4 個停靠站：景點介紹 + 附近必吃美食）
@@ -311,9 +532,9 @@
             spot_desc_zh: "沿著中山北路林蔭大道步行約 15 分鐘抵達前美國大使官邸純白洋樓，順遊捷運中山站至雙連站之間的設計師選物店與赤峰街文創巷弄。",
             spot_desc_en: "Walk 15 mins along tree-lined Zhongshan N. Rd. to the historic white mansion, then browse indie boutiques along Chifeng Street.",
             spot_desc_ja: "並木道を徒歩約15分。白亜の歴史洋館を見学後、赤峰街や遊歩道沿いのセレクトショップ巡りを満喫。",
-            food_zh: "福大山東蒸餃大王 / 茗香園冰室（中山站排隊人氣美食）",
-            food_en: "Fuda Steamed Dumplings / Ming Xiang Yuan (HK Cafe)",
-            food_ja: "福大山東蒸餃大王（蒸し餃子）／茗香園冰室（香港カフェ）",
+            food_zh: "福大山東蒸餃大王 / 茗香園冰室",
+            food_en: "Fuda Steamed Dumplings / Ming Xiang Yuan",
+            food_ja: "福大山東蒸餃大王 / 茗香園冰室",
             map_url: "https://maps.google.com/?q=心中山線形公園"
           },
           {
@@ -326,7 +547,7 @@
             spot_desc_ja: "バロック建築が並ぶ迪化街を散策。縁結びで有名な霞海城隍廟への参拝や、台湾茶・ドライフルーツのお土産探しに最適。",
             food_zh: "永樂旗魚米粉湯 / 妙口四神湯・肉包專賣店",
             food_en: "Yongle Swordfish Rice Noodles / Miaokou Steamed Pork Buns",
-            food_ja: "永楽旗魚米粉湯（カジキビーフン）／妙口肉包（肉まん）",
+            food_ja: "永樂旗魚米粉湯 / 妙口四神湯・肉包專賣店",
             map_url: "https://maps.google.com/?q=迪化街"
           },
           {
@@ -339,7 +560,7 @@
             spot_desc_ja: "築100年以上の漢方薬局を改装した中庭付きカフェで、台湾高山烏龍茶やハンドドリップコーヒーを味わいながらひと休み。",
             food_zh: "ASW Tea House / 幻猻家珈琲 Pallas Café",
             food_en: "ASW Tea House / Pallas Café",
-            food_ja: "ASW Tea House（台湾茶サロン）／幻猻家珈琲",
+            food_ja: "ASW Tea House / 幻猻家珈琲 Pallas Café",
             map_url: "https://maps.google.com/?q=ASW+Tea+House"
           },
           {
@@ -350,9 +571,9 @@
             spot_desc_zh: "傍晚步行至五號水門外的大稻埕碼頭，在河畔微風中欣賞金色夕陽映照淡水河面，直接在貨櫃市集享用異國美食與精釀啤酒。",
             spot_desc_en: "Walk out to Pier 5 by sunset to watch golden reflections on the Tamsui River while enjoying street food and craft beer.",
             spot_desc_ja: "夕暮れ時に5号水門へ。淡水河に沈む黄金色の夕日を眺めながら、コンテナ屋台のグルメやクラフトビールで乾杯。",
-            food_zh: "大稻埕碼頭貨櫃市集（微醺夜景）或回程順遊寧夏夜市",
-            food_en: "Dadaocheng Wharf Market or Ningxia Night Market on return",
-            food_ja: "大稲埕埠頭コンテナ屋台、または帰路に寧夏夜市へ立ち寄り",
+            food_zh: "大稻埕碼頭貨櫃市集 / 寧夏夜市",
+            food_en: "Dadaocheng Wharf Market / Ningxia Night Market",
+            food_ja: "大稻埕碼頭貨櫃市集 / 寧夏夜市",
             map_url: "https://maps.google.com/?q=大稻埕碼頭貨櫃市集"
           }
         ]
@@ -380,9 +601,9 @@
             spot_desc_zh: "位於台北 101 正對面的台北第一座眷村，保留低矮灰瓦平房與彩色木門，是拍攝台北 101 全景同框的最佳文青打卡點。",
             spot_desc_en: "Taipei's first military dependents' village right across from Taipei 101, offering nostalgic low-rise alleys with dramatic 101 backdrop views.",
             spot_desc_ja: "台北101の目の前に残る台北初の眷村（軍人村）跡。レトロな平屋と超高層ビル・台北101が同時に撮れる人気フォトスポット。",
-            food_zh: "好丘 Good Cho's（手作貝果與台灣精釀）",
-            food_en: "Good Cho's (Artisanal Taiwanese Bagels & Cafe)",
-            food_ja: "好丘 Good Cho's（台湾素材の手作りベーグルカフェ）",
+            food_zh: "好丘 Good Cho's",
+            food_en: "Good Cho's",
+            food_ja: "好丘 Good Cho's",
             map_url: "https://maps.google.com/?q=四四南村"
           },
           {
@@ -393,9 +614,9 @@
             spot_desc_zh: "搭乘高速電梯直上 89 樓觀景台俯瞰大台北盆地，並沿著信義計畫區空中步道逛逛微風南山或百貨伴手禮區。",
             spot_desc_en: "Ride the high-speed elevator to the 89th-floor Observatory for 360-degree city views, then stroll Xinyi's elevated walkways.",
             spot_desc_ja: "超高速エレベーターで89階展望台へ上がり台北市街を360度一望。信義エリアの空中歩道でショッピングも楽しめます。",
-            food_zh: "興波咖啡 Simple Kaffa（88樓高空咖啡）/ 鼎泰豐 101 店",
-            food_en: "Simple Kaffa Sola (88F Sky Cafe) / Din Tai Fung 101",
-            food_ja: "Simple Kaffa Sola（88階天空カフェ）／鼎泰豊 101店",
+            food_zh: "興波咖啡 Simple Kaffa / 鼎泰豐 101 店",
+            food_en: "Simple Kaffa Sola / Din Tai Fung 101",
+            food_ja: "興波咖啡 Simple Kaffa / 鼎泰豐 101 店",
             map_url: "https://maps.google.com/?q=台北101"
           },
           {
@@ -406,9 +627,9 @@
             spot_desc_zh: "日落前約 30 分鐘抵達捷運象山站，沿石階步行約 15 分鐘登上六巨石與攝手平台，欣賞夕陽餘暉轉為萬家燈火的經典畫面。",
             spot_desc_en: "Arrive 30 mins before sunset for a 15-minute stair climb to the Six Giant Rocks viewpoint as Taipei 101 lights up.",
             spot_desc_ja: "日没30分前に登山口へ。階段を約15分登ると「六巨石」展望台に到着し、夕暮れからライトアップされた台北101の絶景が広がります。",
-            food_zh: "解解渴愛玉（象山登山口消暑手工愛玉冰）",
-            food_en: "Jie Jie Ke Aiyu Jelly (Refreshing herbal jelly at trailhead)",
-            food_ja: "解解渇愛玉（登山口の名物手作りオーギョーチー）",
+            food_zh: "解解渴愛玉",
+            food_en: "Jie Jie Ke Aiyu Jelly",
+            food_ja: "解解渴愛玉",
             map_url: "https://maps.google.com/?q=象山步道"
           },
           {
@@ -419,9 +640,9 @@
             spot_desc_zh: "下山後搭乘捷運淡水信義線僅需 2 站即達信義安和站，步行進入在地人最愛的通化夜市享用熱騰騰小吃。",
             spot_desc_en: "Take the MRT just 2 stops to Xinyi Anhe Station to feast on local favorites at Tonghua Night Market.",
             spot_desc_ja: "下山後はMRTで2駅の信義安和駅へ。地元の人にも大人気の通化夜市で熱々の台湾屋台グルメを堪能。",
-            food_zh: "御品元冰火湯圓（米其林必比登）/ 駱記小炒 / 梁記滷味",
-            food_en: "Yu Pin Yuan Iced & Hot Tangyuan (Michelin) / Luo Ji Stir-Fry",
-            food_ja: "御品元氷火湯円（ミシュラン掲載スイーツ）／駱記小炒（炒め物）",
+            food_zh: "御品元冰火湯圓",
+            food_en: "Yu Pin Yuan Iced & Hot Tangyuan",
+            food_ja: "御品元冰火湯圓",
             map_url: "https://maps.google.com/?q=臨江街觀光夜市"
           }
         ]
@@ -449,9 +670,9 @@
             spot_desc_zh: "從新北投捷運站步行 5 分鐘進入北投公園，欣賞台灣首座綠建築木造圖書館，以及日治時期和洋折衷風格的公共浴場古蹟。",
             spot_desc_en: "Walk 5 mins from Xinbeitou Station to see Taiwan's first green wooden library and the Japanese-era public bathhouse museum.",
             spot_desc_ja: "新北投駅から徒歩5分。台湾初のエコ木造図書館と、日本統治時代の公衆浴場を復元した赤レンガの温泉博物館を見学。",
-            food_zh: "高記茶莊（北投必喝袋裝無憂茶・古早味紅茶）",
-            food_en: "Gaoji Tea House (Famous local iced oolong & black tea)",
-            food_ja: "高記茶荘（北投名物の袋入りアイスウーロン茶・紅茶）",
+            food_zh: "高記茶莊",
+            food_en: "Gaoji Tea House",
+            food_ja: "高記茶莊",
             map_url: "https://maps.google.com/?q=北投溫泉博物館"
           },
           {
@@ -462,9 +683,9 @@
             spot_desc_zh: "沿著北投溪往上步行約 8 分鐘抵達地熱谷，終年水溫高達 80～100 度、煙霧繚繞如仙境，環湖步道平緩好走。",
             spot_desc_en: "Stroll 8 mins upstream to Thermal Valley, where steaming jade-green geothermal waters create a mystical mist.",
             spot_desc_ja: "北投渓沿いを徒歩約8分。水温80〜100度のエメラルドグリーンの源泉から立ち込める湯けむりは幻想的な美しさです。",
-            food_zh: "地熱谷溫泉蛋 / 滿來溫泉拉麵（溫泉區人氣排隊店）",
-            food_en: "Thermal Valley Hot Spring Eggs / Manlai Hot Spring Ramen",
-            food_ja: "地熱谷名物の温泉卵／満来温泉ラーメン",
+            food_zh: "滿來溫泉拉麵",
+            food_en: "Manlai Hot Spring Ramen",
+            food_ja: "滿來溫泉拉麵",
             map_url: "https://maps.google.com/?q=北投地熱谷"
           },
           {
@@ -475,9 +696,9 @@
             spot_desc_zh: "挑選北投溫泉區內的質感湯屋（如日勝生加賀屋、水美溫泉會館或瀧乃湯），享受有「牛奶湯」美譽的天然白磺泉消除疲勞。",
             spot_desc_en: "Unwind in a private hot spring room with Beitou's milky-white sulfur water to recharge before dinner.",
             spot_desc_ja: "「美人の湯」とも呼ばれる乳白色の白硫黄泉の貸切風呂（湯屋）でゆっくり入浴し、旅の疲れをリフレッシュ。",
-            food_zh: "泡湯後享用溫泉飯店下午茶或北投本土紅茶",
-            food_en: "Post-bath refreshments or traditional Beitou iced black tea",
-            food_ja: "湯上がりに伝統の北投アイスティーでひと息",
+            food_zh: "",
+            food_en: "",
+            food_ja: "",
             map_url: "https://maps.google.com/?q=新北投溫泉"
           },
           {
@@ -488,9 +709,9 @@
             spot_desc_zh: "回程步行至北投站旁的北投中繼市場，品嚐台北最道地的庶民排隊美食後，搭捷運約 30 分鐘即可輕鬆返回喜瑞飯店。",
             spot_desc_en: "Stop by Beitou Market near the station for iconic local comfort food before taking the 30-minute MRT ride back to the hotel.",
             spot_desc_ja: "帰路に北投駅近くの市場へ立ち寄り、台北屈指の人気ローカルフードを味わってからMRTで約30分でホテルへ戻れます。",
-            food_zh: "矮仔財滷肉飯 / 營養蚵仔 / 陳家剉冰",
-            food_en: "Aizaicai Braised Pork Rice / Oyster Soup / Chen's Shaved Ice",
-            food_ja: "矮仔財魯肉飯（絶品ルーローハン）／栄養牡蠣スープ／陳家かき氷",
+            food_zh: "矮仔財滷肉飯",
+            food_en: "Aizaicai Braised Pork Rice",
+            food_ja: "矮仔財滷肉飯",
             map_url: "https://maps.google.com/?q=北投中繼市場"
           }
         ]
@@ -622,14 +843,15 @@
         tourCardBtn: "洽詢預約包車",
         viewItineraryBtn: "查看 {n} 站完整行程",
         stopsCountLabel: "共 {n} 個精選停靠站",
-        nearbyFoodLabel: "附近必吃美食",
+        nearbyFoodLabel: "附近必吃美食（點擊店家看介紹）",
         stopMapBtn: "地圖定位",
-        itinFooterTip: "出發點：喜瑞飯店（台北市中山區長安東路一段64號）",
+        itinFooterTip: "提示：點擊各站美食標籤可直接查看店家介紹",
         closeBtn: "關閉行程表",
+        backBtn: "返回",
         showingCount: "共顯示",
         placesUnit: "個精選項目",
         clickTip: "（點擊卡片可檢視照片與詳細介紹）",
-        clickTipItinerary: "（點擊半日遊卡片可展開時間軸與附近美食推薦）",
+        clickTipItinerary: "（點擊半日遊卡片可展開時間軸與附近美食介紹）",
         walkMins: "步行約 {m} 分鐘",
         openMap: "Google 地圖導航",
         viewPhoto: "查看照片",
@@ -657,10 +879,11 @@
         tourCardBtn: "Inquire / Book Tour",
         viewItineraryBtn: "View {n}-Stop Timeline",
         stopsCountLabel: "{n} Curated Stops",
-        nearbyFoodLabel: "Nearby Must-Eats",
+        nearbyFoodLabel: "Nearby Must-Eats (Tap for details)",
         stopMapBtn: "Google Maps",
-        itinFooterTip: "Origin: Ambience Hotel (No. 64, Sec. 1, Chang'an E. Rd.)",
+        itinFooterTip: "Tip: Tap any food badge to view restaurant details",
         closeBtn: "Close Itinerary",
+        backBtn: "Back",
         showingCount: "Showing",
         placesUnit: "curated picks",
         clickTip: "(Tap a card for photos & details)",
@@ -692,10 +915,11 @@
         tourCardBtn: "チャーター予約・相談",
         viewItineraryBtn: "全{n}スポット行程表を見る",
         stopsCountLabel: "全 {n} スポット巡り",
-        nearbyFoodLabel: "周辺のおすすめグルメ",
+        nearbyFoodLabel: "周辺のおすすめグルメ（タップで詳細）",
         stopMapBtn: "地図を開く",
-        itinFooterTip: "出発地：アンビエンスホテル（台北市中山区長安東路一段64号）",
+        itinFooterTip: "ヒント：グルメタグをタップするとお店の詳細が表示されます",
         closeBtn: "行程表を閉じる",
+        backBtn: "戻る",
         showingCount: "全",
         placesUnit: "件のおすすめ",
         clickTip: "（カードをタップすると写真と詳細を表示）",
@@ -836,7 +1060,7 @@
       if (/^\d+$/.test(val)) {
         return `🚶 ${I18N[currentLang].walkMins.replace("{m}", val)}`;
       }
-      return `🚐 ${val}`;
+      return `📍 ${val}`;
     }
 
     function setCategory(cat) {
@@ -1006,6 +1230,53 @@
       }).join("");
     }
 
+    // =========================================================================
+    // 點擊半日遊內的店家標籤，自動查找完整店家資料並彈出詳細介紹視窗
+    // =========================================================================
+    function openSpotFoodDetail(rawFoodName, fallbackQueryName) {
+      const cleanKey = (rawFoodName || "").replace(/（.*?）|\(.*?\)/g, "").trim();
+
+      // 1. 優先從「工作表1（周邊步行圈）」試算表資料中比對是否已收錄
+      const matchedFromSheet = localPlacesData.find(p => {
+        const names = [p.name_zh, p.name_en, p.name_ja].filter(Boolean).join(" ").toLowerCase();
+        return names.includes(cleanKey.toLowerCase()) || names.includes((fallbackQueryName || "").toLowerCase());
+      });
+
+      if (matchedFromSheet) {
+        renderPlaceModalContent(matchedFromSheet, true);
+        return;
+      }
+
+      // 2. 其次從內建半日遊店家百科字典查找
+      const dictKey = Object.keys(SPOT_FOOD_DIRECTORY).find(k =>
+        k.toLowerCase().includes(cleanKey.toLowerCase()) || cleanKey.toLowerCase().includes(k.toLowerCase())
+      );
+
+      if (dictKey) {
+        renderPlaceModalContent(SPOT_FOOD_DIRECTORY[dictKey], true);
+        return;
+      }
+
+      // 3. 若為試算表自行新增的全新店家名稱，自動組裝精簡卡片並直接提供 Google 地圖搜尋導航
+      const fallbackItem = {
+        category: "food",
+        walk_mins: "",
+        name_zh: rawFoodName,
+        name_en: fallbackQueryName || rawFoodName,
+        name_ja: fallbackQueryName || rawFoodName,
+        tag_zh: "半日遊順路推薦美食",
+        tag_en: "Recommended Stop Along Half-Day Route",
+        tag_ja: "半日コース立ち寄りおすすめグルメ",
+        desc_zh: `點擊下方按鈕可直接開啟 Google 地圖查看「${rawFoodName}」的最新營業時間、菜單與旅客評論。`,
+        desc_en: `Tap the button below to view hours, menu, and reviews for "${fallbackQueryName || rawFoodName}" on Google Maps.`,
+        desc_ja: `下のボタンから「${fallbackQueryName || rawFoodName}」の営業時間や口コミをGoogleマップで確認できます。`,
+        hours: "",
+        map_url: `https://maps.google.com/?q=${encodeURIComponent(rawFoodName)}`,
+        image_url: ""
+      };
+      renderPlaceModalContent(fallbackItem, true);
+    }
+
     function openItineraryModal(idx) {
       const item = currentFilteredPlaces[idx];
       if (!item) return;
@@ -1029,7 +1300,27 @@
       timelineEl.innerHTML = stops.map(stop => {
         const spotTitle = getLocalizedField(stop, "spot");
         const spotDesc = getLocalizedField(stop, "spot_desc");
-        const foodText = getLocalizedField(stop, "food");
+        const foodDisplayRaw = getLocalizedField(stop, "food");
+        const foodZhRaw = stop.food_zh || foodDisplayRaw;
+
+        // 將 "/" 分隔的多間美食拆成可點擊的獨立按鈕
+        const displayNames = foodDisplayRaw ? foodDisplayRaw.split("/").map(s => s.trim()).filter(Boolean) : [];
+        const zhNames = foodZhRaw ? foodZhRaw.split("/").map(s => s.trim()).filter(Boolean) : [];
+
+        const foodButtonsHtml = displayNames.map((dispName, fIdx) => {
+          const lookupKey = zhNames[fIdx] || dispName;
+          const safeLookup = lookupKey.replace(/'/g, "\\'");
+          const safeDisp = dispName.replace(/'/g, "\\'");
+          return `
+            <button type="button"
+                    onclick="openSpotFoodDetail('${safeLookup}', '${safeDisp}')"
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-[#B48A5A] text-amber-900 hover:text-white border border-amber-300/90 hover:border-[#B48A5A] text-xs font-semibold shadow-xs transition">
+              <span>🍜</span>
+              <span>${dispName}</span>
+              <span class="opacity-70">›</span>
+            </button>
+          `;
+        }).join("");
 
         return `
           <div class="relative">
@@ -1048,12 +1339,13 @@
             <h4 class="font-bold text-base text-slate-900 mb-1">${spotTitle}</h4>
             <p class="text-sm text-slate-600 leading-relaxed mb-2.5">${spotDesc}</p>
 
-            ${foodText ? `
-              <div class="bg-amber-50/80 border border-amber-200/80 rounded-xl px-3.5 py-2.5 flex items-start gap-2">
-                <span class="text-sm shrink-0">🍜</span>
-                <div class="text-xs">
-                  <span class="font-bold text-amber-900">${I18N[currentLang].nearbyFoodLabel}：</span>
-                  <span class="text-amber-800 font-medium">${foodText}</span>
+            ${displayNames.length > 0 ? `
+              <div class="bg-amber-50/70 border border-amber-200/80 rounded-xl p-3 space-y-2">
+                <p class="text-[11px] font-bold text-amber-900 flex items-center gap-1">
+                  <span>✨ ${I18N[currentLang].nearbyFoodLabel}</span>
+                </p>
+                <div class="flex flex-wrap gap-2">
+                  ${foodButtonsHtml}
                 </div>
               </div>
             ` : ""}
@@ -1071,8 +1363,11 @@
     function openPlaceModal(idx) {
       const item = currentFilteredPlaces[idx];
       if (!item) return;
+      renderPlaceModalContent(item, currentMode === "local");
+    }
 
-      const defaultCat = currentMode === "local" ? "food" : "charter";
+    function renderPlaceModalContent(item, isPlaceMapMode) {
+      const defaultCat = isPlaceMapMode ? "food" : "charter";
       const catKey = (item.category || defaultCat).toLowerCase();
       const style = CATEGORY_STYLES[catKey] || CATEGORY_STYLES[defaultCat];
       const name = getLocalizedField(item, "name");
@@ -1089,13 +1384,21 @@
       document.getElementById("modalDesc").textContent = desc || "";
       document.getElementById("modalHours").textContent = item.hours ? `🕒 ${item.hours}` : "";
       document.getElementById("modalCatBadge").textContent = `${style.icon} ${catLabel}`;
-      document.getElementById("modalWalkBadge").textContent = badgeRight;
+
+      const walkBadgeEl = document.getElementById("modalWalkBadge");
+      if (badgeRight) {
+        walkBadgeEl.textContent = badgeRight;
+        walkBadgeEl.classList.remove("hidden");
+      } else {
+        walkBadgeEl.classList.add("hidden");
+      }
+
       document.getElementById("modalFallbackIcon").textContent = style.icon;
 
       const actionBtn = document.getElementById("modalActionBtn");
       const actionText = document.getElementById("modalActionText");
-      if (currentMode === "local") {
-        actionBtn.href = item.map_url || "#";
+      if (isPlaceMapMode) {
+        actionBtn.href = item.map_url || `https://maps.google.com/?q=${encodeURIComponent(name)}`;
         actionText.textContent = I18N[currentLang].openMap;
       } else {
         actionBtn.href = item.map_url || HOTEL_LINE_URL;
@@ -1131,7 +1434,12 @@
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
-        closePlaceModal();
+        // 若同時開著第二層店家介紹視窗，按 ESC 先關掉店家視窗，保留半日遊時間軸
+        const placeModal = document.getElementById("placeModal");
+        if (!placeModal.classList.contains("hidden")) {
+          closePlaceModal();
+          return;
+        }
         closeItineraryModal();
         document.getElementById("setupModal").classList.add("hidden");
       }
@@ -1190,7 +1498,6 @@
       }).filter(item => item.name_zh || item.name_en || item.name_ja);
     }
 
-    // 將試算表的橫向 stop1~stop4 欄位轉為行程時間軸陣列
     function mapRowToItinerary(row) {
       const stops = [];
       for (let i = 1; i <= 4; i++) {

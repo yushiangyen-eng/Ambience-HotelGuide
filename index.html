@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>喜瑞飯店 Ambience Hotel｜周邊美食・半日遊行程・包車探索指南</title>
+  <title>喜瑞飯店 Ambience Hotel｜周邊美食・包車探索指南</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,7 +39,7 @@
             喜瑞飯店｜旅遊與周邊探索指南
           </h1>
           <p class="text-slate-300 text-sm sm:text-base mt-1.5 max-w-xl" data-i18n="subtitle">
-            步行可達的道地台式美食與條通酒吧、精選自由行半日遊路線，以及北台灣專車包車服務。
+            步行可達的道地台式美食與條通酒吧，以及北台灣專車包車服務。
           </p>
         </div>
 
@@ -57,20 +57,20 @@
         </div>
       </div>
 
-      <!-- 主頻道切換 Tabs（三大頻道） -->
-      <div class="grid grid-cols-3 gap-2 sm:max-w-xl pt-1">
+      <!-- 主頻道切換 Tabs（由 ENABLE_ITINERARY_TAB 控制是否顯示半日遊） -->
+      <div id="mainModeTabs" class="grid grid-cols-2 gap-2.5 sm:max-w-md pt-1">
         <button onclick="switchMode('local')" id="tabLocal"
-                class="flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-xl text-xs sm:text-sm font-bold bg-[#B48A5A] text-white shadow-md transition">
+                class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold bg-[#B48A5A] text-white shadow-md transition">
           <span>🚶</span>
           <span data-i18n="modeLocal">周邊步行圈</span>
         </button>
         <button onclick="switchMode('itinerary')" id="tabItinerary"
-                class="flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-white/10 hover:bg-white/15 text-slate-200 border border-white/15 transition">
+                class="hidden items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold bg-white/10 hover:bg-white/15 text-slate-200 border border-white/15 transition">
           <span>🗺️</span>
           <span data-i18n="modeItinerary">推薦半日遊</span>
         </button>
         <button onclick="switchMode('tour')" id="tabTour"
-                class="flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-white/10 hover:bg-white/15 text-slate-200 border border-white/15 transition">
+                class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold bg-white/10 hover:bg-white/15 text-slate-200 border border-white/15 transition">
           <span>🚐</span>
           <span data-i18n="modeTour">包車接駁</span>
         </button>
@@ -144,10 +144,9 @@
     </div>
   </footer>
 
-  <!-- 1. 半日遊行程時間軸視窗（z-40，點開半日遊卡片時彈出） -->
+  <!-- 1. 半日遊行程時間軸視窗（已保留完整功能，待重新開啟分頁後即可使用） -->
   <div id="itineraryModal" onclick="if(event.target === this) closeItineraryModal()" class="hidden fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[88vh] flex flex-col overflow-hidden shadow-2xl border border-stone-200">
-      <!-- 彈窗頂部標題列 -->
       <div class="bg-[#1E293B] text-white p-5 sm:p-6 flex items-start justify-between gap-4 shrink-0">
         <div>
           <div class="flex items-center gap-2 mb-2">
@@ -162,17 +161,13 @@
         </button>
       </div>
 
-      <!-- 彈窗可捲動時間軸內容 -->
       <div class="p-5 sm:p-6 overflow-y-auto space-y-5 flex-1">
         <p id="itinModalSummary" class="text-sm text-slate-600 bg-[#FAF9F6] p-3.5 rounded-xl border border-stone-200/80 leading-relaxed"></p>
-
-        <!-- 3~4 站時間軸列表 -->
         <div id="itinStopsTimeline" class="relative pl-6 border-l-2 border-[#B48A5A]/40 space-y-6 ml-2"></div>
       </div>
 
-      <!-- 彈窗底部 -->
       <div class="bg-stone-50 border-t border-stone-200/80 px-5 py-3.5 flex items-center justify-between gap-3 shrink-0">
-        <span class="text-xs text-slate-500" data-i18n="itinFooterTip">點擊下方店家標籤可查看詳細介紹與地圖</span>
+        <span class="text-xs text-slate-500" data-i18n="itinFooterTip">提示：點擊各站美食標籤可直接查看店家介紹</span>
         <button onclick="closeItineraryModal()" class="px-4 py-2 rounded-xl bg-[#1E293B] hover:bg-slate-800 text-white text-xs font-semibold transition" data-i18n="closeBtn">
           關閉行程表
         </button>
@@ -180,7 +175,7 @@
     </div>
   </div>
 
-  <!-- 2. 店家 / 包車詳情視窗（z-50，比時間軸更高一層，可在半日遊內點擊店家直接跳出！） -->
+  <!-- 2. 店家 / 包車詳情視窗（Modal） -->
   <div id="placeModal" onclick="if(event.target === this) closePlaceModal()" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-stone-200">
       <div id="modalImageContainer" class="relative bg-stone-100">
@@ -229,13 +224,12 @@
   <div id="setupModal" onclick="if(event.target === this) toggleSetupModal()" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-stone-200 space-y-4">
       <div class="flex items-center justify-between">
-        <h3 class="font-bold text-base text-slate-800">Google 試算表串接「推薦半日遊」說明</h3>
+        <h3 class="font-bold text-base text-slate-800">試算表串接狀態與半日遊開關說明</h3>
         <button onclick="toggleSetupModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold">✕</button>
       </div>
       <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
-        <p><strong>1. 多間美食自動變按鈕：</strong>在半日遊試算表的 <code>stop1_food_zh</code> 欄位填入多間店名並用 <code>/</code> 分隔（例如：<code>福大山東蒸餃大王 / 茗香園冰室</code>），網頁會自動拆分成獨立的可點擊店家按鈕。</p>
-        <p><strong>2. 自動同步「工作表1」店家資料：</strong>點擊半日遊內的店家按鈕時，系統會自動比對您「工作表1」試算表是否已建檔該店家，若有則直接帶出完整介紹、照片與營業時間！</p>
-        <p><strong>3. 發佈半日遊工作表：</strong>下載下方 CSV 範本匯入試算表新增分頁，發佈為 CSV 後將網址貼入 <code>ITINERARY_SHEET_CSV_URL</code> 即可即時更新。</p>
+        <p><strong>目前狀態：</strong>「推薦半日遊」分頁已暫時隱藏（程式碼與內建行程資料完整保留）。</p>
+        <p><strong>重新開啟方式：</strong>等資料更新完成後，將程式碼第 218 行的 <code>const ENABLE_ITINERARY_TAB = false;</code> 改為 <code>true</code>，網頁就會立刻恢復顯示「🗺️ 推薦半日遊」分頁。</p>
       </div>
       <div class="pt-2 flex flex-wrap gap-2">
         <button onclick="downloadItineraryCSV()" class="px-3.5 py-2 bg-stone-100 hover:bg-stone-200 text-slate-700 rounded-lg text-xs font-medium transition">
@@ -249,6 +243,11 @@
   </div>
 
   <script>
+    // =========================================================================
+    // 0. 半日遊分頁總開關（false = 暫時隱藏關閉；資料準備好後改為 true 即可重新開啟）
+    // =========================================================================
+    const ENABLE_ITINERARY_TAB = false;
+
     // =========================================================================
     // 1. 飯店周邊步行圈 CSV 網址（已綁定您的工作表1）
     // =========================================================================
@@ -289,9 +288,7 @@
       }
     ];
 
-    // =========================================================================
-    // 半日遊推薦店家專屬百科字典（當點擊半日遊內的店家按鈕時，若工作表1尚未收錄，會自動讀取這裡的詳細介紹）
-    // =========================================================================
+    // 半日遊推薦店家專屬百科字典
     const SPOT_FOOD_DIRECTORY = {
       "福大山東蒸餃大王": {
         category: "food",
@@ -505,9 +502,7 @@
       }
     };
 
-    // =========================================================================
-    // 推薦半日遊內建資料（每條半日遊含 3~4 個停靠站：景點介紹 + 附近必吃美食）
-    // =========================================================================
+    // 推薦半日遊內建資料
     const DEFAULT_ITINERARY_PLACES = [
       {
         category: "culture",
@@ -826,7 +821,7 @@
       zh: {
         originTag: "出發點：台北市中山區長安東路一段64號",
         title: "喜瑞飯店｜旅遊與周邊探索指南",
-        subtitle: "步行可達的道地台式美食與條通酒吧、精選自由行半日遊路線，以及北台灣專車包車服務。",
+        subtitle: "步行可達的道地台式美食與條通酒吧，以及北台灣專車包車服務。",
         modeLocal: "周邊步行圈",
         modeItinerary: "推薦半日遊",
         modeTour: "包車接駁",
@@ -861,8 +856,8 @@
       },
       en: {
         originTag: "Origin: No. 64, Sec. 1, Chang'an E. Rd., Zhongshan Dist.",
-        title: "Ambience Hotel｜Neighborhood, Half-Day Trips & Charter Guide",
-        subtitle: "Walkable local eats, curated half-day self-guided itineraries with food stops, and private car charters.",
+        title: "Ambience Hotel｜Neighborhood & Private Charter Guide",
+        subtitle: "Walkable local eats, atmospheric bars, and private car charters across Northern Taiwan.",
         modeLocal: "Walking Distance",
         modeItinerary: "Half-Day Trips",
         modeTour: "Private Charter",
@@ -897,8 +892,8 @@
       },
       ja: {
         originTag: "出発地：台北市中山区長安東路一段64号（アンビエンスホテル）",
-        title: "アンビエンスホテル｜周辺グルメ・半日モデルコース・貸切案内",
-        subtitle: "ホテル徒歩圏内の台湾グルメ・条通バーから、周辺グルメ付きの半日観光モデルコース・貸切チャーターまでご案内します。",
+        title: "アンビエンスホテル｜周辺グルメ＆貸切観光案内",
+        subtitle: "ホテル徒歩圏内の台湾グルメ・条通バーから、北台湾の貸切観光チャーターまでご案内します。",
         modeLocal: "周辺（徒歩圏内）",
         modeItinerary: "おすすめ半日旅",
         modeTour: "貸切チャーター",
@@ -934,7 +929,7 @@
     };
 
     let currentLang = "zh";
-    let currentMode = "local"; // 'local' | 'itinerary' | 'tour'
+    let currentMode = "local";
     let currentCategory = "all";
     let currentWalkFilter = "all";
     let localPlacesData = [...DEFAULT_LOCAL_PLACES];
@@ -947,7 +942,25 @@
 
     document.getElementById("charterBannerBtn").href = HOTEL_LINE_URL;
 
+    // 依據 ENABLE_ITINERARY_TAB 動態顯示或隱藏「推薦半日遊」按鈕
+    function applyItineraryTabVisibility() {
+      const container = document.getElementById("mainModeTabs");
+      const itinBtn = document.getElementById("tabItinerary");
+      if (ENABLE_ITINERARY_TAB) {
+        container.className = "grid grid-cols-3 gap-2 sm:max-w-xl pt-1";
+        itinBtn.classList.remove("hidden");
+        itinBtn.classList.add("flex");
+      } else {
+        container.className = "grid grid-cols-2 gap-2.5 sm:max-w-md pt-1";
+        itinBtn.classList.add("hidden");
+        itinBtn.classList.remove("flex");
+      }
+    }
+
     function switchMode(mode) {
+      if (mode === "itinerary" && !ENABLE_ITINERARY_TAB) {
+        mode = "local";
+      }
       currentMode = mode;
       currentCategory = "all";
       currentWalkFilter = "all";
@@ -960,9 +973,10 @@
       };
 
       Object.entries(tabs).forEach(([key, el]) => {
+        if (key === "itinerary" && !ENABLE_ITINERARY_TAB) return;
         el.className = key === mode
-          ? "flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-xl text-xs sm:text-sm font-bold bg-[#B48A5A] text-white shadow-md transition"
-          : "flex items-center justify-center gap-1.5 py-2.5 px-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-white/10 hover:bg-white/15 text-slate-200 border border-white/15 transition";
+          ? "flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold bg-[#B48A5A] text-white shadow-md transition"
+          : "flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold bg-white/10 hover:bg-white/15 text-slate-200 border border-white/15 transition";
       });
 
       const walkGroup = document.getElementById("walkFilterGroup");
@@ -1116,7 +1130,6 @@
 
       emptyState.classList.add("hidden");
 
-      // 模式二：推薦半日遊卡片渲染
       if (currentMode === "itinerary") {
         grid.innerHTML = currentFilteredPlaces.map((item, idx) => {
           const catKey = (item.category || "culture").toLowerCase();
@@ -1153,7 +1166,6 @@
               ${tag ? `<p class="text-xs font-semibold text-[#B48A5A] mb-2">${tag}</p>` : ""}
               <p class="text-sm text-slate-600 leading-relaxed line-clamp-2 mb-3.5">${desc}</p>
 
-              <!-- 停靠站快速預覽框 -->
               <div class="bg-[#FAF9F6] rounded-xl p-3 border border-stone-200/70 space-y-1.5 mb-4 flex-1">
                 ${stopsPreviewHtml}
               </div>
@@ -1170,7 +1182,6 @@
         return;
       }
 
-      // 模式一（周邊步行圈）與 模式三（包車接駁）卡片渲染
       grid.innerHTML = currentFilteredPlaces.map((item, idx) => {
         const defaultCat = currentMode === "local" ? "food" : "charter";
         const catKey = (item.category || defaultCat).toLowerCase();
@@ -1230,13 +1241,9 @@
       }).join("");
     }
 
-    // =========================================================================
-    // 點擊半日遊內的店家標籤，自動查找完整店家資料並彈出詳細介紹視窗
-    // =========================================================================
     function openSpotFoodDetail(rawFoodName, fallbackQueryName) {
       const cleanKey = (rawFoodName || "").replace(/（.*?）|\(.*?\)/g, "").trim();
 
-      // 1. 優先從「工作表1（周邊步行圈）」試算表資料中比對是否已收錄
       const matchedFromSheet = localPlacesData.find(p => {
         const names = [p.name_zh, p.name_en, p.name_ja].filter(Boolean).join(" ").toLowerCase();
         return names.includes(cleanKey.toLowerCase()) || names.includes((fallbackQueryName || "").toLowerCase());
@@ -1247,7 +1254,6 @@
         return;
       }
 
-      // 2. 其次從內建半日遊店家百科字典查找
       const dictKey = Object.keys(SPOT_FOOD_DIRECTORY).find(k =>
         k.toLowerCase().includes(cleanKey.toLowerCase()) || cleanKey.toLowerCase().includes(k.toLowerCase())
       );
@@ -1257,7 +1263,6 @@
         return;
       }
 
-      // 3. 若為試算表自行新增的全新店家名稱，自動組裝精簡卡片並直接提供 Google 地圖搜尋導航
       const fallbackItem = {
         category: "food",
         walk_mins: "",
@@ -1303,7 +1308,6 @@
         const foodDisplayRaw = getLocalizedField(stop, "food");
         const foodZhRaw = stop.food_zh || foodDisplayRaw;
 
-        // 將 "/" 分隔的多間美食拆成可點擊的獨立按鈕
         const displayNames = foodDisplayRaw ? foodDisplayRaw.split("/").map(s => s.trim()).filter(Boolean) : [];
         const zhNames = foodZhRaw ? foodZhRaw.split("/").map(s => s.trim()).filter(Boolean) : [];
 
@@ -1434,7 +1438,6 @@
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
-        // 若同時開著第二層店家介紹視窗，按 ESC 先關掉店家視窗，保留半日遊時間軸
         const placeModal = document.getElementById("placeModal");
         if (!placeModal.classList.contains("hidden")) {
           closePlaceModal();
@@ -1637,6 +1640,7 @@
     }
 
     // 啟動初始化
+    applyItineraryTabVisibility();
     renderCategoryTabs();
     renderPlaces();
     loadAllSheets();

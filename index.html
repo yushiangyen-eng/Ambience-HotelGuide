@@ -178,18 +178,19 @@
           <!-- 防機器人蜜罐隱藏欄位 -->
           <input type="text" name="_honey" id="tf_honey" style="display:none" tabindex="-1" autocomplete="off" />
 
-          <!-- 1. 服務類型與車型（車型與價格由試算表動態載入） -->
+          <!-- 1. 服務類型與車型（車型與價格依用車日期及試算表動態載入） -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_type">服務類型 Service Type *</label>
               <select id="tf_type" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]">
                 <option value="接機 Pick-up (桃園機場 TPE ➔ 喜瑞飯店)" data-i18n="tf_opt_pickup">接機 Pick-up（桃園機場 TPE ➔ 喜瑞飯店）</option>
+                <option value="送機 Drop-off (喜瑞飯店 ➔ 桃園機場 TPE)" data-i18n="tf_opt_dropoff">送機 Drop-off（喜瑞飯店 ➔ 桃園機場 TPE）</option>
               </select>
             </div>
             <div>
               <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_car">選擇車型 Vehicle Type *</label>
               <select id="tf_car" onchange="calculateTransferFare()" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]">
-                <!-- 由 renderTransferOptions() 依據試算表動態產生 -->
+                <!-- 由 renderTransferOptions() 依據用車日期與試算表動態產生 -->
               </select>
             </div>
           </div>
@@ -198,7 +199,7 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_date">用車日期 Date *</label>
-              <input type="date" id="tf_date" onchange="calculateTransferFare()" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+              <input type="date" id="tf_date" onchange="handleTransferDateChange()" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
             </div>
             <div>
               <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_time">航班 / 上車時間 Time *</label>
@@ -411,8 +412,8 @@
         <button onclick="toggleSetupModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold">✕</button>
       </div>
       <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
-        <p><strong>1. FormSubmit 背景寄信設定：</strong>目前已綁定隨機亂碼收件 Hash ID 隱藏櫃檯信箱，表單提交後將自動轉寄至櫃檯公務信箱。</p>
-        <p><strong>2. 機場接送機價目試算表：</strong>在試算表建立「接送機價目」分頁並發布為 CSV，填入程式碼中的 <code>TRANSFER_SHEET_CSV_URL</code>，即可隨時修改車型價格、特殊日期區間加價、夜間加成時段與嬰兒座椅單價。</p>
+        <p><strong>1. 2027/01/01 跨年自動調價：</strong>2026/12/31 前用車顯示 1–2 人座 NT$ 1,300；2027/01/01（含）起自動切換為 NT$ 1,400，4–6 人座維持 NT$ 1,600。</p>
+        <p><strong>2. 機場接送機價目試算表：</strong>在試算表「接送機價目」分頁修改價格或設定 <code>effective_date</code>（例：<code>2027-01-01</code>），即可優先覆寫網頁預設費率。</p>
       </div>
       <div class="pt-2 flex flex-wrap gap-2">
         <button onclick="downloadItineraryCSV()" class="px-3.5 py-2 bg-stone-100 hover:bg-stone-200 text-slate-700 rounded-lg text-xs font-medium transition cursor-pointer">
@@ -463,7 +464,7 @@
     // 喜瑞飯店官方 LINE 預約網址
     const HOTEL_LINE_URL = "https://lin.ee/nSZAeFK";
 
-    // 機場接送機預設費率設定（若已綁定 TRANSFER_SHEET_CSV_URL 會自動由試算表覆寫）
+    // 機場接送機預設費率設定（含 2027-01-01 起 1-2 人座調漲至 1400，4-6 人座維持 1600）
     const DEFAULT_TRANSFER_CONFIG = {
       vehicles: [
         {
@@ -471,14 +472,18 @@
           name_zh: "1–2 人座（一般轎車／休旅）",
           name_en: "1–2 Pax (Sedan / SUV)",
           name_ja: "1〜2名乗り（セダン／SUV）",
-          price: 1300
+          price: 1300,
+          future_effective_date: "2027-01-01",
+          future_price: 1400
         },
         {
           id: "van",
           name_zh: "4–6 人座（商務九人座）",
           name_en: "4–6 Pax (Business Van)",
           name_ja: "4〜6名乗り（ビジネスワゴン）",
-          price: 1600
+          price: 1600,
+          future_effective_date: "2027-01-01",
+          future_price: 1600
         }
       ],
       seasonal_rates: [
@@ -1141,7 +1146,7 @@
         tf_lbl_booking: "訂房編號 Booking ID（選填）",
         tf_lbl_notes: "備註 Notes（航廈資訊等）",
         tf_fare_heading: "💰 預估單趟車資 Estimated Fare",
-        tf_pay_note: "支付現金予司機",
+        tf_pay_note: "支付現金",
         tf_submit_btn: "✉️ 立即送出預約至飯店櫃檯",
         tf_sending_btn: "⏳ 預約資料傳送中，請稍候...",
         tf_copy_btn: "📋 複製文字傳 LINE",
@@ -1204,6 +1209,7 @@
         tf_lbl_time: "Flight / Time *",
         tf_lbl_flight: "Flight No. *",
         tf_lbl_name: "Guest Name (As on Passport) *",
+        tf_lbl_email: "Email *",
         tf_lbl_contact: "Phone / LINE / WhatsApp *",
         tf_lbl_pax: "Passengers *",
         tf_lbl_luggage: "Luggage Count & Sizes *",
@@ -1376,6 +1382,7 @@
         transferStatusTip.classList.remove("hidden");
         transferSection.classList.remove("hidden");
         badge.textContent = transferSyncStatus;
+        renderTransferOptions();
         calculateTransferFare();
         return;
       }
@@ -1950,16 +1957,29 @@
     });
 
     // =========================================================================
-    // 機場接送機預約邏輯（FormSubmit 背景寄信 + Google 試算表動態價目）
+    // 機場接送機預約邏輯（含 2027-01-01 跨年自動調價 + Google 試算表動態價目）
     // =========================================================================
+    function getEffectiveVehiclePrice(vehicle, dateStr) {
+      let effectivePrice = Number(vehicle.price) || 1300;
+      const effectiveDate = vehicle.future_effective_date || "2027-01-01";
+      const futurePrice = Number(vehicle.future_price);
+
+      if (dateStr && effectiveDate && dateStr >= effectiveDate && !isNaN(futurePrice) && futurePrice > 0) {
+        effectivePrice = futurePrice;
+      }
+      return effectivePrice;
+    }
+
     function renderTransferOptions() {
       const carSelect = document.getElementById("tf_car");
       const prevCarIdx = carSelect.selectedIndex >= 0 ? carSelect.selectedIndex : 0;
+      const selectedDate = document.getElementById("tf_date")?.value || "";
 
       carSelect.innerHTML = transferConfig.vehicles.map(v => {
         const label = getLocalizedField(v, "name");
         const bilingualLabel = v.name_zh !== v.name_en ? `${v.name_zh} (${v.name_en})` : v.name_zh;
-        return `<option value="${v.price}" data-label="${bilingualLabel}">${label} — NT$ ${Number(v.price).toLocaleString()}</option>`;
+        const unitPrice = getEffectiveVehiclePrice(v, selectedDate);
+        return `<option value="${unitPrice}" data-label="${bilingualLabel}">${label} — NT$ ${unitPrice.toLocaleString()}</option>`;
       }).join("");
 
       if (prevCarIdx < carSelect.options.length) {
@@ -1981,6 +2001,11 @@
       }
       seatSelect.innerHTML = seatOptionsHtml;
       seatSelect.value = prevSeatVal;
+    }
+
+    function handleTransferDateChange() {
+      renderTransferOptions();
+      calculateTransferFare();
     }
 
     function timeToMinutes(hhmm) {
@@ -2194,6 +2219,7 @@
     function resetTransferFormUI() {
       document.getElementById("transferForm").reset();
       document.getElementById("tf_date").valueAsDate = new Date();
+      renderTransferOptions();
       calculateTransferFare();
       document.getElementById("tf_success_box").classList.add("hidden");
       document.getElementById("transferForm").classList.remove("hidden");
@@ -2281,12 +2307,20 @@
         const price = Number(r.price);
 
         if (type === "vehicle" && !isNaN(price) && price > 0) {
+          const defaultVehicle = DEFAULT_TRANSFER_CONFIG.vehicles.find(dv => dv.id === r.id);
+          const sheetEffectiveDate = normalizeSheetDate(r.effective_date);
+          const sheetFuturePrice = Number(r.future_price);
+
           vehicles.push({
             id: r.id || `v_${vehicles.length + 1}`,
             name_zh: r.name_zh || r.name_en || "專車接送",
             name_en: r.name_en || r.name_zh || "Private Car",
             name_ja: r.name_ja || r.name_en || r.name_zh || "専用車",
-            price
+            price,
+            future_effective_date: sheetEffectiveDate || (defaultVehicle ? defaultVehicle.future_effective_date : ""),
+            future_price: (!isNaN(sheetFuturePrice) && sheetFuturePrice > 0)
+              ? sheetFuturePrice
+              : (defaultVehicle ? defaultVehicle.future_price : price)
           });
         } else if (type === "season") {
           const startDate = normalizeSheetDate(r.start_date);
@@ -2434,13 +2468,13 @@
     }
 
     function downloadTransferCSV() {
-      const headers = ["item_type", "id", "name_zh", "name_en", "name_ja", "price", "night_start", "night_end", "start_date", "end_date"];
+      const headers = ["item_type", "id", "name_zh", "name_en", "name_ja", "price", "effective_date", "future_price", "night_start", "night_end", "start_date", "end_date"];
       const sampleRows = [
-        ["vehicle", "sedan", "1–2 人座（一般轎車／休旅）", "1–2 Pax (Sedan / SUV)", "1〜2名乗り（セダン／SUV）", "1300", "", "", "", ""],
-        ["vehicle", "van", "4–6 人座（商務九人座）", "4–6 Pax (Business Van)", "4〜6名乗り（ビジネスワゴン）", "1600", "", "", "", ""],
-        ["season", "cny_2027", "春節期間加成", "Lunar New Year Surcharge", "春節期間割増", "500", "", "", "2027-02-05", "2027-02-10"],
-        ["night", "night_fee", "夜間時段加成", "Night Surcharge", "深夜早朝割増", "100", "22:00", "06:00", "", ""],
-        ["baby_seat", "seat_fee", "嬰兒座椅（單張）", "Baby Seat (Per Seat)", "チャイルドシート（1台）", "200", "", "", "", ""]
+        ["vehicle", "sedan", "1–2 人座（一般轎車／休旅）", "1–2 Pax (Sedan / SUV)", "1〜2名乗り（セダン／SUV）", "1300", "2027-01-01", "1400", "", "", "", ""],
+        ["vehicle", "van", "4–6 人座（商務九人座）", "4–6 Pax (Business Van)", "4〜6名乗り（ビジネスワゴン）", "1600", "2027-01-01", "1600", "", "", "", ""],
+        ["season", "cny_2027", "春節期間加成", "Lunar New Year Surcharge", "春節期間割増", "500", "", "", "", "", "2027-02-05", "2027-02-10"],
+        ["night", "night_fee", "夜間時段加成", "Night Surcharge", "深夜早朝割増", "100", "", "", "22:00", "06:00", "", ""],
+        ["baby_seat", "seat_fee", "嬰兒座椅（單張）", "Baby Seat (Per Seat)", "チャイルドシート（1台）", "200", "", "", "", "", "", ""]
       ];
       const csvLines = [
         headers.join(","),

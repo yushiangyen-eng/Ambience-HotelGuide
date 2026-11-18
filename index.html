@@ -175,7 +175,9 @@
 
         <!-- 表單本體 -->
         <form id="transferForm" class="p-5 sm:p-6 space-y-4 text-sm text-slate-700" onsubmit="handleTransferSubmit(event)">
-          
+          <!-- 防機器人蜜罐隱藏欄位 -->
+          <input type="text" name="_honey" id="tf_honey" style="display:none" tabindex="-1" autocomplete="off" />
+
           <!-- 1. 服務類型與車型（車型與價格由試算表動態載入） -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -410,8 +412,8 @@
         <button onclick="toggleSetupModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold">✕</button>
       </div>
       <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
-        <p><strong>1. FormSubmit 背景寄信啟用：</strong>首次部署後請送出一筆測試預約，並至 <code>ambience@taipeiinn.com.tw</code> 點擊「Activate Form」完成信箱啟用。</p>
-        <p><strong>2. 機場接送機價目試算表：</strong>在試算表建立「接送機價目」分頁並發布為 CSV，填入程式碼中的 <code>TRANSFER_SHEET_CSV_URL</code>，即可隨時修改車型價格、夜間加成時段與嬰兒座椅單價。</p>
+        <p><strong>1. FormSubmit 背景寄信設定：</strong>目前已綁定隨機亂碼收件 Hash ID 隱藏櫃檯信箱，表單提交後將自動轉寄至櫃檯公務信箱。</p>
+        <p><strong>2. 機場接送機價目試算表：</strong>在試算表建立「接送機價目」分頁並發布為 CSV，填入程式碼中的 <code>TRANSFER_SHEET_CSV_URL</code>，即可隨時修改車型價格、特殊日期區間加價、夜間加成時段與嬰兒座椅單價。</p>
       </div>
       <div class="pt-2 flex flex-wrap gap-2">
         <button onclick="downloadItineraryCSV()" class="px-3.5 py-2 bg-stone-100 hover:bg-stone-200 text-slate-700 rounded-lg text-xs font-medium transition cursor-pointer">
@@ -449,12 +451,12 @@
     const TOUR_SHEET_CSV_URL = "";
 
     // =========================================================================
-    // 4. 機場接送機價目 CSV 網址（選填：發布 Google 試算表「接送機價目」分頁為 CSV 後貼於此處）
+    // 4. 機場接送機價目 CSV 網址
     // =========================================================================
     const TRANSFER_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWlyzIGNyylZRVgFo_33AIShQXGJngkbN7MqkbwlWk-X5jsKiqa81A73jttrRIETcxs1tzPnyjVvxM/pub?gid=729206365&single=true&output=csv";
 
     // =========================================================================
-    // 5. FormSubmit 背景寄信設定（啟用信箱後可將信箱換成 FormSubmit 提供的隨機 Hash 字串）
+    // 5. FormSubmit 背景寄信設定（已替換為隨機 Hash 字串，隱藏真實信箱）
     // =========================================================================
     const FORMSUBMIT_RECIPIENT = "ec42c0bcadee276f2970f214989e64f6";
     const FORMSUBMIT_AJAX_URL = `https://formsubmit.co/ajax/${FORMSUBMIT_RECIPIENT}`;
@@ -464,7 +466,6 @@
 
     // 機場接送機預設費率設定（若已綁定 TRANSFER_SHEET_CSV_URL 會自動由試算表覆寫）
     const DEFAULT_TRANSFER_CONFIG = {
-     const DEFAULT_TRANSFER_CONFIG = {
       vehicles: [
         {
           id: "sedan",
@@ -481,7 +482,6 @@
           price: 1600
         }
       ],
-      // 特殊日期區間費率設定（可自由增減多組區間；surcharge 為加價金額，亦可改用 override_price 直接指定該區間單趟價）
       seasonal_rates: [
         {
           start_date: "2027-02-05",
@@ -1128,10 +1128,11 @@
         tf_opt_pickup: "接機 Pick-up（桃園機場 TPE ➔ 喜瑞飯店）",
         tf_opt_dropoff: "送機 Drop-off（喜瑞飯店 ➔ 桃園機場 TPE）",
         tf_lbl_car: "選擇車型 Vehicle Type *",
-        tf_lbl_date: "預訂日期 Date *",
-        tf_lbl_time: "航班時間 Time *",
+        tf_lbl_date: "用車日期 Date *",
+        tf_lbl_time: "航班 / 上車時間 Time *",
         tf_lbl_flight: "航班編號 Flight No. *",
         tf_lbl_name: "訂房大名（同護照）Guest Name *",
+        tf_lbl_email: "聯繫 Email *",
         tf_lbl_contact: "聯絡電話 / LINE / WhatsApp *",
         tf_lbl_pax: "乘客人數 Passengers *",
         tf_lbl_luggage: "行李件數與尺寸 Luggage *",
@@ -1139,13 +1140,14 @@
         tf_seat_none: "0 張（不需要）",
         tf_seat_item: "{n} 張（+NT$ {total}）",
         tf_lbl_booking: "訂房編號 Booking ID（選填）",
-        tf_lbl_notes: "備註 Notes（特殊需求）",
+        tf_lbl_notes: "備註 Notes（航廈資訊等）",
         tf_fare_heading: "💰 預估單趟車資 Estimated Fare",
         tf_pay_note: "支付現金予司機",
         tf_submit_btn: "✉️ 立即送出預約至飯店櫃檯",
         tf_sending_btn: "⏳ 預約資料傳送中，請稍候...",
         tf_copy_btn: "📋 複製文字傳 LINE",
         tf_fare_base_text: "基本車資 NT$ {base}（{start}–{end} 夜間時段加收 NT$ {night}）",
+        tf_fare_season_badge: "{label} +NT$ {fee}",
         tf_fare_night_badge: "夜間加成 +NT$ {night}（{start}–{end}）",
         tf_fare_seat_badge: "嬰兒座椅 {n} 張 +NT$ {seatTotal}",
         tf_copied_alert: "✅ 已複製完整接送機預約明細！\n請直接貼上至「喜瑞飯店官方 LINE」傳送給櫃檯人員確認。",
@@ -1217,6 +1219,7 @@
         tf_sending_btn: "⏳ Sending booking details...",
         tf_copy_btn: "📋 Copy for LINE",
         tf_fare_base_text: "Base fare NT$ {base} (+NT$ {night} night surcharge during {start}–{end})",
+        tf_fare_season_badge: "{label} +NT$ {fee}",
         tf_fare_night_badge: "Night Surcharge +NT$ {night} ({start}–{end})",
         tf_fare_seat_badge: "{n} Baby Seat(s) +NT$ {seatTotal}",
         tf_copied_alert: "✅ Reservation summary copied!\nPlease paste and send it to Ambience Hotel's Official LINE account.",
@@ -1274,6 +1277,7 @@
         tf_lbl_time: "フライト Time *",
         tf_lbl_flight: "便名 Flight No. *",
         tf_lbl_name: "ご宿泊者名（パスポート表記）Guest Name *",
+        tf_lbl_email: "連絡先 Email *",
         tf_lbl_contact: "電話番号 / LINE / WhatsApp *",
         tf_lbl_pax: "ご乗車人数 Passengers *",
         tf_lbl_luggage: "お荷物個数・サイズ Luggage *",
@@ -1288,6 +1292,7 @@
         tf_sending_btn: "⏳ 送信中です。少々お待ちください...",
         tf_copy_btn: "📋 LINE用にテキストをコピー",
         tf_fare_base_text: "基本料金 NT$ {base}（{start}〜{end}の深夜早朝は +NT$ {night}）",
+        tf_fare_season_badge: "{label} +NT$ {fee}",
         tf_fare_night_badge: "深夜早朝割増 +NT$ {night}（{start}–{end}）",
         tf_fare_seat_badge: "チャイルドシート {n}台 +NT$ {seatTotal}",
         tf_copied_alert: "✅ 空港送迎の予約内容をコピーしました！\n「喜瑞飯店（アンビエンスホテル）公式LINE」に貼り付けて送信してください。",
@@ -1997,7 +2002,7 @@
       return t >= s && t < e;
     }
 
-   function getSeasonalAdjustment(dateStr) {
+    function getSeasonalAdjustment(dateStr) {
       if (!dateStr || !Array.isArray(transferConfig.seasonal_rates)) return null;
       return transferConfig.seasonal_rates.find(rule =>
         rule.start_date && rule.end_date && dateStr >= rule.start_date && dateStr <= rule.end_date
@@ -2119,7 +2124,7 @@
       return { subject, body, email };
     }
 
-    // FormSubmit AJAX 背景直接寄信（含 _replyto 自動回覆房客信箱）
+    // FormSubmit AJAX 背景直接寄信（含 _replyto 自動回覆房客信箱與 _honey 蜜罐防刷）
     async function handleTransferSubmit(event) {
       event.preventDefault();
 
@@ -2136,6 +2141,7 @@
         _replyto: email,
         _template: "basic",
         _captcha: "false",
+        _honey: document.getElementById("tf_honey").value,
         "預約單內容": body
       };
 
@@ -2255,8 +2261,17 @@
       return objects.filter(item => item.name_zh || item.name_en || item.name_ja);
     }
 
+    function normalizeSheetDate(raw) {
+      if (!raw) return "";
+      const parts = String(raw).trim().replace(/\//g, "-").split("-");
+      if (parts.length !== 3) return String(raw).trim();
+      const [y, m, d] = parts;
+      return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+    }
+
     function applyTransferSheetRows(rows) {
       const vehicles = [];
+      const seasonalRates = [];
       let nightStart = transferConfig.night_start;
       let nightEnd = transferConfig.night_end;
       let nightSurcharge = transferConfig.night_surcharge;
@@ -2274,27 +2289,33 @@
             name_ja: r.name_ja || r.name_en || r.name_zh || "専用車",
             price
           });
-        } else if (type === "night") {
-          if (r.night_start) nightStart = r.night_start;
-          if (r.night_end) nightEnd = r.night_end;
-          if (!isNaN(price) && price >= 0) nightSurcharge = price;
-        } else if (type === "baby_seat") {
-          if (!isNaN(price) && price >= 0) babySeatPrice = price;
         } else if (type === "season") {
-          if (r.start_date && r.end_date && !isNaN(price)) {
+          const startDate = normalizeSheetDate(r.start_date);
+          const endDate = normalizeSheetDate(r.end_date);
+          if (startDate && endDate && !isNaN(price)) {
             seasonalRates.push({
-              start_date: r.start_date,
-              end_date: r.end_date,
+              start_date: startDate,
+              end_date: endDate,
               label_zh: r.name_zh || "特殊日期加成",
               label_en: r.name_en || r.name_zh || "Seasonal Surcharge",
               label_ja: r.name_ja || r.name_en || r.name_zh || "特別期間割増",
               surcharge: price
             });
           }
+        } else if (type === "night") {
+          if (r.night_start) nightStart = r.night_start;
+          if (r.night_end) nightEnd = r.night_end;
+          if (!isNaN(price) && price >= 0) nightSurcharge = price;
+        } else if (type === "baby_seat") {
+          if (!isNaN(price) && price >= 0) babySeatPrice = price;
         }
+      });
 
       if (vehicles.length > 0) {
         transferConfig.vehicles = vehicles;
+      }
+      if (rows.some(r => (r.item_type || r.type || "").toLowerCase() === "season")) {
+        transferConfig.seasonal_rates = seasonalRates;
       }
       transferConfig.night_start = nightStart;
       transferConfig.night_end = nightEnd;
@@ -2414,12 +2435,13 @@
     }
 
     function downloadTransferCSV() {
-      const headers = ["item_type", "id", "name_zh", "name_en", "name_ja", "price", "night_start", "night_end"];
+      const headers = ["item_type", "id", "name_zh", "name_en", "name_ja", "price", "night_start", "night_end", "start_date", "end_date"];
       const sampleRows = [
-        ["vehicle", "sedan", "1–4 人座（一般轎車／休旅）", "1–4 Pax (Sedan / SUV)", "1〜4名乗り（セダン／SUV）", "1300", "", ""],
-        ["vehicle", "van", "5–8 人座（商務九人座）", "5–8 Pax (Business Van)", "5〜8名乗り（ビジネスワゴン）", "1600", "", ""],
-        ["night", "night_fee", "夜間時段加成", "Night Surcharge", "深夜早朝割増", "100", "22:00", "06:00"],
-        ["baby_seat", "seat_fee", "嬰兒座椅（單張）", "Baby Seat (Per Seat)", "チャイルドシート（1台）", "200", "", ""]
+        ["vehicle", "sedan", "1–2 人座（一般轎車／休旅）", "1–2 Pax (Sedan / SUV)", "1〜2名乗り（セダン／SUV）", "1300", "", "", "", ""],
+        ["vehicle", "van", "4–6 人座（商務九人座）", "4–6 Pax (Business Van)", "4〜6名乗り（ビジネスワゴン）", "1600", "", "", "", ""],
+        ["season", "cny_2027", "春節期間加成", "Lunar New Year Surcharge", "春節期間割増", "500", "", "", "2027-02-05", "2027-02-10"],
+        ["night", "night_fee", "夜間時段加成", "Night Surcharge", "深夜早朝割増", "100", "22:00", "06:00", "", ""],
+        ["baby_seat", "seat_fee", "嬰兒座椅（單張）", "Baby Seat (Per Seat)", "チャイルドシート（1台）", "200", "", "", "", ""]
       ];
       const csvLines = [
         headers.join(","),

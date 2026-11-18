@@ -1442,8 +1442,8 @@
 
         const foodButtonsHtml = displayNames.map((dispName, fIdx) => {
           const lookupKey = zhNames[fIdx] || dispName;
-          const safeLookup = lookupKey.replace(/'/g, "\'");
-          const safeDisp = dispName.replace(/'/g, "\'");
+          const safeLookup = lookupKey.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+          const safeDisp = dispName.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
           const cleanKey = lookupKey.replace(/（.*?）|\(.*?\)/g, "").trim();
 
           const matchedLocal = localPlacesData.find(p =>
@@ -1643,12 +1643,8 @@
         } else if (char === ',' && !inQuotes) {
           currentRow.push(currentCell.trim());
           currentCell = "";
-        } else if ((char === '
-' || (char === '
-' && nextChar === '
-')) && !inQuotes) {
-          if (char === '
-') i++;
+        } else if ((char === '\n' || (char === '\r' && nextChar === '\n')) && !inQuotes) {
+          if (char === '\r') i++;
           currentRow.push(currentCell.trim());
           if (currentRow.some(c => c !== "")) rows.push(currentRow);
           currentRow = [];
@@ -1672,7 +1668,7 @@
       const rows = parseCSV(csvText);
       if (rows.length < 2) throw new Error("CSV has no data rows");
 
-      const headers = rows[0].map(h => h.replace(/^﻿/, "").toLowerCase().trim());
+      const headers = rows[0].map(h => h.replace(/^\uFEFF/, "").toLowerCase().trim());
       return rows.slice(1).map(row => {
         const obj = {};
         headers.forEach((h, idx) => {
@@ -1813,8 +1809,7 @@
         })
       ];
 
-      const blob = new Blob(["﻿" + csvLines.join("
-")], { type: "text/csv;charset=utf-8;" });
+      const blob = new Blob(["\uFEFF" + csvLines.join("\n")], { type: "text/csv;charset=utf-8;" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
       link.download = "ambience_hotel_halfday_trips.csv";

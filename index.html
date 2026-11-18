@@ -209,11 +209,15 @@
             </div>
           </div>
 
-          <!-- 3. 訂房大名與聯絡方式 -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- 3. 訂房大名、聯繫 Email 與聯絡方式 -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_name">訂房大名（同護照）Guest Name *</label>
               <input type="text" id="tf_name" placeholder="例：WANG XIAO-MING" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_email">聯繫 Email *</label>
+              <input type="email" id="tf_email" placeholder="例：guest@example.com" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
             </div>
             <div>
               <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_contact">聯絡電話 / LINE / WhatsApp *</label>
@@ -2034,6 +2038,7 @@
       const time = document.getElementById("tf_time").value;
       const flight = document.getElementById("tf_flight").value.trim().toUpperCase();
       const name = document.getElementById("tf_name").value.trim();
+      const email = document.getElementById("tf_email").value.trim();
       const contact = document.getElementById("tf_contact").value.trim();
       const pax = document.getElementById("tf_pax").value.trim();
       const luggage = document.getElementById("tf_luggage").value.trim();
@@ -2065,6 +2070,7 @@
 ----------------------------------------
 ■ 訂房大名 Guest Name：${name}
 ■ 訂房編號 Booking ID：${bookingId}
+■ 聯繫信箱 Email：${email}
 ■ 聯絡方式 Contact：${contact}
 ----------------------------------------
 ■ 預約車型 Vehicle：${carLabel}
@@ -2076,10 +2082,10 @@
 ■ 預估單趟車資 Estimated Fare：NT$ ${fareInfo.total.toLocaleString()} ${fareBreakdownNote}
 ========================================`;
 
-      return { subject, body };
+      return { subject, body, email };
     }
 
-    // FormSubmit AJAX 背景直接寄信（純文字預約單格式）
+    // FormSubmit AJAX 背景直接寄信（含 _replyto 自動回覆房客信箱）
     async function handleTransferSubmit(event) {
       event.preventDefault();
 
@@ -2088,11 +2094,12 @@
       submitBtn.classList.add("opacity-70", "cursor-not-allowed");
       submitBtn.innerHTML = `<span>${I18N[currentLang].tf_sending_btn}</span>`;
 
-      const { subject, body } = buildTransferSummaryText();
+      const { subject, body, email } = buildTransferSummaryText();
       lastSubmittedSummaryBody = body;
 
       const formPayload = {
         _subject: subject,
+        _replyto: email,
         _template: "basic",
         _captcha: "false",
         "預約單內容": body
@@ -2124,6 +2131,7 @@
         submitBtn.innerHTML = `<span data-i18n="tf_submit_btn">${I18N[currentLang].tf_submit_btn}</span>`;
       }
     }
+    
     function copyTransferSummary() {
       const form = document.getElementById("transferForm");
       if (!form.checkValidity()) {

@@ -2050,13 +2050,10 @@
       if (fareInfo.seatTotal > 0) extraFareNotes.push(`含嬰兒座椅 ${fareInfo.seatCount} 張 NT$${fareInfo.seatTotal}`);
       const fareBreakdownNote = extraFareNotes.length > 0 ? `(${extraFareNotes.join("、")})` : "";
 
-      const subject = `[機場接送機預約] ${date} ${time} - ${name} (${flight})`;
+      const subject = `[官網線上預約-機場接送] ${date} ${time} - ${name} (${flight})`;
 
       const body = 
-`喜瑞飯店 櫃檯服務中心 您好 / Dear Ambience Hotel Front Desk,
-
-我想預約機場接送機專車服務，以下為我的乘車資訊，請協助安排並回覆確認：
-I would like to book an airport transfer service. Please confirm my reservation details below:
+`房客已透過「喜瑞飯店旅遊指南網頁」提交機場接送機線上預約，明細如下：
 
 ========================================
 【喜瑞飯店 機場接送機預約單】
@@ -2077,26 +2074,12 @@ I would like to book an airport transfer service. Please confirm my reservation 
 ■ 特殊備註 Notes：${notes}
 ----------------------------------------
 ■ 預估單趟車資 Estimated Fare：NT$ ${fareInfo.total.toLocaleString()} ${fareBreakdownNote}
-========================================
+========================================`;
 
-煩請櫃檯人員確認車輛後回覆通知，謝謝！
-Thank you for your assistance!
-
-旅客敬上 / Best regards,
-${name}`;
-
-      return {
-        subject,
-        body,
-        fields: {
-          type, date, time, flight, name, bookingId, contact,
-          carLabel, pax, luggage, seatText, notes,
-          totalFare: `NT$ ${fareInfo.total.toLocaleString()} ${fareBreakdownNote}`.trim()
-        }
-      };
+      return { subject, body };
     }
 
-    // FormSubmit AJAX 背景直接寄信
+    // FormSubmit AJAX 背景直接寄信（純文字預約單格式）
     async function handleTransferSubmit(event) {
       event.preventDefault();
 
@@ -2105,27 +2088,14 @@ ${name}`;
       submitBtn.classList.add("opacity-70", "cursor-not-allowed");
       submitBtn.innerHTML = `<span>${I18N[currentLang].tf_sending_btn}</span>`;
 
-      const { subject, body, fields } = buildTransferSummaryText();
+      const { subject, body } = buildTransferSummaryText();
       lastSubmittedSummaryBody = body;
 
-      // 整理成 FormSubmit 表格化結構欄位，櫃檯收信時一目了然
       const formPayload = {
         _subject: subject,
-        _template: "table",
+        _template: "basic",
         _captcha: "false",
-        "1_服務類型_Service": fields.type,
-        "2_用車日期_Date": fields.date,
-        "3_航班時間_Time": fields.time,
-        "4_航班編號_Flight": fields.flight,
-        "5_訂房大名_Guest_Name": fields.name,
-        "6_訂房編號_Booking_ID": fields.bookingId,
-        "7_聯絡方式_Contact": fields.contact,
-        "8_預約車型_Vehicle": fields.carLabel,
-        "9_乘客人數_Passengers": fields.pax,
-        "10_行李件數_Luggage": fields.luggage,
-        "11_嬰兒座椅_Baby_Seat": fields.seatText,
-        "12_特殊備註_Notes": fields.notes,
-        "13_預估車資_Estimated_Fare": fields.totalFare
+        "預約單內容": body
       };
 
       try {
@@ -2154,7 +2124,6 @@ ${name}`;
         submitBtn.innerHTML = `<span data-i18n="tf_submit_btn">${I18N[currentLang].tf_submit_btn}</span>`;
       }
     }
-
     function copyTransferSummary() {
       const form = document.getElementById("transferForm");
       if (!form.checkValidity()) {

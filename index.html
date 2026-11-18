@@ -127,11 +127,18 @@
         <p class="text-sm font-bold" data-i18n="charterTitle">飯店門口出發・中文／日文／英文司機包車一日遊</p>
         <p class="text-xs text-slate-300" data-i18n="charterDesc">支援 4 人座轎車／7～9 人座商務休旅，可依需求客製路線，歡迎洽詢一樓櫃檯或透過 LINE 預約。</p>
       </div>
-      <a id="charterBannerBtn" href="https://line.me/" target="_blank" rel="noopener noreferrer"
-         class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#B48A5A] hover:bg-[#9E7649] text-white text-xs font-bold transition shrink-0">
-        <span>💬</span>
-        <span data-i18n="charterCta">洽詢櫃檯 / LINE 預約</span>
-      </a>
+      <div class="flex flex-wrap items-center gap-2 shrink-0">
+        <a href="#airport-transfer-section"
+           class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold transition">
+          <span>✈️</span>
+          <span data-i18n="jumpTransferBtn">機場接送預約</span>
+        </a>
+        <a id="charterBannerBtn" href="https://line.me/" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#B48A5A] hover:bg-[#9E7649] text-white text-xs font-bold transition">
+          <span>💬</span>
+          <span data-i18n="charterCta">洽詢櫃檯 / LINE 預約</span>
+        </a>
+      </div>
     </div>
 
     <div class="flex items-center justify-between mb-3.5">
@@ -150,6 +157,114 @@
       <p class="text-slate-500 text-sm" data-i18n="noResults">找不到符合條件的項目，請嘗試清除篩選條件。</p>
       <button onclick="resetFilters()" class="mt-3 px-4 py-2 bg-[#1E293B] text-white text-xs font-medium rounded-lg hover:bg-slate-800 transition" data-i18n="resetBtn">重設篩選</button>
     </div>
+
+    <!-- 機場接送機線上預約區塊（切換至「包車接駁」模式時顯示） -->
+    <section id="airport-transfer-section" class="hidden max-w-3xl mx-auto mt-10 mb-4 scroll-mt-24">
+      <div class="bg-white border border-stone-200 rounded-2xl shadow-sm overflow-hidden">
+        <!-- 頂部標題列 -->
+        <div class="bg-[#1E293B] text-white px-5 sm:px-6 py-4 border-b-4 border-[#B48A5A] flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <span class="text-[11px] font-bold tracking-widest text-[#E6C79C] uppercase">AMBIENCE CONCIERGE SERVICE</span>
+            <h2 class="text-base sm:text-lg font-bold mt-0.5" data-i18n="tf_title">✈️ 桃園機場專屬接送機預約｜Airport Transfer Booking</h2>
+          </div>
+          <span class="text-xs bg-white/10 px-3 py-1 rounded-full text-[#E6C79C] font-semibold" data-i18n="tf_badge24h">24H 專車接送</span>
+        </div>
+
+        <!-- 表單本體 -->
+        <form id="transferForm" class="p-5 sm:p-6 space-y-4 text-sm text-slate-700" onsubmit="handleTransferSubmit(event)">
+          
+          <!-- 1. 服務類型與車型 -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_type">服務類型 Service Type *</label>
+              <select id="tf_type" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]">
+                <option value="接機 Pick-up (桃園機場 TPE ➔ 喜瑞飯店)" data-i18n="tf_opt_pickup">接機 Pick-up（桃園機場 TPE ➔ 喜瑞飯店）</option>
+                <option value="送機 Drop-off (喜瑞飯店 ➔ 桃園機場 TPE)" data-i18n="tf_opt_dropoff">送機 Drop-off（喜瑞飯店 ➔ 桃園機場 TPE）</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_car">選擇車型 Vehicle Type *</label>
+              <select id="tf_car" onchange="calculateTransferFare()" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]">
+                <option value="1300" data-label="1-4人座轎車/休旅 (1-4 Pax Sedan/SUV)" data-i18n="tf_opt_car4">1–4 人座（一般轎車／休旅）— NT$ 1,300</option>
+                <option value="1600" data-label="5-8人座商務休旅 (5-8 Pax Van)" data-i18n="tf_opt_car8">5–8 人座（商務九人座）— NT$ 1,600</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 2. 日期、時間與航班編號 -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_date">用車日期 Date *</label>
+              <input type="date" id="tf_date" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_time">航班 / 上車時間 Time *</label>
+              <input type="time" id="tf_time" onchange="calculateTransferFare()" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_flight">航班編號 Flight No. *</label>
+              <input type="text" id="tf_flight" placeholder="例：BR198 / JX800" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+            </div>
+          </div>
+
+          <!-- 3. 訂房大名與聯絡方式 -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_name">訂房大名（同護照）Guest Name *</label>
+              <input type="text" id="tf_name" placeholder="例：WANG XIAO-MING" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_contact">聯絡電話 / LINE / WhatsApp *</label>
+              <input type="text" id="tf_contact" placeholder="例：+886-912-345-678 / LINE ID" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+            </div>
+          </div>
+
+          <!-- 4. 人數、行李與訂房編號 -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_pax">乘客人數 Passengers *</label>
+              <input type="text" id="tf_pax" placeholder="例：2 大 1 小" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_luggage">行李件數與尺寸 Luggage *</label>
+              <input type="text" id="tf_luggage" placeholder="例：28吋×2、20吋×1" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_booking">訂房編號 Booking ID（選填）</label>
+              <input type="text" id="tf_booking_id" placeholder="例：TPI2611..." class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+            </div>
+          </div>
+
+          <!-- 5. 特殊需求備註 -->
+          <div>
+            <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_notes">備註 Notes（舉牌需求 / 兒童安全座椅等）</label>
+            <input type="text" id="tf_notes" placeholder="例：需要接機舉牌、需 1 張嬰兒座椅（需另加價）" class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+          </div>
+
+          <!-- 即時車資試算提示框 -->
+          <div class="bg-[#FAF9F6] border border-[#B48A5A]/40 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <p class="text-xs font-bold text-slate-800" data-i18n="tf_fare_heading">💰 預估單趟車資 Estimated Fare</p>
+              <p id="tf_fare_detail" class="text-[11px] text-slate-500 mt-0.5">基本車資 NT$ 1,300（22:00–06:00 夜間時段加收 NT$ 100）</p>
+            </div>
+            <div class="text-right">
+              <span id="tf_total_fare" class="text-xl font-bold text-[#B48A5A]">NT$ 1,300</span>
+              <span class="block text-[10px] text-slate-400" data-i18n="tf_pay_note">現場支付現金或由櫃檯代收</span>
+            </div>
+          </div>
+
+          <!-- 送出按鈕區 -->
+          <div class="pt-2 flex flex-col sm:flex-row gap-3">
+            <button type="submit" class="flex-1 bg-[#1E293B] hover:bg-slate-800 text-white font-bold py-3 px-5 rounded-xl shadow transition flex items-center justify-center gap-2 cursor-pointer">
+              <span data-i18n="tf_submit_btn">✉️ 整理資料並發送信件至櫃檯確認</span>
+            </button>
+            <button type="button" onclick="copyTransferSummary()" class="sm:w-auto bg-stone-100 hover:bg-stone-200 text-slate-800 font-bold py-3 px-4 rounded-xl border border-stone-300 transition flex items-center justify-center gap-1.5 cursor-pointer">
+              <span data-i18n="tf_copy_btn">📋 複製文字傳 LINE</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
   </main>
 
   <!-- 頁尾（雙擊版權宣告可開啟管理員同步設定） -->
@@ -308,9 +423,10 @@
     const TOUR_SHEET_CSV_URL = "";
 
     // =========================================================================
-    // 4. 喜瑞飯店官方 LINE 預約網址
+    // 4. 喜瑞飯店官方 LINE 預約網址與櫃檯信箱
     // =========================================================================
     const HOTEL_LINE_URL = "https://line.me/";
+    const HOTEL_CONCIERGE_EMAIL = "ambience@taipeiinn.com.tw";
 
     // 飯店周邊預設備援資料
     const DEFAULT_LOCAL_PLACES = [
@@ -334,7 +450,7 @@
     ];
 
     // =========================================================================
-    // 半日遊推薦店家與體驗場所專屬百科字典（已移除歇業店家並對齊最新試算表名稱）
+    // 半日遊推薦店家與體驗場所專屬百科字典
     // =========================================================================
     const SPOT_FOOD_DIRECTORY = {
       "福大山東蒸餃大王": {
@@ -579,7 +695,7 @@
       }
     };
 
-    // 推薦半日遊內建資料（已移除歇業店家並對齊最新試算表店名）
+    // 推薦半日遊內建資料
     const DEFAULT_ITINERARY_PLACES = [
       {
         category: "culture",
@@ -911,6 +1027,7 @@
         charterBadge: "AMBIENCE CONCIERGE｜飯店合作專車接駁",
         charterTitle: "飯店門口出發・中文／日文／英文司機包車一日遊",
         charterDesc: "支援 4 人座轎車／7～9 人座商務休旅，可依需求客製路線，歡迎洽詢一樓櫃檯或透過 LINE 預約。",
+        jumpTransferBtn: "機場接送預約",
         charterCta: "洽詢櫃檯 / LINE 預約",
         tourCardBtn: "洽詢預約包車",
         viewItineraryBtn: "查看 {n} 站完整行程",
@@ -930,7 +1047,32 @@
         openMap: "Google 地圖導航",
         viewPhoto: "實景",
         noResults: "找不到符合條件的項目，請嘗試清除篩選條件。",
-        resetBtn: "重設篩選"
+        resetBtn: "重設篩選",
+        // 機場接送機表單語系
+        tf_title: "✈️ 桃園機場專屬接送機預約｜Airport Transfer Booking",
+        tf_badge24h: "24H 專車接送",
+        tf_lbl_type: "服務類型 Service Type *",
+        tf_opt_pickup: "接機 Pick-up（桃園機場 TPE ➔ 喜瑞飯店）",
+        tf_opt_dropoff: "送機 Drop-off（喜瑞飯店 ➔ 桃園機場 TPE）",
+        tf_lbl_car: "選擇車型 Vehicle Type *",
+        tf_opt_car4: "1–4 人座（一般轎車／休旅）— NT$ 1,300",
+        tf_opt_car8: "5–8 人座（商務九人座）— NT$ 1,600",
+        tf_lbl_date: "用車日期 Date *",
+        tf_lbl_time: "航班 / 上車時間 Time *",
+        tf_lbl_flight: "航班編號 Flight No. *",
+        tf_lbl_name: "訂房大名（同護照）Guest Name *",
+        tf_lbl_contact: "聯絡電話 / LINE / WhatsApp *",
+        tf_lbl_pax: "乘客人數 Passengers *",
+        tf_lbl_luggage: "行李件數與尺寸 Luggage *",
+        tf_lbl_booking: "訂房編號 Booking ID（選填）",
+        tf_lbl_notes: "備註 Notes（舉牌需求 / 兒童安全座椅等）",
+        tf_fare_heading: "💰 預估單趟車資 Estimated Fare",
+        tf_pay_note: "現場支付現金或由櫃檯代收",
+        tf_submit_btn: "✉️ 整理資料並發送信件至櫃檯確認",
+        tf_copy_btn: "📋 複製文字傳 LINE",
+        tf_fare_base: "基本車資 NT$ {base}（22:00–06:00 夜間時段加收 NT$ 100）",
+        tf_fare_night: "基本車資 NT$ {base} + <span class=\"text-amber-700 font-bold\">夜間加成 NT$ 100 (22:00–06:00)</span>",
+        tf_copied_alert: "✅ 已複製完整接送機預約明細！\n請直接貼上至「喜瑞飯店官方 LINE」傳送給櫃檯人員確認。"
       },
       en: {
         originTag: "Origin: No. 64, Sec. 1, Chang'an E. Rd., Zhongshan Dist.",
@@ -948,6 +1090,7 @@
         charterBadge: "AMBIENCE CONCIERGE｜PRIVATE CHARTER SERVICE",
         charterTitle: "Hotel Door-to-Door Private Day Tours (EN / JP / ZH Drivers)",
         charterDesc: "Available in 4-seater sedans or 7–9 seater vans with customizable itineraries. Contact our 1F Front Desk or LINE to book.",
+        jumpTransferBtn: "Airport Transfer",
         charterCta: "Inquire at Desk / LINE",
         tourCardBtn: "Inquire / Book Tour",
         viewItineraryBtn: "View {n}-Stop Timeline",
@@ -967,7 +1110,32 @@
         openMap: "Open in Google Maps",
         viewPhoto: "Photo",
         noResults: "No matching items found. Try clearing your filters.",
-        resetBtn: "Reset Filters"
+        resetBtn: "Reset Filters",
+        // Airport Transfer Form
+        tf_title: "✈️ Taoyuan Airport (TPE) Private Transfer Booking",
+        tf_badge24h: "24H Private Service",
+        tf_lbl_type: "Service Type *",
+        tf_opt_pickup: "Pick-up (Taoyuan Airport TPE ➔ Ambience Hotel)",
+        tf_opt_dropoff: "Drop-off (Ambience Hotel ➔ Taoyuan Airport TPE)",
+        tf_lbl_car: "Vehicle Type *",
+        tf_opt_car4: "1–4 Pax (Sedan / SUV) — NT$ 1,300",
+        tf_opt_car8: "5–8 Pax (Business Van) — NT$ 1,600",
+        tf_lbl_date: "Date *",
+        tf_lbl_time: "Flight / Pick-up Time *",
+        tf_lbl_flight: "Flight No. *",
+        tf_lbl_name: "Guest Name (As on Passport) *",
+        tf_lbl_contact: "Phone / LINE / WhatsApp *",
+        tf_lbl_pax: "Passengers *",
+        tf_lbl_luggage: "Luggage Count & Sizes *",
+        tf_lbl_booking: "Booking ID (Optional)",
+        tf_lbl_notes: "Notes (Paging Board / Child Seat, etc.)",
+        tf_fare_heading: "💰 Estimated One-Way Fare",
+        tf_pay_note: "Pay in cash to driver or at Front Desk",
+        tf_submit_btn: "✉️ Compose Email to Front Desk",
+        tf_copy_btn: "📋 Copy for LINE",
+        tf_fare_base: "Base fare NT$ {base} (+NT$ 100 night surcharge for 22:00–06:00)",
+        tf_fare_night: "Base fare NT$ {base} + <span class=\"text-amber-700 font-bold\">Night Surcharge NT$ 100 (22:00–06:00)</span>",
+        tf_copied_alert: "✅ Reservation summary copied!\nPlease paste and send it to Ambience Hotel's Official LINE account."
       },
       ja: {
         originTag: "出発地：台北市中山区長安東路一段64号（アンビエンスホテル）",
@@ -985,6 +1153,7 @@
         charterBadge: "AMBIENCE CONCIERGE｜ホテル発着・専用車チャーター",
         charterTitle: "日本語・英語ドライバー対応 貸切観光チャーター（1日／半日）",
         charterDesc: "セダン（1〜3名）からワゴン車（4〜8名）まで手配可能。ご希望のルートにアレンジできます。1階フロントまたはLINEでお気軽にご相談ください。",
+        jumpTransferBtn: "空港送迎予約",
         charterCta: "フロント相談 / LINE予約",
         tourCardBtn: "チャーター予約・相談",
         viewItineraryBtn: "全{n}スポット行程表を見る",
@@ -1004,7 +1173,32 @@
         openMap: "Google マップで開く",
         viewPhoto: "写真",
         noResults: "条件に一致する項目が見つかりませんでした。",
-        resetBtn: "フィルターをリセット"
+        resetBtn: "フィルターをリセット",
+        // 空港送迎フォーム
+        tf_title: "✈️ 桃園国際空港（TPE）専用車送迎予約",
+        tf_badge24h: "24時間対応",
+        tf_lbl_type: "ご利用内容 Service Type *",
+        tf_opt_pickup: "お迎え Pick-up（桃園空港 TPE ➔ アンビエンスホテル）",
+        tf_opt_dropoff: "お送り Drop-off（アンビエンスホテル ➔ 桃園空港 TPE）",
+        tf_lbl_car: "車種選択 Vehicle Type *",
+        tf_opt_car4: "1〜4名乗り（セダン／SUV）— NT$ 1,300",
+        tf_opt_car8: "5〜8名乗り（ビジネスワゴン）— NT$ 1,600",
+        tf_lbl_date: "ご利用日 Date *",
+        tf_lbl_time: "フライト／お迎え時刻 Time *",
+        tf_lbl_flight: "便名 Flight No. *",
+        tf_lbl_name: "ご宿泊者名（パスポート表記）Guest Name *",
+        tf_lbl_contact: "電話番号 / LINE / WhatsApp *",
+        tf_lbl_pax: "ご乗車人数 Passengers *",
+        tf_lbl_luggage: "お荷物個数・サイズ Luggage *",
+        tf_lbl_booking: "予約番号 Booking ID（任意）",
+        tf_lbl_notes: "備考 Notes（ネームボード希望・チャイルドシート等）",
+        tf_fare_heading: "💰 片道料金目安 Estimated Fare",
+        tf_pay_note: "ドライバーへ現金払い、またはフロントにてお支払い",
+        tf_submit_btn: "✉️ 予約内容をメールでフロントへ送信",
+        tf_copy_btn: "📋 LINE用にテキストをコピー",
+        tf_fare_base: "基本料金 NT$ {base}（22:00〜06:00の深夜早朝は +NT$ 100）",
+        tf_fare_night: "基本料金 NT$ {base} + <span class=\"text-amber-700 font-bold\">深夜早朝割増 NT$ 100 (22:00–06:00)</span>",
+        tf_copied_alert: "✅ 空港送迎の予約内容をコピーしました！\n「喜瑞飯店（アンビエンスホテル）公式LINE」に貼り付けて送信してください。"
       }
     };
 
@@ -1061,6 +1255,7 @@
 
       const walkGroup = document.getElementById("walkFilterGroup");
       const charterBanner = document.getElementById("charterBanner");
+      const transferSection = document.getElementById("airport-transfer-section");
       const searchInput = document.getElementById("searchInput");
       const badge = document.getElementById("dataSourceBadge");
       const clickTip = document.getElementById("clickTipText");
@@ -1068,18 +1263,21 @@
       if (mode === "local") {
         walkGroup.classList.remove("hidden");
         charterBanner.classList.add("hidden");
+        transferSection.classList.add("hidden");
         searchInput.placeholder = I18N[currentLang].searchPlaceholderLocal;
         badge.textContent = localSyncStatus;
         clickTip.textContent = I18N[currentLang].clickTip;
       } else if (mode === "itinerary") {
         walkGroup.classList.add("hidden");
         charterBanner.classList.add("hidden");
+        transferSection.classList.add("hidden");
         searchInput.placeholder = I18N[currentLang].searchPlaceholderItinerary;
         badge.textContent = itinerarySyncStatus;
         clickTip.textContent = I18N[currentLang].clickTipItinerary;
       } else {
         walkGroup.classList.add("hidden");
         charterBanner.classList.remove("hidden");
+        transferSection.classList.remove("hidden");
         searchInput.placeholder = I18N[currentLang].searchPlaceholderTour;
         badge.textContent = tourSyncStatus;
         clickTip.textContent = I18N[currentLang].clickTip;
@@ -1130,6 +1328,7 @@
         ? I18N[currentLang].clickTipItinerary
         : I18N[currentLang].clickTip;
 
+      calculateTransferFare();
       renderCategoryTabs();
       renderPlaces();
     }
@@ -1292,7 +1491,6 @@
                <span>💬 ${I18N[currentLang].tourCardBtn}</span>
              </a>`;
 
-        // 使用 data-* 安全儲存屬性，避免 onerror 內聯單引號截斷風險
         const mediaHeaderHtml = imgUrl
           ? `<div class="relative aspect-[16/9] bg-stone-100 overflow-hidden"
                   data-icon="${style.icon}"
@@ -1349,7 +1547,6 @@
       }).join("");
     }
 
-    // 圖片載入失敗時的優雅降級處理（安全讀取 dataset）
     function handleCardImgError(imgEl) {
       const parent = imgEl.parentElement;
       if (!parent) return;
@@ -1524,7 +1721,6 @@
       const badgeRight = formatDistanceBadge(item.walk_mins);
       const cleanImgUrl = (item.image_url || "").trim();
 
-      // 設定一鍵複製文字（優先保留中文店名方便司機辨識）
       currentModalCopyText = item.name_zh || name;
       document.getElementById("copyBtnText").textContent = I18N[currentLang].copyBtn;
 
@@ -1625,6 +1821,109 @@
       }
     });
 
+    // =========================================================================
+    // 機場接送機預約邏輯（車資即時試算 / 郵件帶入 / 一鍵複製）
+    // =========================================================================
+    function calculateTransferFare() {
+      const carSelect = document.getElementById("tf_car");
+      const baseFare = parseInt(carSelect.value, 10) || 1300;
+      const timeVal = document.getElementById("tf_time").value;
+      
+      let nightSurcharge = 0;
+      if (timeVal) {
+        const hour = parseInt(timeVal.split(":")[0], 10);
+        if (hour >= 22 || hour < 6) {
+          nightSurcharge = 100;
+        }
+      }
+
+      const total = baseFare + nightSurcharge;
+      document.getElementById("tf_total_fare").textContent = `NT$ ${total.toLocaleString()}`;
+      
+      const detailEl = document.getElementById("tf_fare_detail");
+      if (nightSurcharge > 0) {
+        detailEl.innerHTML = I18N[currentLang].tf_fare_night.replace("{base}", baseFare.toLocaleString());
+      } else {
+        detailEl.textContent = I18N[currentLang].tf_fare_base.replace("{base}", baseFare.toLocaleString());
+      }
+
+      return { baseFare, nightSurcharge, total };
+    }
+
+    function buildTransferSummaryText() {
+      const type = document.getElementById("tf_type").value;
+      const carSelect = document.getElementById("tf_car");
+      const carLabel = carSelect.options[carSelect.selectedIndex].getAttribute("data-label");
+      const date = document.getElementById("tf_date").value;
+      const time = document.getElementById("tf_time").value;
+      const flight = document.getElementById("tf_flight").value.trim().toUpperCase();
+      const name = document.getElementById("tf_name").value.trim();
+      const contact = document.getElementById("tf_contact").value.trim();
+      const pax = document.getElementById("tf_pax").value.trim();
+      const luggage = document.getElementById("tf_luggage").value.trim();
+      const bookingId = document.getElementById("tf_booking_id").value.trim() || "未提供 (Not Provided)";
+      const notes = document.getElementById("tf_notes").value.trim() || "無 (None)";
+      const fareInfo = calculateTransferFare();
+
+      const subject = `[機場接送機預約] ${date} ${time} - ${name} (${flight})`;
+
+      const body = 
+`喜瑞飯店 櫃檯服務中心 您好 / Dear Ambience Hotel Front Desk,
+
+我想預約機場接送機專車服務，以下為我的乘車資訊，請協助安排並回覆確認：
+I would like to book an airport transfer service. Please confirm my reservation details below:
+
+========================================
+【喜瑞飯店 機場接送機預約單】
+========================================
+■ 服務類型 Service：${type}
+■ 用車日期 Date：${date}
+■ 航班/上車時間 Time：${time}
+■ 航班編號 Flight No.：${flight}
+----------------------------------------
+■ 訂房大名 Guest Name：${name}
+■ 訂房編號 Booking ID：${bookingId}
+■ 聯絡方式 Contact：${contact}
+----------------------------------------
+■ 預約車型 Vehicle：${carLabel}
+■ 乘客人數 Passengers：${pax}
+■ 行李件數 Luggage：${luggage}
+■ 特殊備註 Notes：${notes}
+----------------------------------------
+■ 預估單趟車資 Estimated Fare：NT$ ${fareInfo.total.toLocaleString()} ${fareInfo.nightSurcharge > 0 ? "(含夜間加成 NT$100)" : ""}
+========================================
+
+煩請櫃檯人員確認車輛後回覆通知，謝謝！
+Thank you for your assistance!
+
+旅客敬上 / Best regards,
+${name}`;
+
+      return { subject, body };
+    }
+
+    function handleTransferSubmit(event) {
+      event.preventDefault();
+      const { subject, body } = buildTransferSummaryText();
+      const mailtoUrl = `mailto:${HOTEL_CONCIERGE_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailtoUrl;
+    }
+
+    function copyTransferSummary() {
+      const form = document.getElementById("transferForm");
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      const { body } = buildTransferSummaryText();
+      navigator.clipboard.writeText(body).then(() => {
+        alert(I18N[currentLang].tf_copied_alert);
+      });
+    }
+
+    // =========================================================================
+    // Google 試算表 CSV 解析與同步
+    // =========================================================================
     function parseCSV(text) {
       const rows = [];
       let currentRow = [];
@@ -1817,6 +2116,7 @@
     }
 
     // 啟動初始化
+    document.getElementById("tf_date").valueAsDate = new Date();
     applyItineraryTabVisibility();
     renderCategoryTabs();
     renderPlaces();

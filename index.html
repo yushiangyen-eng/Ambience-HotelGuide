@@ -1,2321 +1,1192 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>喜瑞飯店 Ambience Hotel｜周邊美食・包車探索指南</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Plus Jakarta Sans', 'Noto Sans TC', 'Noto Sans JP', sans-serif;
-      background-color: #FAF9F6;
-      color: #1E293B;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    /* 手機端 Bottom Sheet 抽屜動畫 */
-    @keyframes sheetSlideUp {
-      from { transform: translateY(100%); opacity: 0.6; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    @keyframes modalFadeIn {
-      from { opacity: 0; transform: scale(0.97); }
-      to { opacity: 1; transform: scale(1); }
-    }
-    .animate-sheet {
-      animation: sheetSlideUp 0.28s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-    }
-    @media (min-width: 640px) {
-      .animate-sheet {
-        animation: modalFadeIn 0.2s ease-out forwards;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台北喜瑞飯店 Ambience Hotel Taipei - 周邊探索與數位旅遊指南</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', 'Noto Sans TC', 'Noto Sans JP', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .ambience-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+        .card-hover {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(15, 23, 42, 0.12);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .tab-active {
+            border-bottom: 2px solid #d97706;
+            color: #d97706;
+            font-weight: 700;
+        }
+        .timeline-line {
+            position: relative;
+        }
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: 28px;
+            bottom: -16px;
+            left: 19px;
+            width: 2px;
+            background-color: #e2e8f0;
+            z-index: 0;
+        }
+        .timeline-item:last-child .timeline-line::before {
+            display: none;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+    </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-[#B48A5A] selection:text-white pb-20 sm:pb-0">
-
-  <!-- 頂部品牌視覺區 -->
-  <header class="bg-[#1E293B] text-white pt-5 pb-6 sm:pt-7 sm:pb-8 px-4 sm:px-6 relative overflow-hidden">
-    <div class="max-w-5xl mx-auto relative z-10 space-y-4 sm:space-y-5">
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3.5">
-        <div>
-          <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-[#B48A5A]/20 border border-[#B48A5A]/40 text-[#E6C79C] text-[11px] font-medium mb-2">
-            <span>AMBIENCE HOTEL TAIPEI</span>
-            <span>•</span>
-            <span data-i18n="originTag">出發點：台北市中山區長安東路一段64號</span>
-          </div>
-          <h1 class="text-xl sm:text-3xl font-bold tracking-tight" data-i18n="title">
-            喜瑞飯店｜旅遊與周邊探索指南
-          </h1>
-          <p class="text-slate-300 text-xs sm:text-base mt-1 max-w-xl leading-relaxed" data-i18n="subtitle">
-            步行可達的道地台式美食與條通酒吧，以及北台灣專車包車服務。
-          </p>
-        </div>
-
-        <!-- 三語切換按鈕組（繁中 / EN / 日本語） -->
-        <div class="self-start sm:self-center inline-flex rounded-xl bg-white/10 p-1 border border-white/15 shrink-0">
-          <button onclick="setLanguage('zh')" data-lang="zh" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#B48A5A] text-white transition">
-            繁中
-          </button>
-          <button onclick="setLanguage('en')" data-lang="en" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-200 hover:text-white transition">
-            EN
-          </button>
-          <button onclick="setLanguage('ja')" data-lang="ja" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-200 hover:text-white transition">
-            日本語
-          </button>
-        </div>
-      </div>
-
-      <!-- 主頻道切換 Tabs（由 ENABLE_ITINERARY_TAB 控制是否顯示半日遊） -->
-      <div id="mainModeTabs" class="grid grid-cols-2 gap-2 sm:max-w-md pt-0.5">
-        <button onclick="switchMode('local')" id="tabLocal"
-                class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold bg-[#B48A5A] text-white shadow-md transition">
-          <span>🚶</span>
-          <span data-i18n="modeLocal">周邊步行圈</span>
-        </button>
-        <button onclick="switchMode('itinerary')" id="tabItinerary"
-                class="hidden items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold bg-white/10 hover:bg-white/15 text-slate-200 border border-white/15 transition">
-          <span>🗺️</span>
-          <span data-i18n="modeItinerary">推薦半日遊</span>
-        </button>
-        <button onclick="switchMode('tour')" id="tabTour"
-                class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold bg-white/10 hover:bg-white/15 text-slate-200 border border-white/15 transition">
-          <span>🚐</span>
-          <span data-i18n="modeTour">包車接駁</span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- 置頂篩選與搜尋列（針對手機螢幕優化緊湊度） -->
-  <div class="sticky top-0 z-30 bg-[#FAF9F6]/95 backdrop-blur-md border-b border-stone-200/80 shadow-xs">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-2.5 sm:py-3 space-y-2.5">
-      <div class="flex flex-col sm:flex-row gap-2">
-        <!-- 關鍵字搜尋 -->
-        <div class="relative flex-1">
-          <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-          <input id="searchInput" type="text" oninput="renderPlaces()" placeholder="搜尋店名、料理或特色（例：豬腳、咖啡、調酒）..." class="w-full pl-9 pr-4 py-2 bg-white border border-stone-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-[#B48A5A] focus:ring-1 focus:ring-[#B48A5A]" />
-        </div>
-        <!-- 步行距離篩選（僅在「周邊步行圈」模式顯示） -->
-        <div id="walkFilterGroup" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-          <button onclick="setWalkFilter('all')" data-walk="all" class="walk-btn active px-3 py-1.5 sm:py-2 rounded-xl text-xs font-medium whitespace-nowrap bg-[#1E293B] text-white transition" data-i18n="walkAll">全部距離</button>
-          <button onclick="setWalkFilter(5)" data-walk="5" class="walk-btn px-3 py-1.5 sm:py-2 rounded-xl text-xs font-medium whitespace-nowrap bg-white border border-stone-200 text-slate-600 hover:bg-stone-100 transition" data-i18n="walk5">步行 5 分鐘內</button>
-          <button onclick="setWalkFilter(15)" data-walk="15" class="walk-btn px-3 py-1.5 sm:py-2 rounded-xl text-xs font-medium whitespace-nowrap bg-white border border-stone-200 text-slate-600 hover:bg-stone-100 transition" data-i18n="walk15">步行 15 分鐘內</button>
-        </div>
-      </div>
-
-      <!-- 動態分類標籤列（依模式自動切換） -->
-      <div id="categoryTabsContainer" class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-0.5"></div>
-    </div>
-  </div>
-
-  <!-- 主要卡片列表區 -->
-  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-5 sm:py-6">
-    <!-- 包車專屬服務提示橫幅（僅在「包車接駁」模式顯示） -->
-    <div id="charterBanner" class="hidden mb-5 p-4 rounded-2xl bg-gradient-to-r from-[#1E293B] to-slate-800 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
-      <div class="space-y-0.5">
-        <p class="text-xs font-semibold text-[#E6C79C]" data-i18n="charterBadge">AMBIENCE CONCIERGE｜飯店合作專車接駁</p>
-        <p class="text-sm font-bold" data-i18n="charterTitle">飯店門口出發・中文／日文／英文司機包車一日遊</p>
-        <p class="text-xs text-slate-300" data-i18n="charterDesc">支援 4 人座轎車／7～9 人座商務休旅，可依需求客製路線，歡迎洽詢一樓櫃檯或透過 LINE 預約。</p>
-      </div>
-      <div class="flex flex-wrap items-center gap-2 shrink-0">
-        <button type="button" onclick="openTransferModal()"
-                class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 border border-white/25 text-white text-xs font-bold transition cursor-pointer">
-          <span>✈️</span>
-          <span data-tf-i18n="fab_title">預約接送機</span>
-        </button>
-        <a id="charterBannerBtn" href="https://line.me/" target="_blank" rel="noopener noreferrer"
-           class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#B48A5A] hover:bg-[#9E7649] text-white text-xs font-bold transition">
-          <span>💬</span>
-          <span data-i18n="charterCta">洽詢櫃檯 / LINE 預約</span>
-        </a>
-      </div>
-    </div>
-
-    <div class="flex items-center justify-between mb-3.5">
-      <p class="text-xs sm:text-sm text-slate-500">
-        <span data-i18n="showingCount">共顯示</span> <strong id="resultCount" class="text-slate-800">0</strong> <span id="placesUnitText" data-i18n="placesUnit">個精選項目</span>
-        <span class="hidden sm:inline text-slate-400 ml-1" id="clickTipText" data-i18n="clickTip">（點擊卡片可檢視照片與詳細介紹）</span>
-      </p>
-      <span id="dataSourceBadge" class="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-medium">正在載入資料...</span>
-    </div>
-
-    <!-- 卡片網格 -->
-    <div id="placesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5"></div>
-
-    <!-- 無結果提示 -->
-    <div id="emptyState" class="hidden text-center py-16 bg-white rounded-2xl border border-stone-200/80">
-      <p class="text-slate-500 text-sm" data-i18n="noResults">找不到符合條件的項目，請嘗試清除篩選條件。</p>
-      <button onclick="resetFilters()" class="mt-3 px-4 py-2 bg-[#1E293B] text-white text-xs font-medium rounded-lg hover:bg-slate-800 transition" data-i18n="resetBtn">重設篩選</button>
-    </div>
-  </main>
-
-  <!-- 頁尾（雙擊版權宣告可開啟管理員同步設定） -->
-  <footer class="bg-white border-t border-stone-200/80 py-5 px-4 sm:px-6 mt-8">
-    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-400">
-      <p ondblclick="toggleSetupModal()" class="cursor-default select-none" title="Double-click for Admin Settings">
-        © 2026 喜瑞飯店 Ambience Hotel Taipei. All rights reserved.
-      </p>
-      <p class="text-[11px] text-slate-400">No. 64, Sec. 1, Chang'an E. Rd., Taipei</p>
-    </div>
-  </footer>
-
-  <!-- 1. 半日遊行程時間軸視窗（手機版 Bottom Sheet / 桌面版置中 Modal） -->
-  <div id="itineraryModal" onclick="if(event.target === this) closeItineraryModal()" class="hidden fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-xs flex items-end sm:items-center justify-center sm:p-4">
-    <div class="animate-sheet bg-white rounded-t-3xl sm:rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl border border-stone-200">
-      <!-- 手機版拖曳指示條 -->
-      <div class="bg-[#1E293B] pt-2.5 sm:hidden flex justify-center shrink-0">
-        <div class="w-10 h-1 rounded-full bg-white/30"></div>
-      </div>
-
-      <div class="bg-[#1E293B] text-white p-5 sm:p-6 pt-3 sm:pt-6 flex items-start justify-between gap-4 shrink-0">
-        <div>
-          <div class="flex flex-wrap items-center gap-2 mb-2">
-            <span id="itinModalBadge" class="px-2.5 py-0.5 rounded-full bg-[#B48A5A] text-white text-xs font-semibold"></span>
-            <span id="itinModalDuration" class="px-2.5 py-0.5 rounded-full bg-white/15 text-[#E6C79C] text-xs font-medium"></span>
-          </div>
-          <h3 id="itinModalTitle" class="text-lg sm:text-xl font-bold leading-snug"></h3>
-          <p id="itinModalSubTitle" class="text-xs text-slate-300 mt-1"></p>
-        </div>
-        <button onclick="closeItineraryModal()" aria-label="關閉" class="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center text-sm font-bold transition shrink-0">
-          ✕
-        </button>
-      </div>
-
-      <div class="p-5 sm:p-6 overflow-y-auto space-y-5 flex-1">
-        <p id="itinModalSummary" class="text-sm text-slate-600 bg-[#FAF9F6] p-3.5 rounded-xl border border-stone-200/80 leading-relaxed"></p>
-        <div id="itinStopsTimeline" class="relative pl-6 border-l-2 border-[#B48A5A]/40 space-y-6 ml-2"></div>
-      </div>
-
-      <div class="bg-stone-50 border-t border-stone-200/80 px-5 py-3.5 flex items-center justify-between gap-3 shrink-0">
-        <span class="text-xs text-slate-500" data-i18n="itinFooterTip">提示：點擊各站推薦店家標籤可直接查看介紹</span>
-        <button onclick="closeItineraryModal()" class="px-4 py-2 rounded-xl bg-[#1E293B] hover:bg-slate-800 text-white text-xs font-semibold transition shrink-0" data-i18n="closeBtn">
-          關閉行程表
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 2. 店家 / 包車詳情視窗（手機版 Bottom Sheet / 桌面版置中 Modal） -->
-  <div id="placeModal" onclick="if(event.target === this) closePlaceModal()" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs flex items-end sm:items-center justify-center sm:p-4">
-    <div class="animate-sheet bg-white rounded-t-3xl sm:rounded-2xl max-w-lg w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl border border-stone-200">
-      
-      <!-- 圖片 / 精品排版視覺區 -->
-      <div id="modalImageContainer" class="relative bg-stone-100 shrink-0">
-        <!-- 手機版懸浮拖曳指示條 -->
-        <div class="absolute top-2.5 left-1/2 -translate-x-1/2 z-20 sm:hidden w-10 h-1 rounded-full bg-white/80 shadow-xs"></div>
-
-        <img id="modalImage" src="" alt="" class="w-full h-56 sm:h-64 object-cover hidden" />
-        
-        <!-- 無實景照片時的精品品牌排版卡（取代生硬的缺圖提示） -->
-        <div id="modalNoImage" class="h-36 sm:h-40 w-full flex flex-col items-center justify-center bg-gradient-to-br from-[#F5F2EB] via-[#FAF9F6] to-[#EFE9DD] relative overflow-hidden">
-          <span id="modalWatermark" class="absolute text-4xl font-bold tracking-widest uppercase text-[#B48A5A]/10 select-none pointer-events-none">AMBIENCE</span>
-          <span id="modalFallbackIcon" class="text-3xl mb-1 relative z-10">🍜</span>
-          <span class="text-[11px] font-semibold tracking-wider uppercase text-[#B48A5A] relative z-10">Ambience Concierge Pick</span>
-        </div>
-
-        <button onclick="closePlaceModal()" aria-label="關閉" class="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-slate-900/65 hover:bg-slate-900 text-white flex items-center justify-center text-sm font-bold transition shadow">
-          ✕
-        </button>
-
-        <div class="absolute bottom-3 left-3 z-10 flex items-center gap-2">
-          <span id="modalCatBadge" class="px-2.5 py-1 rounded-lg bg-white/95 backdrop-blur-xs text-xs font-semibold text-slate-800 shadow-xs"></span>
-          <span id="modalWalkBadge" class="px-2.5 py-1 rounded-lg bg-[#1E293B]/90 text-white text-xs font-medium shadow-xs"></span>
-        </div>
-      </div>
-
-      <!-- 可滾動內容區 -->
-      <div class="p-5 sm:p-6 overflow-y-auto space-y-3.5 flex-1">
-        <div class="flex items-start justify-between gap-3">
-          <div>
-            <h3 id="modalTitle" class="text-xl font-bold text-slate-900 leading-snug"></h3>
-            <p id="modalSubTitle" class="text-xs text-slate-400 mt-0.5"></p>
-          </div>
-          <!-- 一鍵複製中文名稱（方便房客給計程車司機看） -->
-          <button id="copyNameBtn" onclick="copyPlaceInfo()" class="shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#FAF9F6] hover:bg-stone-100 border border-stone-200 text-slate-600 text-xs font-medium transition active:scale-95">
-            <span>📋</span>
-            <span id="copyBtnText">複製店名</span>
-          </button>
-        </div>
-
-        <p id="modalTag" class="text-xs font-semibold text-[#B48A5A] bg-amber-50/70 border border-amber-200/60 px-3 py-1.5 rounded-lg inline-block"></p>
-
-        <p id="modalDesc" class="text-sm text-slate-600 leading-relaxed whitespace-pre-line"></p>
-
-        <div id="modalHoursBox" class="bg-[#FAF9F6] border border-stone-200/70 rounded-xl p-3 flex items-center gap-2 text-xs text-slate-600">
-          <span class="text-base">🕒</span>
-          <span id="modalHours" class="font-medium"></span>
-        </div>
-      </div>
-
-      <!-- 底部固定操作列（單手拇指友善） -->
-      <div class="px-5 py-3.5 bg-white border-t border-stone-100 flex items-center gap-2.5 shrink-0">
-        <button onclick="closePlaceModal()" class="px-4 py-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-slate-700 text-xs sm:text-sm font-semibold transition" data-i18n="backBtn">
-          返回
-        </button>
-        <a id="modalActionBtn" href="#" target="_blank" rel="noopener noreferrer"
-           class="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#B48A5A] hover:bg-[#9E7649] text-white text-xs sm:text-sm font-bold transition shadow-sm active:scale-[0.99]">
-          <span id="modalActionText">Google 地圖導航</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <!-- 試算表狀態與設定說明彈窗（雙擊頁尾版權開啟） -->
-  <div id="setupModal" onclick="if(event.target === this) toggleSetupModal()" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-stone-200 space-y-4">
-      <div class="flex items-center justify-between">
-        <h3 class="font-bold text-base text-slate-800">試算表串接狀態與半日遊開關說明</h3>
-        <button onclick="toggleSetupModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold">✕</button>
-      </div>
-      <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
-        <p><strong>目前狀態：</strong>「推薦半日遊」分頁已開啟（<code>ENABLE_ITINERARY_TAB = true</code>）。</p>
-        <p><strong>快速管理：</strong>若需暫時隱藏半日遊分頁，將程式碼中的 <code>const ENABLE_ITINERARY_TAB = true;</code> 改為 <code>false</code> 即可。</p>
-      </div>
-      <div class="pt-2 flex flex-wrap gap-2">
-        <button onclick="downloadItineraryCSV()" class="px-3.5 py-2 bg-stone-100 hover:bg-stone-200 text-slate-700 rounded-lg text-xs font-medium transition">
-          📥 下載半日遊 CSV 範本
-        </button>
-        <button onclick="reloadAllSheets()" class="px-3.5 py-2 bg-[#B48A5A] hover:bg-[#9E7649] text-white rounded-lg text-xs font-medium transition">
-          🔄 立即重新同步試算表
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== 喜瑞飯店：全三語浮動接送機預約系統 ==================== -->
-
-  <!-- 1. 右下角浮動觸發按鈕 -->
-  <button onclick="openTransferModal()" 
-    class="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 bg-[#1E293B] hover:bg-slate-800 text-white border-2 border-[#B48A5A] shadow-xl rounded-full px-4 sm:px-5 py-3 sm:py-3.5 flex items-center gap-2.5 transition-transform hover:scale-105 cursor-pointer group">
-    <span class="text-lg group-hover:rotate-12 transition-transform">✈️</span>
-    <div class="text-left leading-tight">
-      <span class="block text-xs font-bold text-[#E6C79C]" data-tf-i18n="fab_title">預約接送機</span>
-      <span class="block text-[10px] text-slate-300" data-tf-i18n="fab_sub">Airport Transfer</span>
-    </div>
-  </button>
-
-  <!-- 2. 彈出式預約視窗 (Modal) -->
-  <div id="transferModal" onclick="if(event.target === this) closeTransferModal()" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-slate-900/65 backdrop-blur-xs sm:p-4 overflow-y-auto">
-    <div class="animate-sheet bg-white border border-stone-200 rounded-t-3xl sm:rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col">
-      
-      <!-- 手機版拖曳指示條 -->
-      <div class="bg-[#1E293B] pt-2.5 sm:hidden flex justify-center shrink-0">
-        <div class="w-10 h-1 rounded-full bg-white/30"></div>
-      </div>
-
-      <!-- 視窗頂部標題列 -->
-      <div class="bg-[#1E293B] text-white px-5 sm:px-6 py-3.5 sm:py-4 border-b-4 border-[#B48A5A] flex items-center justify-between shrink-0">
-        <div>
-          <span class="text-[10px] font-bold tracking-widest text-[#E6C79C] uppercase">AMBIENCE CONCIERGE · DIRECT BOOKING</span>
-          <h2 class="text-base sm:text-lg font-bold mt-0.5" data-tf-i18n="modal_title">✈️ 桃園機場專屬接送機預約</h2>
-        </div>
-        <button onclick="closeTransferModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-lg transition cursor-pointer shrink-0" aria-label="Close">
-          ✕
-        </button>
-      </div>
-
-      <!-- 預約成功提示畫面 -->
-      <div id="transferSuccessView" class="hidden p-6 sm:p-8 text-center space-y-4 overflow-y-auto flex-1">
-        <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-3xl mx-auto">✓</div>
-        <h3 class="text-xl font-bold text-slate-900" data-tf-i18n="success_title">預約資料已成功傳送至櫃檯！</h3>
-        <p class="text-xs text-slate-600 max-w-md mx-auto leading-relaxed" data-tf-i18n="success_desc">
-          我們已收到您的接送機需求，櫃檯人員確認車輛後將盡快透過您留下的聯絡方式回覆確認。
-        </p>
-        <div class="bg-[#FAF9F6] border border-stone-200 rounded-xl p-4 text-left text-xs text-slate-700 font-mono whitespace-pre-wrap max-h-48 overflow-y-auto" id="transferReceiptBox"></div>
-        <div class="pt-2 flex flex-wrap justify-center gap-3">
-          <button type="button" onclick="copyLastReceipt()" class="px-4 py-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-slate-800 text-xs font-bold border border-stone-300 cursor-pointer" data-tf-i18n="btn_copy_receipt">
-            📋 複製預約明細（備存 / 傳 LINE）
-          </button>
-          <button type="button" onclick="resetAndCloseTransferModal()" class="px-5 py-2.5 rounded-xl bg-[#1E293B] hover:bg-slate-800 text-white text-xs font-bold cursor-pointer" data-tf-i18n="btn_close">
-            完成並關閉
-          </button>
-        </div>
-      </div>
-
-      <!-- 表單填寫畫面 -->
-      <form id="transferForm" class="p-5 sm:p-6 space-y-3.5 text-sm text-slate-700 overflow-y-auto flex-1" onsubmit="submitTransferDirect(event)">
-        
-        <!-- 服務類型 & 車型 -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-          <div>
-            <label class="block text-xs font-bold text-slate-800 mb-1" data-tf-i18n="lbl_type">服務類型 *</label>
-            <select id="tf_type" required class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-[#FAF9F6] text-xs sm:text-sm focus:outline-none focus:border-[#B48A5A]">
-              <option value="接機 Pick-up (桃園機場 TPE ➔ 喜瑞飯店)" data-tf-i18n="opt_pickup">接機（桃園機場 TPE ➔ 喜瑞飯店）</option>
-              <option value="送機 Drop-off (喜瑞飯店 ➔ 桃園機場 TPE)" data-tf-i18n="opt_dropoff">送機（喜瑞飯店 ➔ 桃園機場 TPE）</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-800 mb-1" data-tf-i18n="lbl_car">選擇車型 *</label>
-            <select id="tf_car" onchange="calculateTransferFare()" required class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-[#FAF9F6] text-xs sm:text-sm focus:outline-none focus:border-[#B48A5A]">
-              <option value="1300" data-label="1-4人座轎車/休旅 (1-4 Pax Sedan/SUV)" data-tf-i18n="opt_car_small">1–4 人座（一般轎車／休旅）— NT$ 1,300</option>
-              <option value="1600" data-label="5-8人座商務休旅 (5-8 Pax Van)" data-tf-i18n="opt_car_large">5–8 人座（商務九人座）— NT$ 1,600</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- 日期、時間 & 航班 -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-          <div>
-            <label class="block text-xs font-bold text-slate-800 mb-1" data-tf-i18n="lbl_date">用車日期 *</label>
-            <input type="date" id="tf_date" required class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-[#FAF9F6] text-xs sm:text-sm focus:outline-none focus:border-[#B48A5A]" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-800 mb-1" data-tf-i18n="lbl_time">航班 / 上車時間 *</label>
-            <input type="time" id="tf_time" onchange="calculateTransferFare()" required class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-[#FAF9F6] text-xs sm:text-sm focus:outline-none focus:border-[#B48A5A]" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-800 mb-1" data-tf-i18n="lbl_flight">航班編號 *</label>
-            <input type="text" id="tf_flight" data-tf-placeholder="ph_flight" placeholder="例：BR198 / JX800" required class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-[#FAF9F6] text-xs sm:text-sm focus:outline-none focus:border-[#B48A5A]" />
-          </div>
-        </div>
-
-        <!-- 訂房大名 & 回覆信箱 -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-          <div>
-            <label class="block text-xs font-bold text-slate-800 mb-1" data-tf-i18n="lbl_name">訂房大名（同護照）*</label>
-            <input type="text" id="tf_name" data-tf-placeholder="ph_name" placeholder="例：WANG XIAO-MING" required class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-[#FAF9F6] text-xs sm:text-sm focus:outline-none focus:border-[#B48A5A]" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-800 mb-1" data-tf-i18n="lbl_email">電子信箱（接收櫃檯確認信）*</label>
-            <input type="email" id="tf_email" placeholder="guest@example.com" required class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-[#FAF9F6] text-xs sm:text-sm focus:outline-none focus:border-[#B48A5A]" />
-          </div>
-        </div>
-
-        <!-- 聯絡電話/LINE & 訂房編號 -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-          <div>
-            <label class="block text-xs font-bold text-slate-800 mb-1" data-tf-i18n="lbl_contact">手機 / LINE / WhatsApp *</label>
-            <input type="text" id="tf_contact" data-tf-placeholder="ph_contact" placeholder="例：+886-912-345-678 / LINE ID" required class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-[#FAF9F6] text-xs sm:text-sm focus:outline-none focus:border-[#B48A5A]" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-800 mb-1" data-tf-i18n="lbl_booking_id">訂房編號（選填）</label>
-            <input type="text" id="tf_booking_id" placeholder="例：TPI2611..." class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-[#FAF9F6] text-xs sm:text-sm focus:outline-none focus:border-[#B48A5A]" />
-          </div>
-        </div>
-
-        <!-- 人數 & 行李 -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-          <div>
-            <label class="block text-xs font-bold text-slate-800 mb-1" data-tf-i18n="lbl_pax">乘客人數 *</label>
-            <input type="text" id="tf_pax" data-tf-placeholder="ph_pax" placeholder="例：2 大 1 小" required class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-[#FAF9F6] text-xs sm:text-sm focus:outline-none focus:border-[#B48A5A]" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-800 mb-1" data-tf-i18n="lbl_luggage">行李件數與尺寸 *</label>
-            <input type="text" id="tf_luggage" data-tf-placeholder="ph_luggage" placeholder="例：28吋×2、20吋×1" required class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-[#FAF9F6] text-xs sm:text-sm focus:outline-none focus:border-[#B48A5A]" />
-          </div>
-        </div>
-
-        <!-- 備註 -->
-        <div>
-          <label class="block text-xs font-bold text-slate-800 mb-1" data-tf-i18n="lbl_notes">特殊需求備註（舉牌需求 / 兒童安全座椅等）</label>
-          <input type="text" id="tf_notes" data-tf-placeholder="ph_notes" placeholder="例：需要接機舉牌、需 1 張嬰兒座椅（需另加價）" class="w-full border border-stone-300 rounded-xl px-3 py-2 bg-[#FAF9F6] text-xs sm:text-sm focus:outline-none focus:border-[#B48A5A]" />
-        </div>
-
-        <!-- 即時車資試算框 -->
-        <div class="bg-[#FAF9F6] border border-[#B48A5A]/50 rounded-xl p-3.5 flex items-center justify-between gap-2">
-          <div>
-            <p class="text-xs font-bold text-slate-800" data-tf-i18n="fare_title">💰 預估單趟車資</p>
-            <p id="tf_fare_detail" class="text-[11px] text-slate-500 mt-0.5">基本車資 NT$ 1,300（22:00–06:00 夜間加收 NT$ 100）</p>
-          </div>
-          <div class="text-right shrink-0">
-            <span id="tf_total_fare" class="text-lg sm:text-xl font-bold text-[#B48A5A]">NT$ 1,300</span>
-            <span class="block text-[10px] text-slate-400" data-tf-i18n="fare_pay_note">現場支付現金或櫃檯代收</span>
-          </div>
-        </div>
-
-        <!-- 按鈕區 -->
-        <div class="pt-1 flex flex-col sm:flex-row gap-2.5">
-          <button type="submit" id="tf_submit_btn" class="flex-1 bg-[#1E293B] hover:bg-slate-800 text-white font-bold py-3 px-5 rounded-xl shadow transition flex items-center justify-center gap-2 cursor-pointer">
-            <span data-tf-i18n="btn_submit">📨 直接發送預約至櫃檯確認</span>
-          </button>
-          <button type="button" onclick="copyTransferSummaryOnly()" class="sm:w-auto bg-stone-100 hover:bg-stone-200 text-slate-800 font-bold py-3 px-4 rounded-xl border border-stone-300 transition flex items-center justify-center gap-1.5 cursor-pointer text-xs">
-            <span data-tf-i18n="btn_copy_only">📋 僅複製文字</span>
-          </button>
-        </div>
-      </form>
-
-    </div>
-  </div>
-
-  <script>
-    // =========================================================================
-    // 0. 半日遊分頁總開關（false = 暫時隱藏關閉；true = 開啟顯示）
-    // =========================================================================
-    const ENABLE_ITINERARY_TAB = true;
-
-    // =========================================================================
-    // 1. 飯店周邊步行圈 CSV 網址（已綁定您的工作表1）
-    // =========================================================================
-    const LOCAL_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWlyzIGNyylZRVgFo_33AIShQXGJngkbN7MqkbwlWk-X5jsKiqa81A73jttrRIETcxs1tzPnyjVvxM/pub?gid=0&single=true&output=csv";
-
-    // =========================================================================
-    // 2. 推薦半日遊 CSV 網址
-    // =========================================================================
-    const ITINERARY_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWlyzIGNyylZRVgFo_33AIShQXGJngkbN7MqkbwlWk-X5jsKiqa81A73jttrRIETcxs1tzPnyjVvxM/pub?gid=607351244&single=true&output=csv";
-
-    // =========================================================================
-    // 3. 包車接駁 CSV 網址（選填）
-    // =========================================================================
-    const TOUR_SHEET_CSV_URL = "";
-
-    // =========================================================================
-    // 4. 喜瑞飯店官方 LINE 預約網址
-    // =========================================================================
-    const HOTEL_LINE_URL = "https://line.me/";
-
-    // 飯店周邊預設備援資料
-    const DEFAULT_LOCAL_PLACES = [
-      {
-        category: "food",
-        walk_mins: 12,
-        name_zh: "阜杭豆漿",
-        name_en: "Fuhang Soy Milk",
-        name_ja: "阜杭豆漿（フーハンドウジャン）",
-        tag_zh: "米其林必比登 · 經典台式早餐",
-        tag_en: "Michelin Bib Gourmand · Iconic Breakfast",
-        tag_ja: "ミシュランビブグルマン・定番台湾朝ごはん",
-        desc_zh: "位於華山市場二樓的排隊名店，必點炭火現烤厚餅夾蛋、香濃鹹豆漿與焦糖甜餅。",
-        desc_en: "Legendary Taipei breakfast spot on the 2nd floor of Huashan Market.",
-        desc_ja: "華山市場2階にある行列のできる人気朝食店。",
-        hours: "05:30 - 12:30 (週一公休)",
-        map_url: "https://maps.google.com/?q=阜杭豆漿",
-        image_url: ""
-      }
-    ];
-
-    // =========================================================================
-    // 半日遊推薦店家與體驗場所專屬百科字典
-    // =========================================================================
-    const SPOT_FOOD_DIRECTORY = {
-      "福大蒸餃": {
-        category: "food",
-        walk_mins: "中山站步行 2 分",
-        name_zh: "福大山東蒸餃大王",
-        name_en: "Fuda Shandong Steamed Dumplings",
-        name_ja: "福大山東蒸餃大王",
-        tag_zh: "中山商圈排隊名店 · 皮薄爆汁手工蒸餃",
-        tag_en: "Zhongshan Favorite · Juicy Handmade Steamed Dumplings",
-        tag_ja: "中山エリア人気店・肉汁あふれる手作り蒸し餃子",
-        desc_zh: "隱身在捷運中山站新光三越後方巷弄的人氣老店，現桿現包的手工蒸餃外皮Q彈、內餡飽滿多汁，推薦搭配酸辣湯或紅油抄手一起享用。",
-        desc_en: "Tucked behind Shin Kong Mitsukoshi near Zhongshan Station, famous for chewy handmade steamed dumplings paired with hot & sour soup.",
-        desc_ja: "MRT中山駅裏の路地にある老舗。注文後に蒸し上げるモチモチ皮のジューシーな蒸し餃子と酸辣湯の組み合わせが絶品です。",
-        hours: "11:30 - 20:30 (週日公休)",
-        map_url: "https://maps.google.com/?q=福大山東蒸餃大王"
-      },
-      "茗香園冰室": {
-        category: "food",
-        walk_mins: "中山站步行 1 分",
-        name_zh: "茗香園冰室（中山店）",
-        name_en: "Ming Xiang Yuan Hong Kong Cafe",
-        name_ja: "茗香園冰室（香港カフェ）",
-        tag_zh: "超人氣港式茶餐廳 · 爆漿流沙奶皇西多士",
-        tag_en: "Popular HK Cafe · Molten Salted Egg French Toast",
-        tag_ja: "行列のできる香港茶餐廳・とろけるカスタードフレンチトースト",
-        desc_zh: "中山站最具代表性的港式茶餐廳，必點切開會爆漿的「流沙奶皇西多士」、滑蛋蝦仁飯與絲襪奶茶，份量十足且口味道地。",
-        desc_en: "Iconic Hong Kong-style diner in Zhongshan. Must-orders include the molten salted egg yolk French toast, scrambled egg shrimp rice, and HK milk tea.",
-        desc_ja: "中山駅すぐの人気香港カフェ。ナイフを入れると塩卵カスタードが溢れ出すフレンチトーストや海老卵丼、香港ミルクティーが大人気。",
-        hours: "11:30 - 21:30",
-        map_url: "https://maps.google.com/?q=茗香園冰室+中山店"
-      },
-      "永樂旗魚米粉湯": {
-        category: "food",
-        walk_mins: "迪化街步行 1 分",
-        name_zh: "永樂旗魚米粉湯",
-        name_en: "Yongle Swordfish Rice Noodles",
-        name_ja: "永楽旗魚米粉湯（カジキビーフン）",
-        tag_zh: "大稻埕百年市場美食 · 鮮甜旗魚湯頭與酥炸紅燒肉",
-        tag_en: "Dadaocheng Classic · Savory Swordfish Broth & Crispy Pork",
-        tag_ja: "大稲埕の名物屋台・カジキ出汁ビーフン＆紅焼肉",
-        desc_zh: "位於永樂市場旁的經典台式小吃，以新鮮旗魚熬煮的清甜湯頭搭配細米粉，再點一盤現炸酥脆的紅燒肉、炸蝦仁與炸蚵仔，是最道地的大稻埕吃法。",
-        desc_en: "Classic street stall beside Yongle Market serving fragrant swordfish rice noodle soup alongside crispy deep-fried red yeast pork and shrimp.",
-        desc_ja: "永楽市場横の老舗屋台。カジキの旨味が溶け込んだ優しいスープのビーフンと、揚げたてサクサクの紅焼肉（台湾風豚唐揚げ）は必食。",
-        hours: "06:00 - 17:00",
-        map_url: "https://maps.google.com/?q=永樂旗魚米粉湯"
-      },
-      "妙口四神湯・肉包專賣店": {
-        category: "food",
-        walk_mins: "迪化街步行 2 分",
-        name_zh: "妙口四神湯・肉包專賣店",
-        name_en: "Miaokou Four-Herb Soup & Steamed Pork Buns",
-        name_ja: "妙口四神湯・肉包専売店",
-        tag_zh: "迪化街騎樓老字號 · 濃郁藥膳四神湯配黑胡椒洋蔥肉包",
-        tag_en: "Dihua St. Landmark · Herbal Pork Intestine Soup & Pepper Buns",
-        tag_ja: "迪化街の老舗・漢方四神湯＆黒胡椒玉ねぎ肉まん",
-        desc_zh: "屹立迪化街騎樓數十年的排隊老店，四神湯乳白濃郁、腸子處理得乾淨軟嫩，搭配帶有黑胡椒與洋蔥甜味的手工大肉包更是絕配。",
-        desc_en: "A decades-old Dihua Street institution famous for rich herbal four-herb soup and fluffy steamed buns filled with juicy pork, onion, and black pepper.",
-        desc_ja: "迪化街のアーケードで長年愛される老舗。臭みのない柔らかなモツ入り薬膳スープ「四神湯」と、黒胡椒が効いたジューシー肉まんのセットが定番。",
-        hours: "11:30 - 17:00 (週一公休)",
-        map_url: "https://maps.google.com/?q=妙口四神湯肉包專賣店"
-      },
-      "ASW Tea House": {
-        category: "cafe",
-        walk_mins: "迪化街步行 1 分",
-        name_zh: "ASW Tea House",
-        name_en: "ASW Tea House",
-        name_ja: "ASW Tea House（台湾茶サロン）",
-        tag_zh: "屈臣氏大藥房二樓 · 英倫圖書館風台灣茶沙龍",
-        tag_en: "2F Historic Watson's Bldg · British Library-Style Taiwanese Tea Salon",
-        tag_ja: "歴史建築2階・英国図書館風の台湾茶サロン",
-        desc_zh: "藏身於大稻埕古蹟「屈臣氏大藥房」二樓的質感茶館，深色木質書櫃與復古窗景充滿英倫書卷氣息，專賣台灣各地小農紅茶與烏龍茶，推薦搭配司康與鹹派。",
-        desc_en: "Located on the 2nd floor of the historic Watson's building in Dadaocheng, offering single-estate Taiwanese black and oolong teas in a moody, book-lined salon.",
-        desc_ja: "大稲埕の歴史建築「屈臣氏大薬房」2階にある隠れ家ティーサロン。重厚な木製本棚に囲まれた空間で、台湾産シングルオリジン紅茶や烏龍茶を味わえます。",
-        hours: "09:00 - 18:00",
-        map_url: "https://maps.google.com/?q=ASW+Tea+House"
-      },
-      "幻猻家珈琲 Pallas Café": {
-        category: "cafe",
-        walk_mins: "迪化街步行 3 分",
-        name_zh: "幻猻家珈琲 Pallas Café",
-        name_en: "Pallas Café",
-        name_ja: "幻猻家珈琲 Pallas Café",
-        tag_zh: "大稻埕老宅自烘咖啡 · 招牌手作焦糖布丁與乾咖哩",
-        tag_en: "Dadaocheng Roastery · Signature Caramel Pudding & Dry Curry",
-        tag_ja: "大稲埕の古民家自家焙煎カフェ・濃厚プリン＆ドライカレー",
-        desc_zh: "改建自大稻埕老街屋的自家烘焙咖啡館，木質暖光氛圍極具復古韻味。除了手沖單品咖啡外，每日限量的「焦糖布丁」與香料「招牌咖哩」更是饕客必點。",
-        desc_en: "A warm, vintage-styled roastery in Dadaocheng celebrated for its single-origin pour-overs, rich Japanese-style caramel pudding, and spiced dry curry.",
-        desc_ja: "大稲埕の古民家を改装した自家焙煎カフェ。レトロで落ち着いた店内で味わうハンドドリップコーヒーと、固めで濃厚なカラメルプリンが大人気です。",
-        hours: "10:00 - 18:00 (週一、二公休)",
-        map_url: "https://maps.google.com/?q=幻猻家珈琲"
-      },
-      "好丘 Good Cho's": {
-        category: "cafe",
-        walk_mins: "四四南村內",
-        name_zh: "好丘 Good Cho's（信義店）",
-        name_en: "Good Cho's (Four Four South Village)",
-        name_ja: "好丘 Good Cho's（四四南村店）",
-        tag_zh: "眷村文創貝果名店 · 結合台灣在地食材的手作貝果",
-        tag_en: "Artisanal Bagel Cafe · Infused with Local Taiwanese Ingredients",
-        tag_ja: "眷村アート空間内の人気店・台湾素材の手作りベーグル",
-        desc_zh: "位於四四南村眷村老屋內的人氣複合式餐飲與選物店，主打使用台灣在地水果、茶葉與地瓜製作的Q彈手作貝果，也能購買台灣文創設計伴手禮。",
-        desc_en: "Housed inside a restored military village cottage at Four Four South Village, famous for chewy bagels made with Taiwanese tea, sweet potato, and local fruits.",
-        desc_ja: "四四南村のレトロな平屋にあるベーグルカフェ＆雑貨ショップ。台湾茶やサツマイモ、フルーツを練り込んだモチモチの手作りベーグルが名物です。",
-        hours: "11:00 - 18:00",
-        map_url: "https://maps.google.com/?q=好丘+信義店"
-      },
-      "興波咖啡 Simple Kaffa": {
-        category: "cafe",
-        walk_mins: "台北101 88樓",
-        name_zh: "興波咖啡天空興波 Simple Kaffa Sola",
-        name_en: "Simple Kaffa Sola (Taipei 101 88F)",
-        name_ja: "Simple Kaffa Sola（台北101・88階天空カフェ）",
-        tag_zh: "世界咖啡師大賽冠軍 · 380 公尺高空雲端咖啡廳",
-        tag_en: "World Barista Champion · 88th-Floor Sky Cafe",
-        tag_ja: "バリスタ世界王者監修・地上88階の雲上カフェ",
-        desc_zh: "由世界咖啡師冠軍吳則霖打造的高空旗艦店，坐落於台北 101 第 88 樓，可一邊俯瞰大台北壯闊山河景致，一邊品嚐冠軍手沖咖啡與創意咖啡調飲。",
-        desc_en: "Founded by World Barista Champion Berg Wu on the 88th floor of Taipei 101, offering panoramic city views alongside world-class pour-overs and signature coffee mocktails.",
-        desc_ja: "バリスタ世界チャンピオンが手掛ける台北101・88階の天空カフェ。台北市街の絶景を見下ろしながら、世界最高峰のスペシャルティコーヒーを堪能できます。",
-        hours: "10:00 - 20:00",
-        map_url: "https://maps.google.com/?q=天空興波+Simple+Kaffa+Sola"
-      },
-      "鼎泰豐 101 店": {
-        category: "food",
-        walk_mins: "台北101 B1",
-        name_zh: "鼎泰豐（台北 101 店）",
-        name_en: "Din Tai Fung (Taipei 101)",
-        name_ja: "鼎泰豊（ディンタイフォン・台北101店）",
-        tag_zh: "台灣美食代名詞 · 黃金 18 摺小籠包與排骨蛋炒飯",
-        tag_en: "Taiwan's Culinary Icon · 18-Fold Xiaolongbao & Pork Chop Fried Rice",
-        tag_ja: "台湾グルメの代名詞・黄金18ヒダの小籠包＆排骨チャーハン",
-        desc_zh: "享譽國際的台灣小籠包名店，每顆小籠包皆堅持黃金 18 摺、皮薄湯鮮。除了原味與絲瓜蝦仁小籠包外，排骨蛋炒飯、紅油抄手與元盅雞湯也是必點經典。",
-        desc_en: "World-renowned for its delicate 18-fold soup dumplings. Beyond classic pork xiaolongbao, don't miss the pork chop fried rice, spicy wontons, and steamed chicken soup.",
-        desc_ja: "世界的に有名な小籠包の名店。職人が18のヒダで包み上げるジューシーな小籠包はもちろん、排骨チャーハンやピリ辛ワンタンも外せない逸品です。",
-        hours: "11:00 - 20:30",
-        map_url: "https://maps.google.com/?q=鼎泰豐+101店"
-      },
-      "解解渴愛玉": {
-        category: "cafe",
-        walk_mins: "象山登山口",
-        name_zh: "解解渴愛玉（象山店）",
-        name_en: "Jie Jie Ke Aiyu Jelly (Xiangshan)",
-        name_ja: "解解渇愛玉（象山登山口店）",
-        tag_zh: "象山步道必喝消暑聖品 · 野生愛玉手洗檸檬冰",
-        tag_en: "Xiangshan Trailhead Refreshment · Hand-Washed Wild Aiyu Jelly",
-        tag_ja: "象山ハイキングの定番・天然オーギョーチーレモンゼリー",
-        desc_zh: "位於象山步道登山口旁的文青甜品小店，採用台灣阿里山野生愛玉子手工搓洗出天然果膠，加入新鮮現榨檸檬汁與冬瓜茶，爬完象山來一碗清涼解渴。",
-        desc_en: "Located right at the Xiangshan trailhead, serving refreshing hand-washed wild mountain aiyu jelly topped with fresh squeezed lemon juice and winter melon tea.",
-        desc_ja: "象山登山口のすぐそばにある人気スイーツスタンド。台湾産天然愛玉子から手揉みで作るプルプルの愛玉ゼリーに、搾りたてレモンを加えた爽やかな一杯。",
-        hours: "11:00 - 21:00",
-        map_url: "https://maps.google.com/?q=解解渴愛玉"
-      },
-      "御品元冰火湯圓": {
-        category: "cafe",
-        walk_mins: "通化夜市內",
-        name_zh: "御品元冰火湯圓（台北總店）",
-        name_en: "Yu Pin Yuan Iced & Hot Tangyuan",
-        name_ja: "御品元氷火湯円（ミシュラン掲載スイーツ）",
-        tag_zh: "米其林必比登推薦 · 滾燙芝麻花生湯圓放上桂花剉冰",
-        tag_en: "Michelin Bib Gourmand · Hot Sesame/Peanut Dumplings over Osmanthus Ice",
-        tag_ja: "ミシュランビブグルマン・熱々胡麻団子×キンモクセイかき氷",
-        desc_zh: "通化夜市排隊名店，將剛煮好滾燙的手工芝麻與花生湯圓直接鋪在清涼剉冰上，淋上香甜桂花蜜與檸檬汁，冷熱交織的獨特口感讓人一吃難忘。",
-        desc_en: "Michelin-recognized dessert stall topping finely shaved ice with piping-hot sesame and peanut glutinous rice balls, drizzled with fragrant osmanthus syrup and lemon.",
-        desc_ja: "通化夜市の行列店。茹でたて熱々の黒胡麻＆ピーナッツ団子を冷たいかき氷の上に乗せ、香り高いキンモクセイ蜜をかけた温冷スイーツが絶品です。",
-        hours: "18:00 - 23:30",
-        map_url: "https://maps.google.com/?q=御品元冰火湯圓"
-      },
-      "高記茶莊": {
-        category: "cafe",
-        walk_mins: "北投市場旁",
-        name_zh: "高記茶莊",
-        name_en: "Gaoji Tea House (Beitou)",
-        name_ja: "高記茶荘（北投名物ドリンクスタンド）",
-        tag_zh: "北投在地人排隊茶飲 · 超大容量袋裝無憂茶與古早味紅茶",
-        tag_en: "Beitou Local Favorite · Giant Bagged Iced Oolong & Black Tea",
-        tag_ja: "北投の行列お茶スタンド・名物袋入りアイスウーロン茶＆紅茶",
-        desc_zh: "北投最具代表性的手搖茶老店，招牌「無憂茶」（烏龍綠茶）清香回甘不澀口，推薦點豪邁的「袋裝」版本提著邊走邊喝，充滿濃濃懷舊台味。",
-        desc_en: "Beitou's most beloved traditional tea stand. Try their signature 'Wuyou Tea' (oolong-green tea blend) served in a nostalgic giant plastic carry bag.",
-        desc_ja: "北投で絶大な人気を誇る老舗お茶スタンド。看板メニューの「無憂茶（烏龍緑茶）」はすっきりとした後味で、レトロなビニール袋入りスタイルが名物です。",
-        hours: "07:00 - 22:00",
-        map_url: "https://maps.google.com/?q=高記茶莊"
-      },
-      "滿來溫泉拉麵": {
-        category: "food",
-        walk_mins: "新北投站步行 4 分",
-        name_zh: "滿來溫泉拉麵",
-        name_en: "Manlai Hot Spring Ramen",
-        name_ja: "満来温泉ラーメン",
-        tag_zh: "新北投溫泉區人氣名店 · 招牌炸排骨拉麵與溫泉豆腐",
-        tag_en: "Xinbeitou Landmark · Signature Fried Pork Chop Ramen & Tofu",
-        tag_ja: "新北投温泉エリアの人気店・名物排骨ラーメン＆温泉豆腐",
-        desc_zh: "位於新北投公園旁的排隊名店，結合台式炸排骨與日式拉麵湯頭，推薦必點香酥厚實的「炸排骨拉麵」、滑嫩「溫泉蛋」與柴魚醬汁「溫泉豆腐」。",
-        desc_en: "A long-standing favorite beside Xinbeitou Park known for its hearty pork chop ramen, soft-boiled hot spring eggs, and silky bonito-topped hot spring tofu.",
-        desc_ja: "新北投公園そばの行列店。サクサクの台湾風豚スペアリブ揚げが乗った「排骨ラーメン」や、とろとろの温泉卵・温泉豆腐が人気です。",
-        hours: "11:30 - 20:30",
-        map_url: "https://maps.google.com/?q=滿來溫泉拉麵"
-      },
-      "瀧乃湯": {
-        category: "hotspring",
-        walk_mins: "新北投站步行 6 分",
-        name_zh: "瀧乃湯浴室",
-        name_en: "Longnice Hot Spring Bathhouse",
-        name_ja: "瀧乃湯（タキノユ）",
-        tag_zh: "百年日式木造大眾湯 · 皇太子曾造訪的天然青磺泉",
-        tag_en: "Century-Old Bathhouse · Historic Green Sulfur Spring",
-        tag_ja: "創業100年以上の老舗浴場・希少な天然ラジウム青硫黄泉",
-        desc_zh: "北投現存最古老的日式湯屋，保留日治時期石造浴池與木造建築，提供平價道地的天然青磺泉（鐳泉）大眾裸湯與雙人湯屋體驗。",
-        desc_en: "Beitou's oldest surviving Japanese-era bathhouse featuring historic stone tubs and rare natural green sulfur radium spring water.",
-        desc_ja: "北投に現存する最古の日本式公衆浴場。歴史ある石造りの湯船で希少な天然青硫黄泉を気軽に体験できます。",
-        hours: "06:30 - 21:00 (週三公休)",
-        map_url: "https://maps.google.com/?q=瀧乃湯浴室"
-      },
-      "日勝生加賀屋": {
-        category: "hotspring",
-        walk_mins: "新北投站步行 5 分",
-        name_zh: "日勝生加賀屋國際溫泉飯店",
-        name_en: "Radium Kagaya International Hotel",
-        name_ja: "日勝生加賀屋 国際温泉ホテル",
-        tag_zh: "日本加賀屋海外唯一分館 · 正統日式女將服務與白磺泉湯屋",
-        tag_en: "Official Kagaya Branch · Authentic Japanese Hospitality & Private Onsen",
-        tag_ja: "日本の老舗「加賀屋」唯一の海外分館・極上の貸切白硫黄温泉",
-        desc_zh: "承襲日本石川縣和倉溫泉加賀屋的數寄屋建築美學與貼心服務，提供獨立景觀雙人湯屋，在檜木與天然石材浴池中享受滑順白磺泉。",
-        desc_en: "Bringing Japan's renowned Kagaya hospitality to Beitou, offering serene private cypress and stone hot spring suites fed by milky white sulfur water.",
-        desc_ja: "石川県和倉温泉「加賀屋」のおもてなしを受け継ぐ温泉旅館。檜や天然石を用いた上質な貸切風呂（湯屋）で白硫黄泉を満喫できます。",
-        hours: "湯屋 07:30 - 23:00 (建議預約)",
-        map_url: "https://maps.google.com/?q=日勝生加賀屋國際溫泉飯店"
-      },
-      "矮仔財滷肉飯": {
-        category: "food",
-        walk_mins: "北投市場 2 樓",
-        name_zh: "矮仔財滷肉飯",
-        name_en: "Aizaicai Braised Pork Rice",
-        name_ja: "矮仔財魯肉飯（北投市場の人気ルーローハン）",
-        tag_zh: "CNN 推薦台北必吃滷肉飯 · 黑金膠質滷汁與紅燒蹄膀",
-        tag_en: "CNN Top Taipei Eats · Rich Caramelized Braised Pork Rice",
-        tag_ja: "CNN選出の絶品ルーローハン・濃厚黒金ダレ＆豚すね肉煮込み",
-        desc_zh: "曾獲 CNN 推薦為台北必吃美食的傳奇滷肉飯，深褐色的陳年滷汁充滿膠質卻鹹香不膩，建議加點一份入口即化的「紅燒蹄膀」與「滷豆腐」。",
-        desc_en: "Featured by CNN as a must-eat Taipei dish, famous for its glossy, deeply caramelized braised pork rice, melt-in-your-mouth pork knuckle, and braised tofu.",
-        desc_ja: "CNNでも「台北で必食のグルメ」に選ばれた伝説のルーローハン店。コラーゲンたっぷりの濃厚な黒ダレご飯に、トロトロの豚すね肉煮込みを添えるのが通の食べ方。",
-        hours: "07:00 - 13:00 (週一、四公休)",
-        map_url: "https://maps.google.com/?q=矮仔財滷肉飯"
-      }
-    };
-
-    // 推薦半日遊內建資料
-    const DEFAULT_ITINERARY_PLACES = [
-      {
-        category: "culture",
-        duration_zh: "約 4.5 小時 · 步行＋捷運",
-        duration_en: "~4.5 Hours · Walk & MRT",
-        duration_ja: "約4.5時間・徒歩＆MRT",
-        name_zh: "中山文創巷弄 × 大稻埕百年街屋夕陽半日遊",
-        name_en: "Zhongshan Indie Alleys & Dadaocheng Sunset Half-Day Trip",
-        name_ja: "中山おしゃれ路地＆大稲埕レトロ街並み夕日半日コース",
-        tag_zh: "午後悠閒散步 · 設計師選物、古蹟茶館與淡水河夕陽",
-        tag_en: "Afternoon Stroll · Indie Boutiques, Heritage Tea & River Sunset",
-        tag_ja: "午後のゆったり散策・雑貨巡り＆歴史茶館と河岸の夕日",
-        desc_zh: "從喜瑞飯店午後出發，散步至心中山線形公園與赤峰街逛設計小店，接著前往大稻埕迪化街欣賞百年巴洛克街屋與霞海城隍廟，傍晚在碼頭欣賞淡水河金色夕陽。",
-        desc_en: "Start in the afternoon from the hotel to Xinzhongshan Linear Park's indie shops, then explore Dadaocheng's historic Dihua Street and enjoy sunset drinks by the wharf.",
-        desc_ja: "ホテルから午後にスタート。心中山リニアパークの雑貨店を巡り、歴史ある問屋街・迪化街散策と大稲埕埠頭での夕日鑑賞を楽しむ半日コース。",
-        stops: [
-          {
-            time: "14:00",
-            spot_zh: "第一站：光點台北 & 心中山線形公園",
-            spot_en: "Stop 1: SPOT-Taipei & Xinzhongshan Linear Park",
-            spot_ja: "第1スポット：光点台北＆心中山リニアパーク",
-            spot_desc_zh: "沿著中山北路林蔭大道步行約 15 分鐘抵達前美國大使官邸純白洋樓，順遊捷運中山站至雙連站之間的設計師選物店與赤峰街文創巷弄。",
-            spot_desc_en: "Walk 15 mins along tree-lined Zhongshan N. Rd. to the historic white mansion, then browse indie boutiques along Chifeng Street.",
-            spot_desc_ja: "並木道を徒歩約15分。白亜の歴史洋館を見学後、赤峰街や遊歩道沿いのセレクトショップ巡りを満喫。",
-            food_zh: "福大山東蒸餃大王 / 茗香園冰室",
-            food_en: "Fuda Steamed Dumplings / Ming Xiang Yuan",
-            food_ja: "福大山東蒸餃大王 / 茗香園冰室",
-            map_url: "https://maps.google.com/?q=心中山線形公園"
-          },
-          {
-            time: "15:30",
-            spot_zh: "第二站：大稻埕迪化街 & 台北霞海城隍廟",
-            spot_en: "Stop 2: Dadaocheng Dihua Street & Xiahai City God Temple",
-            spot_ja: "第2スポット：大稲埕・迪化街＆台北霞海城隍廟",
-            spot_desc_zh: "搭乘捷運至北門站或雙連站步行進入迪化街，欣賞華麗巴洛克立面街屋，參拜靈驗的霞海城隍廟，逛逛台灣茶行與伴手禮老舖。",
-            spot_desc_en: "Admire ornate Baroque shophouses along Dihua Street, visit the famous matchmaking temple, and shop for Taiwanese tea and crafts.",
-            spot_desc_ja: "バロック建築が並ぶ迪化街を散策。縁結びで有名な霞海城隍廟への参拝や、台湾茶・ドライフルーツのお土産探しに最適。",
-            food_zh: "永樂旗魚米粉湯 / 妙口四神湯・肉包專賣店",
-            food_en: "Yongle Swordfish Rice Noodles / Miaokou Steamed Pork Buns",
-            food_ja: "永樂旗魚米粉湯 / 妙口四神湯・肉包專賣店",
-            map_url: "https://maps.google.com/?q=迪化街"
-          },
-          {
-            time: "16:45",
-            spot_zh: "第三站：大稻埕老宅茶館 & 下午茶歇腳",
-            spot_en: "Stop 3: Dadaocheng Heritage Teahouse Break",
-            spot_ja: "第3スポット：大稲埕の古民家カフェ＆台湾茶休憩",
-            spot_desc_zh: "走進改建自百年中藥行或茶行的天井老宅咖啡廳，品嚐台灣高山烏龍茶或手沖精品咖啡，等待黃昏時刻。",
-            spot_desc_en: "Step inside a restored century-old courtyard apothecary turned teahouse for high-mountain oolong tea or pour-over coffee.",
-            spot_desc_ja: "築100年以上の漢方薬局を改装した中庭付きカフェで、台湾高山烏龍茶やハンドドリップコーヒーを味わいながらひと休み。",
-            food_zh: "ASW Tea House / 幻猻家珈琲 Pallas Café",
-            food_en: "ASW Tea House / Pallas Café",
-            food_ja: "ASW Tea House / 幻猻家珈琲 Pallas Café",
-            map_url: "https://maps.google.com/?q=ASW+Tea+House"
-          },
-          {
-            time: "17:45",
-            spot_zh: "第四站：大稻埕碼頭貨櫃市集（淡水河夕陽晚餐）",
-            spot_en: "Stop 4: Dadaocheng Wharf Container Market (Sunset & Dinner)",
-            spot_ja: "第4スポット：大稲埕埠頭コンテナマーケット（夕日＆夕食）",
-            spot_desc_zh: "傍晚步行至五號水門外的大稻埕碼頭，在河畔微風中欣賞金色夕陽映照淡水河面，直接在貨櫃市集享用異國美食與精釀啤酒。",
-            spot_desc_en: "Walk out to Pier 5 by sunset to watch golden reflections on the Tamsui River while enjoying street food and craft beer.",
-            spot_desc_ja: "夕暮れ時に5号水門へ。淡水河に沈む黄金色の夕日を眺めながら、コンテナ屋台のグルメやクラフトビールで乾杯。",
-            food_zh: "大稻埕碼頭貨櫃市集 / 寧夏夜市",
-            food_en: "Dadaocheng Wharf Market / Ningxia Night Market",
-            food_ja: "大稻埕碼頭貨櫃市集 / 寧夏夜市",
-            map_url: "https://maps.google.com/?q=大稻埕碼頭貨櫃市集"
-          }
-        ]
-      },
-      {
-        category: "scenic",
-        duration_zh: "約 4 小時 · 捷運信義線",
-        duration_en: "~4 Hours · MRT Red Line",
-        duration_ja: "約4時間・MRT淡水信義線",
-        name_zh: "四四南村 × 台北101 × 象山百萬夜景半日遊",
-        name_en: "Four Four South Village, Taipei 101 & Xiangshan Sunset Half-Day",
-        name_ja: "四四南村＆台北101・象山100万ドルの夜景半日コース",
-        tag_zh: "傍晚黃金時段 · 眷村文創、高空景觀與城市天際線",
-        tag_en: "Golden Hour · Retro Village, Taipei 101 & Night Skyline",
-        tag_ja: "夕暮れゴールデンタイム・レトロ眷村＆台北101と絶景夜景",
-        desc_zh: "午後三點從飯店出發搭乘捷運淡水信義線直達信義區，先逛四四南村眷村市集與台北 101，日落前登上象山六巨石將台北璀璨夜景盡收眼底，下山再去通化夜市大快朵頤。",
-        desc_en: "Depart at 3 PM via MRT Red Line to explore Four Four South Village and Taipei 101, climb Xiangshan before sunset for skyline views, and end at Tonghua Night Market.",
-        desc_ja: "15時にホテルを出発しMRTで信義エリアへ。四四南村と台北101を散策後、日没前に象山へ登り台北のパノラマ夜景を満喫。下山後は通化夜市で台湾グルメを楽しめます。",
-        stops: [
-          {
-            time: "15:00",
-            spot_zh: "第一站：四四南村（Simple Market 眷村文創園區）",
-            spot_en: "Stop 1: Four Four South Village (Si Si Nan Cun)",
-            spot_ja: "第1スポット：四四南村（レトロ眷村アート空間）",
-            spot_desc_zh: "位於台北 101 正對面的台北第一座眷村，保留低矮灰瓦平房與彩色木門，是拍攝台北 101 全景同框的最佳文青打卡點。",
-            spot_desc_en: "Taipei's first military dependents' village right across from Taipei 101, offering nostalgic low-rise alleys with dramatic 101 backdrop views.",
-            spot_desc_ja: "台北101の目の前に残る台北初の眷村（軍人村）跡。レトロな平屋と超高層ビル・台北101が同時に撮れる人気フォトスポット。",
-            food_zh: "好丘 Good Cho's",
-            food_en: "Good Cho's",
-            food_ja: "好丘 Good Cho's",
-            map_url: "https://maps.google.com/?q=四四南村"
-          },
-          {
-            time: "16:15",
-            spot_zh: "第二站：台北 101 觀景台 & 信義空橋商圈",
-            spot_en: "Stop 2: Taipei 101 Observatory & Xinyi Skywalk",
-            spot_ja: "第2スポット：台北101展望台＆信義エリア散策",
-            spot_desc_zh: "搭乘高速電梯直上 89 樓觀景台俯瞰大台北盆地，並沿著信義計畫區空中步道逛逛微風南山或百貨伴手禮區。",
-            spot_desc_en: "Ride the high-speed elevator to the 89th-floor Observatory for 360-degree city views, then stroll Xinyi's elevated walkways.",
-            spot_desc_ja: "超高速エレベーターで89階展望台へ上がり台北市街を360度一望。信義エリアの空中歩道でショッピングも楽しめます。",
-            food_zh: "興波咖啡 Simple Kaffa / 鼎泰豐 101 店",
-            food_en: "Simple Kaffa Sola / Din Tai Fung 101",
-            food_ja: "興波咖啡 Simple Kaffa / 鼎泰豐 101 店",
-            map_url: "https://maps.google.com/?q=台北101"
-          },
-          {
-            time: "17:30",
-            spot_zh: "第三站：象山步道六巨石（夕陽與台北101百萬夜景）",
-            spot_en: "Stop 3: Xiangshan Six Giant Rocks (Sunset & Night Skyline)",
-            spot_ja: "第3スポット：象山歩道・六巨石（夕日＆台北101夜景）",
-            spot_desc_zh: "日落前約 30 分鐘抵達捷運象山站，沿石階步行約 15 分鐘登上六巨石與攝手平台，欣賞夕陽餘暉轉為萬家燈火的經典畫面。",
-            spot_desc_en: "Arrive 30 mins before sunset for a 15-minute stair climb to the Six Giant Rocks viewpoint as Taipei 101 lights up.",
-            spot_desc_ja: "日没30分前に登山口へ。階段を約15分登ると「六巨石」展望台に到着し、夕暮れからライトアップされた台北101の絶景が広がります。",
-            food_zh: "解解渴愛玉",
-            food_en: "Jie Jie Ke Aiyu Jelly",
-            food_ja: "解解渴愛玉",
-            map_url: "https://maps.google.com/?q=象山步道"
-          },
-          {
-            time: "19:30",
-            spot_zh: "第四站：臨江街（通化）觀光夜市晚餐",
-            spot_en: "Stop 4: Linjiang St. (Tonghua) Night Market Dinner",
-            spot_ja: "第4スポット：臨江街（通化）観光夜市で夕食",
-            spot_desc_zh: "下山後搭乘捷運淡水信義線僅需 2 站即達信義安和站，步行進入在地人最愛的通化夜市享用熱騰騰小吃。",
-            spot_desc_en: "Take the MRT just 2 stops to Xinyi Anhe Station to feast on local favorites at Tonghua Night Market.",
-            spot_desc_ja: "下山後はMRTで2駅の信義安和駅へ。地元の人にも大人気の通化夜市で熱々の台湾屋台グルメを堪能。",
-            food_zh: "御品元冰火湯圓",
-            food_en: "Yu Pin Yuan Iced & Hot Tangyuan",
-            food_ja: "御品元冰火湯圓",
-            map_url: "https://maps.google.com/?q=臨江街觀光夜市"
-          }
-        ]
-      },
-      {
-        category: "hotspring",
-        duration_zh: "約 4.5 小時 · 捷運淡水信義線",
-        duration_en: "~4.5 Hours · MRT Red Line",
-        duration_ja: "約4.5時間・MRT淡水信義線",
-        name_zh: "北投百年溫泉 × 地熱谷綠意散步半日遊",
-        name_en: "Beitou Historic Hot Springs & Thermal Valley Half-Day",
-        name_ja: "北投温泉＆地熱谷の湯けむり散策半日コース",
-        tag_zh: "療癒放鬆首選 · 溫泉博物館、地熱谷與白磺泉湯屋",
-        tag_en: "Relaxing Escape · Hot Spring Museum, Thermal Valley & Bath",
-        tag_ja: "癒やしの半日旅・温泉博物館・地熱谷散策と貸切白硫黄温泉",
-        desc_zh: "搭乘捷運淡水信義線至新北投站僅約 30 分鐘，沿著綠蔭溪畔漫步參觀百年溫泉博物館與翡翠綠地熱谷，享受道地白磺泉湯屋並品嚐北投市場經典小吃。",
-        desc_en: "Just 30 mins north via MRT Red Line to Xinbeitou, stroll along the shaded creek to visit the Hot Spring Museum, steaming Thermal Valley, and enjoy a sulfur bath.",
-        desc_ja: "MRT淡水信義線で新北投駅まで約30分。緑豊かな渓流沿いを歩きながら北投温泉博物館と地熱谷を見学し、名湯・白硫黄泉の貸切風呂と地元グルメを楽しむ半日プラン。",
-        stops: [
-          {
-            time: "13:30",
-            spot_zh: "第一站：北投圖書館 & 北投溫泉博物館",
-            spot_en: "Stop 1: Beitou Library & Hot Spring Museum",
-            spot_ja: "第1スポット：北投図書館＆北投温泉博物館",
-            spot_desc_zh: "從新北投捷運站步行 5 分鐘進入北投公園，欣賞台灣首座綠建築木造圖書館，以及日治時期和洋折衷風格的公共浴場古蹟。",
-            spot_desc_en: "Walk 5 mins from Xinbeitou Station to see Taiwan's first green wooden library and the Japanese-era public bathhouse museum.",
-            spot_desc_ja: "新北投駅から徒歩5分。台湾初のエコ木造図書館と、日本統治時代の公衆浴場を復元した赤レンガの温泉博物館を見学。",
-            food_zh: "高記茶莊",
-            food_en: "Gaoji Tea House",
-            food_ja: "高記茶莊",
-            map_url: "https://maps.google.com/?q=北投溫泉博物館"
-          },
-          {
-            time: "14:45",
-            spot_zh: "第二站：北投地熱谷（翡翠綠硫磺溫泉源頭）",
-            spot_en: "Stop 2: Beitou Thermal Valley (Jade Geothermal Spring)",
-            spot_ja: "第2スポット：北投地熱谷（エメラルドグリーンの源泉）",
-            spot_desc_zh: "沿著北投溪往上步行約 8 分鐘抵達地熱谷，終年水溫高達 80～100 度、煙霧繚繞如仙境，環湖步道平緩好走。",
-            spot_desc_en: "Stroll 8 mins upstream to Thermal Valley, where steaming jade-green geothermal waters create a mystical mist.",
-            spot_desc_ja: "北投渓沿いを徒歩約8分。水温80〜100度のエメラルドグリーンの源泉から立ち込める湯けむりは幻想的な美しさです。",
-            food_zh: "滿來溫泉拉麵",
-            food_en: "Manlai Hot Spring Ramen",
-            food_ja: "滿來溫泉拉麵",
-            map_url: "https://maps.google.com/?q=北投地熱谷"
-          },
-          {
-            time: "16:00",
-            spot_zh: "第三站：北投白磺泉個人湯屋體驗",
-            spot_en: "Stop 3: Private White Sulfur Hot Spring Bath",
-            spot_ja: "第3スポット：北投「白硫黄泉」貸切温泉（湯屋）体験",
-            spot_desc_zh: "挑選北投溫泉區內的質感湯屋（如日勝生加賀屋、水美溫泉會館或瀧乃湯），享受有「牛奶湯」美譽的天然白磺泉消除疲勞。",
-            spot_desc_en: "Unwind in a private hot spring room with Beitou's milky-white sulfur water to recharge before dinner.",
-            spot_desc_ja: "「美人の湯」とも呼ばれる乳白色の白硫黄泉の貸切風呂（湯屋）でゆっくり入浴し、旅の疲れをリフレッシュ。",
-            food_zh: "瀧乃湯 / 日勝生加賀屋",
-            food_en: "Longnice Bathhouse / Radium Kagaya",
-            food_ja: "瀧乃湯 / 日勝生加賀屋",
-            map_url: "https://maps.google.com/?q=新北投溫泉"
-          },
-          {
-            time: "17:45",
-            spot_zh: "第四站：北投中繼市場在地美食晚餐",
-            spot_en: "Stop 4: Beitou Market Local Dinner Feast",
-            spot_ja: "第4スポット：北投市場で絶品ローカル夕食",
-            spot_desc_zh: "回程步行至北投站旁的北投中繼市場，品嚐台北最道地的庶民排隊美食後，搭捷運約 30 分鐘即可輕鬆返回喜瑞飯店。",
-            spot_desc_en: "Stop by Beitou Market near the station for iconic local comfort food before taking the 30-minute MRT ride back to the hotel.",
-            spot_desc_ja: "帰路に北投駅近くの市場へ立ち寄り、台北屈指の人気ローカルフードを味わってからMRTで約30分でホテルへ戻れます。",
-            food_zh: "矮仔財滷肉飯",
-            food_en: "Aizaicai Braised Pork Rice",
-            food_ja: "矮仔財滷肉飯",
-            map_url: "https://maps.google.com/?q=北投中繼市場"
-          }
-        ]
-      }
-    ];
-
-    // 包車接駁內建精選資料
-    const DEFAULT_TOUR_PLACES = [
-      {
-        category: "charter",
-        walk_mins: "包車 8 小時",
-        name_zh: "九份老街・十分瀑布・野柳地質公園 北海岸經典一日遊",
-        name_en: "Jiufen, Shifen Waterfall & Yehliu Geopark Day Tour",
-        name_ja: "九份・十分の滝・野柳地質公園 北海岸定番1日チャーター",
-        tag_zh: "最受歡迎路線 · 飯店專車直達免轉車",
-        tag_en: "Most Popular · Door-to-Door Private Charter",
-        tag_ja: "人気No.1コース・ホテル発着で乗り換えなし",
-        desc_zh: "喜瑞飯店門口出發！上午欣賞野柳女王頭奇岩與十分老街放天燈、十分瀑布，傍晚漫步山城九份紅燈籠夜景與品嚐芋圓，輕鬆暢遊北海岸免扛行李轉車。",
-        desc_en: "Depart right from Ambience Hotel! Visit Yehliu's Queen's Head, release sky lanterns at Shifen, and enjoy Jiufen's iconic lantern-lit alleys at dusk without transit hassles.",
-        desc_ja: "ホテル玄関前から出発！午前は野柳のクイーンズヘッドと十分での天燈上げ・滝観光、夕暮れ時はノスタルジックな九份の提灯夜景を満喫できる王道ルートです。",
-        hours: "建議 09:00 飯店出發 (約 8 小時)",
-        map_url: "",
-        image_url: ""
-      },
-      {
-        category: "hotspring",
-        walk_mins: "車程約 35 分",
-        name_zh: "陽明山國家公園・竹子湖・北投溫泉半日／一日遊",
-        name_en: "Yangmingshan National Park & Beitou Hot Spring Tour",
-        name_ja: "陽明山国立公園・竹子湖・北投温泉 半日／1日コース",
-        tag_zh: "火山地熱奇景 · 季節花海與百年湯泉",
-        tag_en: "Volcanic Landscapes · Seasonal Blooms & Hot Springs",
-        tag_ja: "火山地熱の絶景・季節の花畑と歴史ある名湯",
-        desc_zh: "造訪小油坑硫磺噴氣孔、擎天崗大草原與竹子湖山產野菜，午後前往北投地熱谷、北投溫泉博物館並享受白磺泉湯屋，適合喜愛自然與放鬆的旅客。",
-        desc_en: "Explore Xiaoyoukeng fumaroles, Qingtiangang grasslands, and Zhuzihu, followed by Beitou Thermal Valley and a relaxing sulfur hot spring bath.",
-        desc_ja: "小油坑の噴気孔や擎天崗の草原、竹子湖での山菜料理を楽しんだ後、午後は北投の地熱谷散策と名湯・白硫黄泉の貸切風呂でリラックス。",
-        hours: "建議 09:30 或 13:00 出發 (約 6–8 小時)",
-        map_url: "",
-        image_url: ""
-      },
-      {
-        category: "railway",
-        walk_mins: "車程約 50 分",
-        name_zh: "平溪線懷舊鐵道・猴硐貓村・菁桐老街漫遊",
-        name_en: "Pingxi Heritage Railway & Houtong Cat Village",
-        name_ja: "平渓線ローカル鉄道・猴硐猫村・菁桐レトロ散策",
-        tag_zh: "CNN 推薦賞貓景點 · 日治木造車站風情",
-        tag_en: "CNN Top Cat Destination · Historic Wooden Stations",
-        tag_ja: "CNN選出の猫スポット・日本統治時代の木造駅舎",
-        desc_zh: "造訪曾獲 CNN 推薦的猴硐貓村，與親人貓咪互動並品嚐貓村咖啡，接著前往平溪與菁桐日式木造車站掛許願竹筒，體驗慢步調的山城鐵道魅力。",
-        desc_en: "Visit CNN-featured Houtong Cat Village, then explore the historic wooden train stations and wish-hanging bamboo tubes of Pingxi and Jingtong.",
-        desc_ja: "CNNにも選ばれた「猴硐猫村」で可愛い猫たちと触れ合った後、平渓や菁桐の日本統治時代の木造駅舎で願い事の竹筒を掛けるノスタルジックな旅。",
-        hours: "建議 09:30 飯店出發 (約 6–8 小時)",
-        map_url: "",
-        image_url: ""
-      },
-      {
-        category: "charter",
-        walk_mins: "包車 8 小時",
-        name_zh: "宜蘭礁溪溫泉・幾米公園・傳統藝術中心 蘭陽一日遊",
-        name_en: "Yilan Jiaoxi Hot Spring & Traditional Arts Day Tour",
-        name_ja: "宜蘭・礁渓温泉・幾米公園・伝統芸術センター 1日チャーター",
-        tag_zh: "穿越雪山隧道 · 親子同遊與碳酸氫鈉美人湯",
-        tag_en: "Family-Friendly · Cultural Park & Hot Springs",
-        tag_ja: "雪山トンネルを抜けて・家族連れに人気の温泉と文化体験",
-        desc_zh: "從台北出發約 50 分鐘穿過雪山隧道抵達宜蘭，走訪國立傳統藝術中心體驗傳統工藝、幾米主題公園拍照，最後在礁溪溫泉公園享受足湯與蘭陽美食。",
-        desc_en: "Cross the Hsuehshan Tunnel into Yilan in 50 mins to explore the National Center for Traditional Arts, Jimmy Park, and Jiaoxi's famous foot hot springs.",
-        desc_ja: "台北から車で約50分。国立伝統芸術センターでの文化体験や絵本作家ジミーの公園散策、礁渓温泉での足湯と地元グルメを楽しめる快適ドライブ旅。",
-        hours: "建議 09:00 飯店出發 (約 8–9 小時)",
-        map_url: "",
-        image_url: ""
-      }
-    ];
-
-    const CATEGORY_CONFIG = {
-      local: [
-        { id: "all",  zh: "全部推薦", en: "All Picks", ja: "すべて表示" },
-        { id: "food", zh: "🍜 在地美食", en: "🍜 Local Food", ja: "🍜 地元グルメ" },
-        { id: "cafe", zh: "☕ 咖啡甜點", en: "☕ Cafe & Sweets", ja: "☕ カフェ・スイーツ" },
-        { id: "bar",  zh: "🍸 微醺酒吧", en: "🍸 Bars & Speakeasy", ja: "🍸 バー・居酒屋" },
-        { id: "spot", zh: "🌿 景點散步", en: "🌿 Sightseeing", ja: "🌿 観光・散策" },
-        { id: "shop", zh: "🛍️ 伴手禮 / 生活", en: "🛍️ Shopping", ja: "🛍️ お土産・買い物" }
-      ],
-      itinerary: [
-        { id: "all",       zh: "全部半日遊", en: "All Half-Day Trips", ja: "すべての半日コース" },
-        { id: "culture",   zh: "🏛️ 歷史街區文創", en: "🏛️ Heritage & Culture", ja: "🏛️ 歴史・カルチャー" },
-        { id: "scenic",    zh: "🌆 美食與夜景", en: "🌆 Eats & Night Skyline", ja: "🌆 グルメ＆夜景" },
-        { id: "hotspring", zh: "♨️ 溫泉與自然", en: "♨️ Hot Springs & Nature", ja: "♨️ 温泉＆自然" }
-      ],
-      tour: [
-        { id: "all",       zh: "全部包車", en: "All Charters", ja: "すべてのチャーター" },
-        { id: "charter",   zh: "🚐 經典包車一日遊", en: "🚐 Classic Charter", ja: "🚐 定番チャーター" },
-        { id: "hotspring", zh: "♨️ 溫泉與山林", en: "♨️ Hot Springs & Nature", ja: "♨️ 温泉・自然" },
-        { id: "railway",   zh: "🏮 懷舊鐵道老街", en: "🏮 Heritage Railway", ja: "🏮 レトロ鉄道・老街" }
-      ]
-    };
-
-    const CATEGORY_STYLES = {
-      food:      { badge: "bg-amber-50 text-amber-800 border-amber-200/80", icon: "🍜", watermark: "LOCAL EATS", labelZh: "在地美食", labelEn: "Local Food", labelJa: "地元グルメ" },
-      cafe:      { badge: "bg-stone-100 text-stone-700 border-stone-200", icon: "☕", watermark: "CAFE & SWEETS", labelZh: "咖啡甜點", labelEn: "Cafe & Sweets", labelJa: "カフェ・スイーツ" },
-      bar:       { badge: "bg-purple-50 text-purple-800 border-purple-200/80", icon: "🍸", watermark: "BAR & LOUNGE", labelZh: "微醺酒吧", labelEn: "Bars & Speakeasy", labelJa: "バー・居酒屋" },
-      spot:      { badge: "bg-emerald-50 text-emerald-800 border-emerald-200/80", icon: "🌿", watermark: "NEIGHBORHOOD", labelZh: "景點散步", labelEn: "Sightseeing", labelJa: "観光・散策" },
-      shop:      { badge: "bg-sky-50 text-sky-800 border-sky-200/80", icon: "🛍️", watermark: "SOUVENIRS", labelZh: "伴手禮 / 生活", labelEn: "Shopping", labelJa: "お土産・買い物" },
-      culture:   { badge: "bg-amber-50 text-amber-900 border-amber-200/80", icon: "🏛️", watermark: "HERITAGE", labelZh: "歷史街區文創", labelEn: "Heritage & Culture", labelJa: "歴史・カルチャー" },
-      scenic:    { badge: "bg-indigo-50 text-indigo-800 border-indigo-200/80", icon: "🌆", watermark: "CITY SKYLINE", labelZh: "美食與夜景", labelEn: "Eats & Skyline", labelJa: "グルメ＆夜景" },
-      charter:   { badge: "bg-amber-50 text-amber-900 border-amber-300/80", icon: "🚐", watermark: "PRIVATE CHARTER", labelZh: "經典包車一日遊", labelEn: "Classic Charter", labelJa: "定番チャーター" },
-      hotspring: { badge: "bg-rose-50 text-rose-800 border-rose-200/80", icon: "♨️", watermark: "HOT SPRINGS", labelZh: "溫泉與湯屋", labelEn: "Hot Springs", labelJa: "温泉・湯屋" },
-      railway:   { badge: "bg-orange-50 text-orange-800 border-orange-200/80", icon: "🏮", watermark: "RAILWAY TRIP", labelZh: "懷舊鐵道老街", labelEn: "Heritage Railway", labelJa: "レトロ鉄道" }
-    };
-
-    const I18N = {
-      zh: {
-        originTag: "出發點：台北市中山區長安東路一段64號",
-        title: "喜瑞飯店｜旅遊與周邊探索指南",
-        subtitle: "步行可達的道地台式美食與條通酒吧，以及北台灣專車包車服務。",
-        modeLocal: "周邊步行圈",
-        modeItinerary: "推薦半日遊",
-        modeTour: "包車接駁",
-        searchPlaceholderLocal: "搜尋店名、料理或特色（例：豬腳、咖啡、調酒）...",
-        searchPlaceholderItinerary: "搜尋半日遊主題、景點或店家（例：大稻埕、101、北投溫泉）...",
-        searchPlaceholderTour: "搜尋包車路線（例：九份、陽明山、宜蘭）...",
-        walkAll: "全部距離",
-        walk5: "步行 5 分鐘內",
-        walk15: "步行 15 分鐘內",
-        charterBadge: "AMBIENCE CONCIERGE｜飯店合作專車接駁",
-        charterTitle: "飯店門口出發・中文／日文／英文司機包車一日遊",
-        charterDesc: "支援 4 人座轎車／7～9 人座商務休旅，可依需求客製路線，歡迎洽詢一樓櫃檯或透過 LINE 預約。",
-        charterCta: "洽詢櫃檯 / LINE 預約",
-        tourCardBtn: "洽詢預約包車",
-        viewItineraryBtn: "查看 {n} 站完整行程",
-        stopsCountLabel: "共 {n} 個精選停靠站",
-        nearbyFoodLabel: "順遊推薦店家（點擊查看介紹）",
-        stopMapBtn: "地圖定位",
-        itinFooterTip: "提示：點擊各站推薦店家標籤可直接查看介紹",
-        closeBtn: "關閉行程表",
-        backBtn: "返回",
-        copyBtn: "複製店名",
-        copiedBtn: "已複製 ✓",
-        showingCount: "共顯示",
-        placesUnit: "個精選項目",
-        clickTip: "（點擊卡片可檢視照片與詳細介紹）",
-        clickTipItinerary: "（點擊半日遊卡片可展開時間軸與順遊推薦店家）",
-        walkMins: "步行約 {m} 分鐘",
-        openMap: "Google 地圖導航",
-        viewPhoto: "實景",
-        noResults: "找不到符合條件的項目，請嘗試清除篩選條件。",
-        resetBtn: "重設篩選"
-      },
-      en: {
-        originTag: "Origin: No. 64, Sec. 1, Chang'an E. Rd., Zhongshan Dist.",
-        title: "Ambience Hotel｜Neighborhood & Private Charter Guide",
-        subtitle: "Walkable local eats, atmospheric bars, and private car charters across Northern Taiwan.",
-        modeLocal: "Walking Distance",
-        modeItinerary: "Half-Day Trips",
-        modeTour: "Private Charter",
-        searchPlaceholderLocal: "Search name, cuisine, or tag (e.g. Goose, Cafe, Cocktail)...",
-        searchPlaceholderItinerary: "Search half-day trip, landmark, or spot (e.g. Dadaocheng, 101, Beitou)...",
-        searchPlaceholderTour: "Search charter destination (e.g. Jiufen, Yangmingshan, Yilan)...",
-        walkAll: "All Distances",
-        walk5: "Within 5 mins",
-        walk15: "Within 15 mins",
-        charterBadge: "AMBIENCE CONCIERGE｜PRIVATE CHARTER SERVICE",
-        charterTitle: "Hotel Door-to-Door Private Day Tours (EN / JP / ZH Drivers)",
-        charterDesc: "Available in 4-seater sedans or 7–9 seater vans with customizable itineraries. Contact our 1F Front Desk or LINE to book.",
-        charterCta: "Inquire at Desk / LINE",
-        tourCardBtn: "Inquire / Book Tour",
-        viewItineraryBtn: "View {n}-Stop Timeline",
-        stopsCountLabel: "{n} Curated Stops",
-        nearbyFoodLabel: "Recommended Spots & Eats (Tap for details)",
-        stopMapBtn: "Google Maps",
-        itinFooterTip: "Tip: Tap any recommended spot badge to view details",
-        closeBtn: "Close Itinerary",
-        backBtn: "Back",
-        copyBtn: "Copy Name",
-        copiedBtn: "Copied ✓",
-        showingCount: "Showing",
-        placesUnit: "curated picks",
-        clickTip: "(Tap a card for photos & details)",
-        clickTipItinerary: "(Tap a card to view the timeline & recommended stops)",
-        walkMins: "{m} min walk",
-        openMap: "Open in Google Maps",
-        viewPhoto: "Photo",
-        noResults: "No matching items found. Try clearing your filters.",
-        resetBtn: "Reset Filters"
-      },
-      ja: {
-        originTag: "出発地：台北市中山区長安東路一段64号（アンビエンスホテル）",
-        title: "アンビエンスホテル｜周辺グルメ＆貸切観光案内",
-        subtitle: "ホテル徒歩圏内の台湾グルメ・条通バーから、北台湾の貸切観光チャーターまでご案内します。",
-        modeLocal: "周辺（徒歩圏内）",
-        modeItinerary: "おすすめ半日旅",
-        modeTour: "貸切チャーター",
-        searchPlaceholderLocal: "店名・料理名で検索（例：小籠包、カフェ、バー）...",
-        searchPlaceholderItinerary: "半日コース・観光地で検索（例：大稲埕、101、北投温泉）...",
-        searchPlaceholderTour: "チャーター目的地で検索（例：九份、陽明山、宜蘭）...",
-        walkAll: "すべての距離",
-        walk5: "徒歩 5 分以内",
-        walk15: "徒歩 15 分以内",
-        charterBadge: "AMBIENCE CONCIERGE｜ホテル発着・専用車チャーター",
-        charterTitle: "日本語・英語ドライバー対応 貸切観光チャーター（1日／半日）",
-        charterDesc: "セダン（1〜3名）からワゴン車（4〜8名）まで手配可能。ご希望のルートにアレンジできます。1階フロントまたはLINEでお気軽にご相談ください。",
-        charterCta: "フロント相談 / LINE予約",
-        tourCardBtn: "チャーター予約・相談",
-        viewItineraryBtn: "全{n}スポット行程表を見る",
-        stopsCountLabel: "全 {n} スポット巡り",
-        nearbyFoodLabel: "立ち寄りおすすめスポット・グルメ（タップで詳細）",
-        stopMapBtn: "地図を開く",
-        itinFooterTip: "ヒント：タグをタップするとお店・施設の詳細が表示されます",
-        closeBtn: "行程表を閉じる",
-        backBtn: "戻る",
-        copyBtn: "店名をコピー",
-        copiedBtn: "コピー完了 ✓",
-        showingCount: "全",
-        placesUnit: "件のおすすめ",
-        clickTip: "（カードをタップすると写真と詳細を表示）",
-        clickTipItinerary: "（カードをタップすると時間ごとの行程とおすすめスポットを表示）",
-        walkMins: "徒歩約 {m} 分",
-        openMap: "Google マップで開く",
-        viewPhoto: "写真",
-        noResults: "条件に一致する項目が見つかりませんでした。",
-        resetBtn: "フィルターをリセット"
-      }
-    };
-
-    // ==================== 接送機預約三語字典 (繁中 / English / 日本語) ====================
-    const CONCIERGE_AJAX_ENDPOINT = "https://formsubmit.co/ajax/ambience@taipeiinn.com.tw";
-    let lastGeneratedReceipt = "";
-    let currentTransferLang = "zh";
-
-    const TRANSFER_I18N = {
-      zh: {
-        fab_title: "預約接送機",
-        fab_sub: "Airport Transfer",
-        modal_title: "✈️ 桃園機場專屬接送機預約",
-        lbl_type: "服務類型 *",
-        opt_pickup: "接機（桃園機場 TPE ➔ 喜瑞飯店）",
-        opt_dropoff: "送機（喜瑞飯店 ➔ 桃園機場 TPE）",
-        lbl_car: "選擇車型 *",
-        opt_car_small: "1–4 人座（一般轎車／休旅）— NT$ 1,300",
-        opt_car_large: "5–8 人座（商務九人座）— NT$ 1,600",
-        lbl_date: "用車日期 *",
-        lbl_time: "航班 / 上車時間 *",
-        lbl_flight: "航班編號 *",
-        ph_flight: "例：BR198 / JX800",
-        lbl_name: "訂房大名（同護照）*",
-        ph_name: "例：WANG XIAO-MING",
-        lbl_email: "電子信箱（接收櫃檯確認信）*",
-        lbl_contact: "手機 / LINE / WhatsApp *",
-        ph_contact: "例：+886-912-345-678 / LINE ID",
-        lbl_booking_id: "訂房編號（選填）",
-        lbl_pax: "乘客人數 *",
-        ph_pax: "例：2 大 1 小",
-        lbl_luggage: "行李件數與尺寸 *",
-        ph_luggage: "例：28吋×2、20吋×1",
-        lbl_notes: "特殊需求備註（舉牌需求 / 兒童安全座椅等）",
-        ph_notes: "例：需要接機舉牌、需 1 張嬰兒座椅（需另加價）",
-        fare_title: "💰 預估單趟車資",
-        fare_base: "基本車資 NT$ {base}（22:00–06:00 夜間加收 NT$ 100）",
-        fare_night: "基本車資 NT$ {base} + <span class='text-amber-700 font-bold'>夜間加成 NT$ 100 (22:00–06:00)</span>",
-        fare_pay_note: "現場支付現金或櫃檯代收",
-        btn_submit: "📨 直接發送預約至櫃檯確認",
-        btn_submitting: "⏳ 正在傳送預約單至櫃檯...",
-        btn_copy_only: "📋 僅複製文字",
-        success_title: "預約資料已成功傳送至櫃檯！",
-        success_desc: "我們已收到您的接送機需求，櫃檯人員確認車輛後將盡快透過您留下的聯絡方式回覆確認。",
-        btn_copy_receipt: "📋 複製預約明細（備存 / 傳 LINE）",
-        btn_close: "完成並關閉",
-        alert_copied: "✅ 已複製完整接送機預約明細！可直接貼上傳送給櫃檯 LINE。",
-        alert_fallback: "⚠️ 網路連線暫時無法直接寄信，系統已為您複製完整預約明細！請直接貼上傳送至「喜瑞飯店官方 LINE」或聯繫櫃檯。"
-      },
-      en: {
-        fab_title: "Airport Transfer",
-        fab_sub: "Book Private Car",
-        modal_title: "✈️ Taoyuan Airport (TPE) Transfer Booking",
-        lbl_type: "Service Type *",
-        opt_pickup: "Pick-up (Taoyuan Airport TPE ➔ Ambience Hotel)",
-        opt_dropoff: "Drop-off (Ambience Hotel ➔ Taoyuan Airport TPE)",
-        lbl_car: "Vehicle Type *",
-        opt_car_small: "1–4 Pax (Sedan / SUV) — NT$ 1,300",
-        opt_car_large: "5–8 Pax (Business Van) — NT$ 1,600",
-        lbl_date: "Transfer Date *",
-        lbl_time: "Flight / Pick-up Time *",
-        lbl_flight: "Flight Number *",
-        ph_flight: "e.g., BR198 / JX800",
-        lbl_name: "Guest Name (As on Passport) *",
-        ph_name: "e.g., JOHN DOE",
-        lbl_email: "Email (For Front Desk Confirmation) *",
-        lbl_contact: "Phone / WhatsApp / LINE *",
-        ph_contact: "e.g., +1-234-567-8900 / LINE ID",
-        lbl_booking_id: "Booking Reference (Optional)",
-        lbl_pax: "Number of Passengers *",
-        ph_pax: "e.g., 2 Adults, 1 Child",
-        lbl_luggage: "Luggage Count & Sizes *",
-        ph_luggage: "e.g., 2x 28-inch, 1x 20-inch",
-        lbl_notes: "Special Requests (Paging Sign / Child Seat)",
-        ph_notes: "e.g., Name sign at arrival hall, 1 baby seat (extra fee applies)",
-        fare_title: "💰 Estimated One-Way Fare",
-        fare_base: "Base fare NT$ {base} (+NT$ 100 night surcharge for 22:00–06:00)",
-        fare_night: "Base fare NT$ {base} + <span class='text-amber-700 font-bold'>Night Surcharge NT$ 100 (22:00–06:00)</span>",
-        fare_pay_note: "Pay cash to driver or via Front Desk",
-        btn_submit: "📨 Send Booking Directly to Front Desk",
-        btn_submitting: "⏳ Sending booking request...",
-        btn_copy_only: "📋 Copy Text",
-        success_title: "Booking Request Sent to Front Desk!",
-        success_desc: "We have received your transfer details. Our Front Desk team will verify vehicle availability and reply to you shortly.",
-        btn_copy_receipt: "📋 Copy Summary (Save / Send via LINE)",
-        btn_close: "Done & Close",
-        alert_copied: "✅ Booking summary copied! You can paste it directly into our official LINE chat.",
-        alert_fallback: "⚠️ Network error sending email directly. Your booking summary has been copied to clipboard—please paste it to our Front Desk via LINE."
-      },
-      ja: {
-        fab_title: "空港送迎予約",
-        fab_sub: "Airport Transfer",
-        modal_title: "✈️ 桃園空港（TPE）専用車送迎予約",
-        lbl_type: "ご利用内容 *",
-        opt_pickup: "お迎え（桃園空港 TPE ➔ アンビエンスホテル）",
-        opt_dropoff: "お送り（アンビエンスホテル ➔ 桃園空港 TPE）",
-        lbl_car: "車種選択 *",
-        opt_car_small: "1〜4名様（セダン／SUV）— NT$ 1,300",
-        opt_car_large: "5〜8名様（大型ワゴン車）— NT$ 1,600",
-        lbl_date: "ご利用日 *",
-        lbl_time: "フライト／お迎え時間 *",
-        lbl_flight: "便名（フライトナンバー）*",
-        ph_flight: "例：BR198 / JX800",
-        lbl_name: "ご予約者名（パスポート表記）*",
-        ph_name: "例：YAMADA TARO",
-        lbl_email: "メールアドレス（確認メール受信用）*",
-        lbl_contact: "電話番号 / LINE / WhatsApp *",
-        ph_contact: "例：+81-90-1234-5678 / LINE ID",
-        lbl_booking_id: "宿泊予約番号（任意）",
-        lbl_pax: "ご乗車人数 *",
-        ph_pax: "例：大人2名、子供1名",
-        lbl_luggage: "お荷物の個数とサイズ *",
-        ph_luggage: "例：スーツケース大×2、機内持込×1",
-        lbl_notes: "ご要望・備考（お迎えボード／チャイルドシート等）",
-        ph_notes: "例：到着ロビーでのネームボード希望、ベビーシート1台（有料）",
-        fare_title: "💰 片道料金目安",
-        fare_base: "基本料金 NT$ {base}（22:00〜06:00は深夜料金 +NT$ 100）",
-        fare_night: "基本料金 NT$ {base} + <span class='text-amber-700 font-bold'>深夜割増 NT$ 100 (22:00–06:00)</span>",
-        fare_pay_note: "現地現金払い、またはフロントにて精算",
-        btn_submit: "📨 フロントへ直接予約を送信する",
-        btn_submitting: "⏳ フロントへ送信中...",
-        btn_copy_only: "📋 テキストコピー",
-        success_title: "フロントへの予約送信が完了しました！",
-        success_desc: "ご予約内容を承りました。車両の手配状況を確認のうえ、ご入力いただいた連絡先へ折り返しご連絡いたします。",
-        btn_copy_receipt: "📋 予約内容をコピー（控え / LINE送信用）",
-        btn_close: "完了して閉じる",
-        alert_copied: "✅ 予約内容をコピーしました！ホテル公式LINEに貼り付けて送信できます。",
-        alert_fallback: "⚠️ 通信エラーのため自動送信できませんでした。予約内容をコピーしましたので、ホテル公式LINEへ貼り付けてお送りください。"
-      }
-    };
-
-    let currentLang = "zh";
-    let currentMode = "local";
-    let currentCategory = "all";
-    let currentWalkFilter = "all";
-    let localPlacesData = [...DEFAULT_LOCAL_PLACES];
-    let itineraryPlacesData = [...DEFAULT_ITINERARY_PLACES];
-    let tourPlacesData = [...DEFAULT_TOUR_PLACES];
-    let currentFilteredPlaces = [];
-    let currentModalCopyText = "";
-    let localSyncStatus = "載入中...";
-    let itinerarySyncStatus = `精選半日遊路線 (${DEFAULT_ITINERARY_PLACES.length} 條)`;
-    let tourSyncStatus = `精選包車路線 (${DEFAULT_TOUR_PLACES.length} 條)`;
-
-    document.getElementById("charterBannerBtn").href = HOTEL_LINE_URL;
-
-    function applyItineraryTabVisibility() {
-      const container = document.getElementById("mainModeTabs");
-      const itinBtn = document.getElementById("tabItinerary");
-      if (ENABLE_ITINERARY_TAB) {
-        container.className = "grid grid-cols-3 gap-2 sm:max-w-xl pt-0.5";
-        itinBtn.classList.remove("hidden");
-        itinBtn.classList.add("flex");
-      } else {
-        container.className = "grid grid-cols-2 gap-2.5 sm:max-w-md pt-0.5";
-        itinBtn.classList.add("hidden");
-        itinBtn.classList.remove("flex");
-      }
-    }
-
-    function switchMode(mode) {
-      if (mode === "itinerary" && !ENABLE_ITINERARY_TAB) {
-        mode = "local";
-      }
-      currentMode = mode;
-      currentCategory = "all";
-      currentWalkFilter = "all";
-      document.getElementById("searchInput").value = "";
-
-      const tabs = {
-        local: document.getElementById("tabLocal"),
-        itinerary: document.getElementById("tabItinerary"),
-        tour: document.getElementById("tabTour")
-      };
-
-      Object.entries(tabs).forEach(([key, el]) => {
-        if (key === "itinerary" && !ENABLE_ITINERARY_TAB) return;
-        el.className = key === mode
-          ? "flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold bg-[#B48A5A] text-white shadow-md transition"
-          : "flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-semibold bg-white/10 hover:bg-white/15 text-slate-200 border border-white/15 transition";
-      });
-
-      const walkGroup = document.getElementById("walkFilterGroup");
-      const charterBanner = document.getElementById("charterBanner");
-      const searchInput = document.getElementById("searchInput");
-      const badge = document.getElementById("dataSourceBadge");
-      const clickTip = document.getElementById("clickTipText");
-
-      if (mode === "local") {
-        walkGroup.classList.remove("hidden");
-        charterBanner.classList.add("hidden");
-        searchInput.placeholder = I18N[currentLang].searchPlaceholderLocal;
-        badge.textContent = localSyncStatus;
-        clickTip.textContent = I18N[currentLang].clickTip;
-      } else if (mode === "itinerary") {
-        walkGroup.classList.add("hidden");
-        charterBanner.classList.add("hidden");
-        searchInput.placeholder = I18N[currentLang].searchPlaceholderItinerary;
-        badge.textContent = itinerarySyncStatus;
-        clickTip.textContent = I18N[currentLang].clickTipItinerary;
-      } else {
-        walkGroup.classList.add("hidden");
-        charterBanner.classList.remove("hidden");
-        searchInput.placeholder = I18N[currentLang].searchPlaceholderTour;
-        badge.textContent = tourSyncStatus;
-        clickTip.textContent = I18N[currentLang].clickTip;
-      }
-
-      renderCategoryTabs();
-      renderPlaces();
-    }
-
-    function renderCategoryTabs() {
-      const container = document.getElementById("categoryTabsContainer");
-      const tabs = CATEGORY_CONFIG[currentMode] || CATEGORY_CONFIG.local;
-      container.innerHTML = tabs.map(tab => {
-        const label = tab[currentLang] || tab.zh;
-        const isActive = currentCategory === tab.id;
-        const cls = isActive
-          ? "cat-btn active px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#B48A5A] text-white transition whitespace-nowrap shadow-xs"
-          : "cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-white border border-stone-200 text-slate-600 hover:border-[#B48A5A] transition whitespace-nowrap";
-        return `<button onclick="setCategory('${tab.id}')" data-cat="${tab.id}" class="${cls}">${label}</button>`;
-      }).join("");
-    }
-
-    // ==================== 接送機預約三語同步函式 ====================
-    function normalizeLangCode(rawLang) {
-      if (!rawLang) return "zh";
-      const lower = rawLang.toLowerCase();
-      if (lower.startsWith("en")) return "en";
-      if (lower.startsWith("ja") || lower.startsWith("jp")) return "ja";
-      return "zh";
-    }
-
-    function syncTransferLanguage(langInput) {
-      const lang = normalizeLangCode(langInput);
-      currentTransferLang = lang;
-      const dict = TRANSFER_I18N[lang] || TRANSFER_I18N.zh;
-
-      document.querySelectorAll("[data-tf-i18n]").forEach(el => {
-        const key = el.getAttribute("data-tf-i18n");
-        if (dict[key]) {
-          el.textContent = dict[key];
-        }
-      });
-
-      document.querySelectorAll("[data-tf-placeholder]").forEach(el => {
-        const key = el.getAttribute("data-tf-placeholder");
-        if (dict[key]) {
-          el.placeholder = dict[key];
-        }
-      });
-
-      calculateTransferFare();
-    }
-
-    function setLanguage(lang) {
-      currentLang = lang;
-      document.documentElement.lang = lang === "zh" ? "zh-Hant" : lang;
-
-      document.querySelectorAll(".lang-btn").forEach(btn => {
-        const isActive = btn.getAttribute("data-lang") === lang;
-        btn.className = isActive
-          ? "lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#B48A5A] text-white transition"
-          : "lang-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-200 hover:text-white transition";
-      });
-
-      const searchInput = document.getElementById("searchInput");
-      if (currentMode === "local") searchInput.placeholder = I18N[currentLang].searchPlaceholderLocal;
-      else if (currentMode === "itinerary") searchInput.placeholder = I18N[currentLang].searchPlaceholderItinerary;
-      else searchInput.placeholder = I18N[currentLang].searchPlaceholderTour;
-
-      document.querySelectorAll("[data-i18n]").forEach(el => {
-        const key = el.getAttribute("data-i18n");
-        if (I18N[currentLang][key]) {
-          el.textContent = I18N[currentLang][key];
-        }
-      });
-
-      document.getElementById("copyBtnText").textContent = I18N[currentLang].copyBtn;
-
-      const clickTip = document.getElementById("clickTipText");
-      clickTip.textContent = currentMode === "itinerary"
-        ? I18N[currentLang].clickTipItinerary
-        : I18N[currentLang].clickTip;
-
-      // 同步切換浮動接送機預約視窗語系
-      syncTransferLanguage(lang);
-
-      renderCategoryTabs();
-      renderPlaces();
-    }
-
-    function getLocalizedField(item, fieldBase) {
-      if (currentLang === "ja") {
-        return item[`${fieldBase}_ja`] || item[`${fieldBase}_en`] || item[`${fieldBase}_zh`] || "";
-      }
-      if (currentLang === "en") {
-        return item[`${fieldBase}_en`] || item[`${fieldBase}_zh`] || "";
-      }
-      return item[`${fieldBase}_zh`] || item[`${fieldBase}_en`] || "";
-    }
-
-    function getCategoryLabel(style) {
-      if (currentLang === "ja") return style.labelJa;
-      if (currentLang === "en") return style.labelEn;
-      return style.labelZh;
-    }
-
-    function formatDistanceBadge(walkMinsVal) {
-      const val = String(walkMinsVal || "").trim();
-      if (!val) return "";
-      if (/^\d+$/.test(val)) {
-        return `🚶 ${I18N[currentLang].walkMins.replace("{m}", val)}`;
-      }
-      return `📍 ${val}`;
-    }
-
-    function setCategory(cat) {
-      currentCategory = cat;
-      renderCategoryTabs();
-      renderPlaces();
-    }
-
-    function setWalkFilter(mins) {
-      currentWalkFilter = mins;
-      document.querySelectorAll(".walk-btn").forEach(btn => {
-        const isActive = String(btn.getAttribute("data-walk")) === String(mins);
-        btn.className = isActive
-          ? "walk-btn active px-3 py-1.5 sm:py-2 rounded-xl text-xs font-medium whitespace-nowrap bg-[#1E293B] text-white transition"
-          : "walk-btn px-3 py-1.5 sm:py-2 rounded-xl text-xs font-medium whitespace-nowrap bg-white border border-stone-200 text-slate-600 hover:bg-stone-100 transition";
-      });
-      renderPlaces();
-    }
-
-    function resetFilters() {
-      document.getElementById("searchInput").value = "";
-      setCategory("all");
-      setWalkFilter("all");
-    }
-
-    function renderPlaces() {
-      const query = document.getElementById("searchInput").value.trim().toLowerCase();
-      const grid = document.getElementById("placesGrid");
-      const emptyState = document.getElementById("emptyState");
-
-      let activeDataset = localPlacesData;
-      if (currentMode === "itinerary") activeDataset = itineraryPlacesData;
-      else if (currentMode === "tour") activeDataset = tourPlacesData;
-
-      currentFilteredPlaces = activeDataset.filter(item => {
-        const matchCat = currentCategory === "all" || (item.category || "").toLowerCase() === currentCategory;
-        const matchWalk = currentMode !== "local" || currentWalkFilter === "all" || Number(item.walk_mins) <= Number(currentWalkFilter);
-        const stopsText = Array.isArray(item.stops)
-          ? item.stops.map(s => `${s.spot_zh} ${s.spot_en} ${s.spot_ja} ${s.food_zh} ${s.food_en} ${s.food_ja}`).join(" ")
-          : "";
-        const isHiddenInLocal = currentMode === "local" && (item.show_in_local || "").toLowerCase() === "no";
-        if (isHiddenInLocal) return false;
-        const searchable = `${item.name_zh} ${item.name_en} ${item.name_ja || ""} ${item.tag_zh} ${item.tag_en} ${item.tag_ja || ""} ${item.desc_zh} ${item.desc_en} ${item.desc_ja || ""} ${stopsText}`.toLowerCase();
-        const matchQuery = !query || searchable.includes(query);
-        return matchCat && matchWalk && matchQuery;
-      });
-
-      document.getElementById("resultCount").textContent = currentFilteredPlaces.length;
-
-      if (currentFilteredPlaces.length === 0) {
-        grid.innerHTML = "";
-        emptyState.classList.remove("hidden");
-        return;
-      }
-
-      emptyState.classList.add("hidden");
-
-      if (currentMode === "itinerary") {
-        grid.innerHTML = currentFilteredPlaces.map((item, idx) => {
-          const catKey = (item.category || "culture").toLowerCase();
-          const style = CATEGORY_STYLES[catKey] || CATEGORY_STYLES.culture;
-          const name = getLocalizedField(item, "name");
-          const tag = getLocalizedField(item, "tag");
-          const desc = getLocalizedField(item, "desc");
-          const duration = getLocalizedField(item, "duration");
-          const catLabel = getCategoryLabel(style);
-          const stops = item.stops || [];
-
-          const stopsPreviewHtml = stops.map((s, sIdx) => {
-            const spotName = getLocalizedField(s, "spot").replace(/^第[一二三四]站：|^Stop \d+:\s*|^第\dスポット：/, "");
-            return `
-              <div class="flex items-center gap-2 text-xs text-slate-600">
-                <span class="w-4 h-4 rounded-full bg-[#B48A5A]/15 text-[#B48A5A] font-bold text-[10px] flex items-center justify-center shrink-0">${sIdx + 1}</span>
-                <span class="truncate">${spotName}</span>
-              </div>
-            `;
-          }).join("");
-
-          return `
-            <article onclick="openItineraryModal(${idx})"
-                     class="group cursor-pointer bg-white rounded-2xl border border-stone-200/90 hover:border-[#B48A5A] p-5 shadow-xs hover:shadow-md transition flex flex-col active:scale-[0.99]">
-              <div class="flex items-center justify-between gap-2 mb-3">
-                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border text-xs font-semibold ${style.badge}">
-                  <span>${style.icon}</span>
-                  <span>${catLabel}</span>
-                </span>
-                ${duration ? `<span class="px-2.5 py-1 rounded-lg bg-[#1E293B] text-white text-xs font-medium">🕒 ${duration}</span>` : ""}
-              </div>
-
-              <h2 class="font-bold text-lg text-slate-900 group-hover:text-[#B48A5A] transition leading-snug mb-1.5">${name}</h2>
-              ${tag ? `<p class="text-xs font-semibold text-[#B48A5A] mb-2">${tag}</p>` : ""}
-              <p class="text-sm text-slate-600 leading-relaxed line-clamp-2 mb-3.5">${desc}</p>
-
-              <div class="bg-[#FAF9F6] rounded-xl p-3 border border-stone-200/70 space-y-1.5 mb-4 flex-1">
-                ${stopsPreviewHtml}
-              </div>
-
-              <div class="pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
-                <span class="text-xs text-slate-400">${I18N[currentLang].stopsCountLabel.replace("{n}", stops.length)}</span>
-                <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#B48A5A] group-hover:bg-[#9E7649] text-white text-xs font-semibold transition">
-                  <span>🗺️ ${I18N[currentLang].viewItineraryBtn.replace("{n}", stops.length)}</span>
-                </span>
-              </div>
-            </article>
-          `;
-        }).join("");
-        return;
-      }
-
-      // 渲染「周邊步行圈」與「包車接駁」卡片（加入高質感照片預覽頭圖區）
-      grid.innerHTML = currentFilteredPlaces.map((item, idx) => {
-        const defaultCat = currentMode === "local" ? "food" : "charter";
-        const catKey = (item.category || defaultCat).toLowerCase();
-        const style = CATEGORY_STYLES[catKey] || CATEGORY_STYLES[defaultCat];
-        const name = getLocalizedField(item, "name");
-        const subName = currentLang === "zh" ? item.name_en : item.name_zh;
-        const tag = getLocalizedField(item, "tag");
-        const desc = getLocalizedField(item, "desc");
-        const catLabel = getCategoryLabel(style);
-        const badgeRight = formatDistanceBadge(item.walk_mins);
-        const imgUrl = (item.image_url || "").trim();
-
-        const footerActionHtml = currentMode === "local"
-          ? `<a href="${item.map_url || '#'}" target="_blank" rel="noopener noreferrer"
-                onclick="event.stopPropagation()"
-                class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#FAF9F6] hover:bg-[#B48A5A] text-slate-800 hover:text-white border border-stone-200 hover:border-[#B48A5A] text-xs font-semibold transition shrink-0">
-               <span>${I18N[currentLang].openMap}</span>
-               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-             </a>`
-          : `<a href="${item.map_url || HOTEL_LINE_URL}" target="_blank" rel="noopener noreferrer"
-                onclick="event.stopPropagation()"
-                class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#FAF9F6] hover:bg-[#1E293B] text-slate-800 hover:text-white border border-stone-200 hover:border-[#1E293B] text-xs font-semibold transition shrink-0">
-               <span>💬 ${I18N[currentLang].tourCardBtn}</span>
-             </a>`;
-
-        // 若有照片則顯示 16:9 圓角大圖；無照片時顯示精品品牌排版色塊（取代空白缺圖感）
-        const mediaHeaderHtml = imgUrl
-          ? `<div class="relative aspect-[16/9] bg-stone-100 overflow-hidden">
-               <img src="${imgUrl}" alt="${name}" loading="lazy"
-                    onerror="this.parentElement.innerHTML = buildTypographicFallback('${style.icon}', '${style.watermark}', '${catLabel}', '${badgeRight}', '${style.badge}')"
-                    class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
-               <div class="absolute top-3 left-3">
-                 <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-xs text-xs font-semibold text-slate-800 shadow-xs">
-                   <span>${style.icon}</span>
-                   <span>${catLabel}</span>
-                 </span>
-               </div>
-               ${badgeRight ? `
-                 <div class="absolute bottom-3 right-3">
-                   <span class="px-2.5 py-1 rounded-full bg-[#1E293B]/90 backdrop-blur-xs text-white text-xs font-semibold shadow-xs">${badgeRight}</span>
-                 </div>
-               ` : ""}
-             </div>`
-          : `<div class="p-5 pb-0 flex items-center justify-between gap-2">
-               <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border text-xs font-semibold ${style.badge}">
-                 <span>${style.icon}</span>
-                 <span>${catLabel}</span>
-               </span>
-               ${badgeRight ? `<span class="px-2.5 py-1 rounded-lg bg-[#1E293B] text-white text-xs font-medium">${badgeRight}</span>` : ""}
-             </div>`;
-
-        return `
-          <article onclick="openPlaceModal(${idx})"
-                   class="group cursor-pointer bg-white rounded-2xl border border-stone-200/90 hover:border-[#B48A5A] overflow-hidden shadow-xs hover:shadow-md transition flex flex-col active:scale-[0.99]">
-            ${mediaHeaderHtml}
-
-            <div class="p-5 flex-1 flex flex-col">
-              <div class="mb-2">
-                <h2 class="font-bold text-base sm:text-lg text-slate-900 group-hover:text-[#B48A5A] transition leading-snug line-clamp-2">${name}</h2>
-                ${subName && subName !== name ? `<p class="text-xs text-slate-400 mt-0.5 truncate">${subName}</p>` : ""}
-              </div>
-
-              ${tag ? `<p class="text-xs font-semibold text-[#B48A5A] mb-2 line-clamp-1">${tag}</p>` : ""}
-
-              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed flex-1 line-clamp-2">${desc}</p>
-
-              <div class="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
-                <span class="text-xs text-slate-400 truncate max-w-[55%]" title="${item.hours || ''}">
-                  ${item.hours ? `🕒 ${item.hours}` : ""}
-                </span>
-                ${footerActionHtml}
-              </div>
-            </div>
-          </article>
-        `;
-      }).join("");
-    }
-
-    // 圖片載入失敗時的優雅降級 HTML
-    function buildTypographicFallback(icon, watermark, catLabel, badgeRight, badgeCls) {
-      return `
-        <div class="w-full h-full bg-gradient-to-br from-[#F5F2EB] to-[#EAE3D5] flex flex-col items-center justify-center relative">
-          <span class="text-2xl font-bold tracking-widest text-[#B48A5A]/15 uppercase">${watermark}</span>
-          <span class="text-2xl mt-1">${icon}</span>
-          <div class="absolute top-3 left-3">
-            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/95 text-xs font-semibold text-slate-800 shadow-xs">${icon} ${catLabel}</span>
-          </div>
-          ${badgeRight ? `<div class="absolute bottom-3 right-3"><span class="px-2.5 py-1 rounded-full bg-[#1E293B] text-white text-xs font-semibold">${badgeRight}</span></div>` : ""}
-        </div>
-      `;
-    }
-
-    function openSpotFoodDetail(rawFoodName, fallbackQueryName) {
-      const cleanKey = (rawFoodName || "").replace(/（.*?）|\(.*?\)/g, "").trim();
-
-      const matchedFromSheet = localPlacesData.find(p => {
-        const names = [p.name_zh, p.name_en, p.name_ja].filter(Boolean).join(" ").toLowerCase();
-        return names.includes(cleanKey.toLowerCase()) || names.includes((fallbackQueryName || "").toLowerCase());
-      });
-
-      if (matchedFromSheet) {
-        renderPlaceModalContent(matchedFromSheet, true);
-        return;
-      }
-
-      const dictKey = Object.keys(SPOT_FOOD_DIRECTORY).find(k =>
-        k.toLowerCase().includes(cleanKey.toLowerCase()) || cleanKey.toLowerCase().includes(k.toLowerCase())
-      );
-
-      if (dictKey) {
-        renderPlaceModalContent(SPOT_FOOD_DIRECTORY[dictKey], true);
-        return;
-      }
-
-      const fallbackItem = {
-        category: "spot",
-        walk_mins: "",
-        name_zh: rawFoodName,
-        name_en: fallbackQueryName || rawFoodName,
-        name_ja: fallbackQueryName || rawFoodName,
-        tag_zh: "半日遊順遊推薦地點",
-        tag_en: "Recommended Stop Along Half-Day Route",
-        tag_ja: "半日コース立ち寄りおすすめスポット",
-        desc_zh: `點擊下方按鈕可直接開啟 Google 地圖查看「${rawFoodName}」的最新營業時間、介紹與旅客評論。`,
-        desc_en: `Tap the button below to view hours, details, and reviews for "${fallbackQueryName || rawFoodName}" on Google Maps.`,
-        desc_ja: `下のボタンから「${fallbackQueryName || rawFoodName}」の営業時間や口コミをGoogleマップで確認できます。`,
-        hours: "",
-        map_url: `https://maps.google.com/?q=${encodeURIComponent(rawFoodName)}`,
-        image_url: ""
-      };
-      renderPlaceModalContent(fallbackItem, true);
-    }
-
-    function openItineraryModal(idx) {
-      const item = currentFilteredPlaces[idx];
-      if (!item) return;
-
-      const catKey = (item.category || "culture").toLowerCase();
-      const style = CATEGORY_STYLES[catKey] || CATEGORY_STYLES.culture;
-      const name = getLocalizedField(item, "name");
-      const tag = getLocalizedField(item, "tag");
-      const desc = getLocalizedField(item, "desc");
-      const duration = getLocalizedField(item, "duration");
-      const catLabel = getCategoryLabel(style);
-      const stops = item.stops || [];
-
-      document.getElementById("itinModalBadge").textContent = `${style.icon} ${catLabel}`;
-      document.getElementById("itinModalDuration").textContent = duration ? `🕒 ${duration}` : "";
-      document.getElementById("itinModalTitle").textContent = name;
-      document.getElementById("itinModalSubTitle").textContent = tag;
-      document.getElementById("itinModalSummary").textContent = desc;
-
-      const timelineEl = document.getElementById("itinStopsTimeline");
-      timelineEl.innerHTML = stops.map(stop => {
-        const spotTitle = getLocalizedField(stop, "spot");
-        const spotDesc = getLocalizedField(stop, "spot_desc");
-        const foodDisplayRaw = getLocalizedField(stop, "food");
-        const foodZhRaw = stop.food_zh || foodDisplayRaw;
-
-        const displayNames = foodDisplayRaw ? foodDisplayRaw.split("/").map(s => s.trim()).filter(Boolean) : [];
-        const zhNames = foodZhRaw ? foodZhRaw.split("/").map(s => s.trim()).filter(Boolean) : [];
-
-        const foodButtonsHtml = displayNames.map((dispName, fIdx) => {
-          const lookupKey = zhNames[fIdx] || dispName;
-          const safeLookup = lookupKey.replace(/'/g, "\'");
-          const safeDisp = dispName.replace(/'/g, "\'");
-          const cleanKey = lookupKey.replace(/（.*?）|\(.*?\)/g, "").trim();
-
-          const matchedLocal = localPlacesData.find(p =>
-            [p.name_zh, p.name_en, p.name_ja].filter(Boolean).join(" ").toLowerCase().includes(cleanKey.toLowerCase())
-          );
-          const dictKey = Object.keys(SPOT_FOOD_DIRECTORY).find(k =>
-            k.toLowerCase().includes(cleanKey.toLowerCase()) || cleanKey.toLowerCase().includes(k.toLowerCase())
-          );
-          const detectedCat = (matchedLocal?.category || SPOT_FOOD_DIRECTORY[dictKey]?.category || "spot").toLowerCase();
-          const btnIcon = (CATEGORY_STYLES[detectedCat] && CATEGORY_STYLES[detectedCat].icon) || "📍";
-
-          return `
-            <button type="button"
-                    onclick="openSpotFoodDetail('${safeLookup}', '${safeDisp}')"
-                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-[#B48A5A] text-amber-900 hover:text-white border border-amber-300/90 hover:border-[#B48A5A] text-xs font-semibold shadow-xs transition">
-              <span>${btnIcon}</span>
-              <span>${dispName}</span>
-              <span class="opacity-70">›</span>
-            </button>
-          `;
-        }).join("");
-
-        return `
-          <div class="relative">
-            <span class="absolute -left-[33px] top-0.5 w-4 h-4 rounded-full bg-[#B48A5A] border-4 border-white shadow"></span>
-
-            <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
-              ${stop.time ? `<span class="inline-block px-2.5 py-0.5 rounded-md bg-[#1E293B] text-[#E6C79C] text-xs font-bold">${stop.time}</span>` : "<span></span>"}
-              ${stop.map_url ? `
-                <a href="${stop.map_url}" target="_blank" rel="noopener noreferrer"
-                   class="inline-flex items-center gap-1 text-xs font-semibold text-[#B48A5A] hover:underline">
-                  <span>📍 ${I18N[currentLang].stopMapBtn}</span>
-                </a>
-              ` : ""}
-            </div>
-
-            <h4 class="font-bold text-base text-slate-900 mb-1">${spotTitle}</h4>
-            <p class="text-sm text-slate-600 leading-relaxed mb-2.5">${spotDesc}</p>
-
-            ${displayNames.length > 0 ? `
-              <div class="bg-amber-50/70 border border-amber-200/80 rounded-xl p-3 space-y-2">
-                <p class="text-[11px] font-bold text-amber-900 flex items-center gap-1">
-                  <span>✨ ${I18N[currentLang].nearbyFoodLabel}</span>
-                </p>
-                <div class="flex flex-wrap gap-2">
-                  ${foodButtonsHtml}
+<body class="antialiased selection:bg-amber-100 selection:text-amber-900">
+
+    <!-- Top Header -->
+    <header class="ambience-gradient text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-5xl mx-auto px-4 py-3.5 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-lg bg-amber-500 flex items-center justify-center text-slate-900 font-bold text-lg shadow-inner">
+                    A
                 </div>
-              </div>
-            ` : ""}
-          </div>
-        `;
-      }).join("");
+                <div>
+                    <h1 class="text-base sm:text-lg font-bold tracking-wide leading-tight">AMBIENCE HOTEL TAIPEI</h1>
+                    <p class="text-[11px] text-slate-300 tracking-wider" data-i18n="subtitle">台北喜瑞飯店 · 旅客專屬數位指南</p>
+                </div>
+            </div>
+            
+            <!-- Language Switcher -->
+            <div class="flex items-center bg-slate-800/80 rounded-full p-1 border border-slate-700">
+                <button onclick="setLanguage('zh')" id="btn-zh" class="px-2.5 py-1 rounded-full text-xs font-medium transition bg-amber-500 text-slate-900">繁中</button>
+                <button onclick="setLanguage('en')" id="btn-en" class="px-2.5 py-1 rounded-full text-xs font-medium transition text-slate-300 hover:text-white">EN</button>
+                <button onclick="setLanguage('ja')" id="btn-ja" class="px-2.5 py-1 rounded-full text-xs font-medium transition text-slate-300 hover:text-white">日本語</button>
+            </div>
+        </div>
 
-      document.getElementById("itineraryModal").classList.remove("hidden");
-      document.body.style.overflow = "hidden";
-    }
+        <!-- Primary Navigation Tabs -->
+        <nav class="bg-white text-slate-600 border-b border-slate-200 shadow-sm">
+            <div class="max-w-5xl mx-auto px-4 flex space-x-6 overflow-x-auto no-scrollbar">
+                <button onclick="switchMainTab('local')" id="tab-local" class="py-3 text-sm whitespace-nowrap tab-active flex items-center gap-2">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                    <span data-i18n="nav_local">周邊步行地圖</span>
+                </button>
+                <button onclick="switchMainTab('itinerary')" id="tab-itinerary" class="py-3 text-sm whitespace-nowrap hover:text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-route"></i>
+                    <span data-i18n="nav_itinerary">精選半日遊行程</span>
+                </button>
+                <button onclick="switchMainTab('transfer')" id="tab-transfer" class="py-3 text-sm whitespace-nowrap hover:text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-car-side"></i>
+                    <span data-i18n="nav_transfer">機場接送預約</span>
+                </button>
+                <button onclick="switchMainTab('info')" id="tab-info" class="py-3 text-sm whitespace-nowrap hover:text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span data-i18n="nav_info">飯店資訊與交通</span>
+                </button>
+            </div>
+        </nav>
+    </header>
 
-    function closeItineraryModal() {
-      document.getElementById("itineraryModal").classList.add("hidden");
-      document.body.style.overflow = "";
-    }
+    <!-- Hotel Starting Point Banner -->
+    <div class="bg-amber-50 border-b border-amber-200/70">
+        <div class="max-w-5xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs text-amber-900">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-location-dot text-amber-600"></i>
+                <span class="font-semibold" data-i18n="hotel_base">出發起點：台北喜瑞飯店 (台北市中山區長安東路一段64號)</span>
+            </div>
+            <a href="https://www.google.com/maps/search/?api=1&query=台北喜瑞飯店+台北市中山區長安東路一段64號" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-amber-700 hover:text-amber-900 font-semibold underline underline-offset-2">
+                <span data-i18n="open_hotel_map">在 Google 地圖開啟飯店位置</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+        </div>
+    </div>
 
-    function openPlaceModal(idx) {
-      const item = currentFilteredPlaces[idx];
-      if (!item) return;
-      renderPlaceModalContent(item, currentMode === "local");
-    }
+    <!-- Main Container -->
+    <main class="max-w-5xl mx-auto px-4 py-6 pb-20">
 
-    function renderPlaceModalContent(item, isPlaceMapMode) {
-      const defaultCat = isPlaceMapMode ? "food" : "charter";
-      const catKey = (item.category || defaultCat).toLowerCase();
-      const style = CATEGORY_STYLES[catKey] || CATEGORY_STYLES[defaultCat];
-      const name = getLocalizedField(item, "name");
-      const subName = currentLang === "zh" ? item.name_en : item.name_zh;
-      const tag = getLocalizedField(item, "tag");
-      const desc = getLocalizedField(item, "desc");
-      const catLabel = getCategoryLabel(style);
-      const badgeRight = formatDistanceBadge(item.walk_mins);
-      const cleanImgUrl = (item.image_url || "").trim();
+        <!-- ==================== TAB 1: LOCAL GUIDE ==================== -->
+        <section id="view-local" class="animate-fade">
+            <!-- Search & Sync Status Bar -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+                <div class="relative flex-1">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input type="text" id="searchInput" oninput="filterPlaces()" data-i18n-placeholder="search_placeholder" placeholder="搜尋店名、美食類型、特色（如：牛肉麵、咖啡、夜市）..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500 shadow-sm">
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="syncStatus" class="text-[11px] px-2.5 py-1.5 rounded-lg bg-slate-100 text-slate-500 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        <span data-i18n="data_ready">已載入精選名錄</span>
+                    </span>
+                </div>
+            </div>
 
-      // 設定一鍵複製文字（優先保留中文店名方便司機辨識）
-      currentModalCopyText = item.name_zh || name;
-      document.getElementById("copyBtnText").textContent = I18N[currentLang].copyBtn;
+            <!-- Category Pills -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-5" id="categoryButtons">
+                <button onclick="setCategory('all')" data-cat="all" class="cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-slate-900 text-white shadow-sm whitespace-nowrap transition" data-i18n="cat_all">全部推薦</button>
+                <button onclick="setCategory('food')" data-cat="food" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 whitespace-nowrap transition" data-i18n="cat_food">🍜 在地美食</button>
+                <button onclick="setCategory('cafe')" data-cat="cafe" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 whitespace-nowrap transition" data-i18n="cat_cafe">☕ 咖啡甜點</button>
+                <button onclick="setCategory('culture')" data-cat="culture" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 whitespace-nowrap transition" data-i18n="cat_culture">🏛️ 散步文創</button>
+                <button onclick="setCategory('shopping')" data-cat="shopping" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 whitespace-nowrap transition" data-i18n="cat_shopping">🛍️ 購物伴手禮</button>
+                <button onclick="setCategory('nightlife')" data-cat="nightlife" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 whitespace-nowrap transition" data-i18n="cat_nightlife">🍸 夜間小酌</button>
+                <button onclick="setCategory('convenience')" data-cat="convenience" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 whitespace-nowrap transition" data-i18n="cat_convenience">🏪 便利生活</button>
+            </div>
 
-      document.getElementById("modalTitle").textContent = name;
-      document.getElementById("modalSubTitle").textContent = (subName && subName !== name) ? subName : "";
-      
-      const tagEl = document.getElementById("modalTag");
-      if (tag) {
-        tagEl.textContent = tag;
-        tagEl.classList.remove("hidden");
-      } else {
-        tagEl.classList.add("hidden");
-      }
+            <!-- Places Grid -->
+            <div id="placesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Cards rendered by JS -->
+            </div>
 
-      document.getElementById("modalDesc").textContent = desc || "";
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden text-center py-16 bg-white rounded-2xl border border-slate-200/80">
+                <i class="fa-regular fa-compass text-4xl text-slate-300 mb-3"></i>
+                <p class="text-slate-500 text-sm" data-i18n="no_results">找不到符合條件的地點，請嘗試其他關鍵字。</p>
+            </div>
+        </section>
 
-      const hoursBox = document.getElementById("modalHoursBox");
-      if (item.hours) {
-        document.getElementById("modalHours").textContent = item.hours;
-        hoursBox.classList.remove("hidden");
-      } else {
-        hoursBox.classList.add("hidden");
-      }
+        <!-- ==================== TAB 2: HALF-DAY ITINERARIES ==================== -->
+        <section id="view-itinerary" class="hidden animate-fade">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900" data-i18n="itin_title">精選半日遊散步路線</h2>
+                    <p class="text-xs text-slate-500 mt-1" data-i18n="itin_desc">從喜瑞飯店出發，輕鬆體驗台北經典文創、夜市美食與潮流街區。</p>
+                </div>
+                <button onclick="downloadItineraryCSV()" class="inline-flex items-center justify-center gap-2 px-3.5 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-semibold shadow-sm transition">
+                    <i class="fa-solid fa-file-csv text-emerald-600"></i>
+                    <span data-i18n="export_csv">匯出行程店家 CSV (15欄)</span>
+                </button>
+            </div>
 
-      document.getElementById("modalCatBadge").textContent = `${style.icon} ${catLabel}`;
+            <!-- Itinerary Selector Pills -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6" id="itinerarySelector">
+                <!-- Rendered by JS -->
+            </div>
 
-      const walkBadgeEl = document.getElementById("modalWalkBadge");
-      if (badgeRight) {
-        walkBadgeEl.textContent = badgeRight;
-        walkBadgeEl.classList.remove("hidden");
-      } else {
-        walkBadgeEl.classList.add("hidden");
-      }
+            <!-- Active Itinerary Detail Card -->
+            <div id="itineraryDetail" class="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-7">
+                <!-- Rendered by JS -->
+            </div>
+        </section>
 
-      document.getElementById("modalFallbackIcon").textContent = style.icon;
-      document.getElementById("modalWatermark").textContent = style.watermark || "AMBIENCE";
+        <!-- ==================== TAB 3: AIRPORT TRANSFER ==================== -->
+        <section id="view-transfer" class="hidden animate-fade">
+            <div class="max-w-2xl mx-auto">
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="ambience-gradient p-6 text-white">
+                        <span class="inline-block px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[11px] font-semibold mb-2 border border-amber-400/30">24H PRIVATE CHAUFFEUR</span>
+                        <h2 class="text-xl font-bold" id="transferTitle">桃園機場 (TPE) 專屬接送服務</h2>
+                        <p class="text-xs text-slate-300 mt-1" id="transferSubtitle">飯店禮賓部合作合法租賃車隊，專人舉牌接機、直達飯店門口。</p>
+                    </div>
 
-      const actionBtn = document.getElementById("modalActionBtn");
-      const actionText = document.getElementById("modalActionText");
-      if (isPlaceMapMode) {
-        actionBtn.href = item.map_url || `https://maps.google.com/?q=${encodeURIComponent(name)}`;
-        actionText.textContent = I18N[currentLang].openMap;
-      } else {
-        actionBtn.href = item.map_url || HOTEL_LINE_URL;
-        actionText.textContent = I18N[currentLang].charterCta;
-      }
+                    <div class="p-6 space-y-6">
+                        <!-- Pricing Table -->
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-tags text-amber-600"></i>
+                                <span data-i18n="rate_title">透明固定車資表（單趟報價）</span>
+                            </h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/70">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-xs font-bold text-slate-700" data-i18n="sedan_title">舒適四人座轎車</span>
+                                        <span class="text-base font-bold text-amber-600">NT$ 1,300 - 1,400</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-500" data-i18n="sedan_desc">建議 1–3 名旅客 + 2 件 28 吋行李</p>
+                                </div>
+                                <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/70">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-xs font-bold text-slate-700" data-i18n="van_title">豪華九人座商旅車</span>
+                                        <span class="text-base font-bold text-amber-600">NT$ 1,600</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-500" data-i18n="van_desc">建議 4–7 名旅客 + 6 件 28 吋行李</p>
+                                </div>
+                            </div>
+                            <p class="text-[11px] text-slate-500 mt-2.5 flex items-center gap-1.5">
+                                <i class="fa-solid fa-moon text-indigo-500"></i>
+                                <span data-i18n="night_surcharge">夜間加成時段（23:00 – 08:00）每趟加收 NT$ 100；。</span>
+                            </p>
+                        </div>
 
-      const imgEl = document.getElementById("modalImage");
-      const noImgEl = document.getElementById("modalNoImage");
+                        <!-- Booking Form / LINE Direct -->
+                        <div class="border-t border-slate-100 pt-5">
+                            <h3 class="text-sm font-bold text-slate-800 mb-3" data-i18n="booking_step_title">快速預約方式</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-600 mb-1" data-i18n="lbl_direction">接送方向</label>
+                                    <select id="tfDirection" class="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-amber-500">
+                                        <option value="接機 (桃園機場 → 喜瑞飯店)">接機：桃園機場 (TPE) → 喜瑞飯店</option>
+                                        <option value="送機 (喜瑞飯店 → 桃園機場)">送機：喜瑞飯店 → 桃園機場 (TPE)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-600 mb-1" data-i18n="lbl_car">車型選擇</label>
+                                    <select id="tfCar" class="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-amber-500">
+                                        <option value="四人座轎車 (NT$1,300-1,400)">四人座轎車 (1-3人)</option>
+                                        <option value="九人座商旅車 (NT$1,600)">九人座商旅車 (4-7人)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-600 mb-1" data-i18n="lbl_date">日期與航班時間</label>
+                                    <input type="text" id="tfDate" placeholder="例：11/25 14:30 BR195" class="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-amber-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-600 mb-1" data-i18n="lbl_guest">訂房大名 / 聯絡方式</label>
+                                    <input type="text" id="tfGuest" placeholder="例：王小明 / 房號 802" class="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-amber-500">
+                                </div>
+                            </div>
 
-      if (cleanImgUrl) {
-        imgEl.onload = () => {
-          imgEl.classList.remove("hidden");
-          noImgEl.classList.add("hidden");
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <button onclick="copyTransferMessage()" class="flex-1 py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition shadow-sm">
+                                    <i class="fa-regular fa-copy"></i>
+                                    <span data-i18n="btn_copy_booking">複製預約訊息（傳送給櫃檯）</span>
+                                </button>
+                                <a href="https://line.me/R/ti/p/@ambiencehotel" target="_blank" rel="noopener" class="flex-1 py-2.5 px-4 bg-[#06C755] hover:bg-[#05b34c] text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition shadow-sm">
+                                    <i class="fa-brands fa-line text-base"></i>
+                                    <span data-i18n="btn_line_booking">透過官方 LINE 聯繫禮賓部</span>
+                                </a>
+                            </div>
+                            <p id="copyToast" class="hidden text-center text-xs text-emerald-600 font-semibold mt-2.5">
+                                ✓ 已複製預約資訊！請貼上並傳送給飯店櫃檯人員。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 4: HOTEL INFO ==================== -->
+        <section id="view-info" class="hidden animate-fade">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-hotel text-amber-600"></i>
+                        <span data-i18n="info_hotel_title">台北喜瑞飯店 Ambience Hotel</span>
+                    </h3>
+                    <ul class="space-y-3 text-xs text-slate-600">
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-location-dot text-slate-400 mt-0.5 w-4"></i>
+                            <span><strong>地址：</strong>104 台北市中山區長安東路一段64號</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-phone text-slate-400 mt-0.5 w-4"></i>
+                            <span><strong>櫃檯專線：</strong>+886-2-2541-0077（房內請直撥 9）</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-clock text-slate-400 mt-0.5 w-4"></i>
+                            <span><strong>入住 / 退房：</strong>15:00 後入住 / 12:00 前退房</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-utensils text-slate-400 mt-0.5 w-4"></i>
+                            <span><strong>早餐時段：</strong>07:00 – 10:00（1F 餐廳）</span>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-train-subway text-amber-600"></i>
+                        <span data-i18n="info_mrt_title">周邊捷運站步行距離</span>
+                    </h3>
+                    <div class="space-y-3 text-xs">
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                            <div>
+                                <span class="inline-block px-2 py-0.5 rounded bg-red-600 text-white font-bold text-[10px] mr-1.5">淡水信義線</span>
+                                <span class="inline-block px-2 py-0.5 rounded bg-emerald-600 text-white font-bold text-[10px] mr-1.5">松山新店線</span>
+                                <strong class="text-slate-800">捷運中山站 (2號出口)</strong>
+                            </div>
+                            <span class="font-semibold text-amber-700">步行約 9 分鐘</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                            <div>
+                                <span class="inline-block px-2 py-0.5 rounded bg-blue-600 text-white font-bold text-[10px] mr-1.5">板南線</span>
+                                <strong class="text-slate-800">捷運善導寺站 (1號出口)</strong>
+                            </div>
+                            <span class="font-semibold text-amber-700">步行約 10 分鐘</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                            <div>
+                                <span class="inline-block px-2 py-0.5 rounded bg-amber-500 text-white font-bold text-[10px] mr-1.5">中和新蘆線</span>
+                                <strong class="text-slate-800">捷運松江南京站 (3號出口)</strong>
+                            </div>
+                            <span class="font-semibold text-amber-700">步行約 10 分鐘</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // ==========================================
+        // 1. GOOGLE SHEETS CSV CONFIG (15-COLUMN SCHEMA)
+        // Headers: category | walk_mins | name_zh | name_en | tag_zh | tag_en | desc_zh | desc_en | hours | map_url | image_url | name_ja | tag_ja | desc_ja | show_in_local
+        // ==========================================
+        const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWlyzIGNyylZRVgFo_33AIShQXGJngkbN7MqkbwlWk-X5jsKiqa81A73jttrRIETcxs1tzPnyjVvxM/pub?output=csv";
+
+        let currentLang = 'zh';
+        let currentCategory = 'all';
+        let activeItineraryIndex = 0;
+
+        // ==========================================
+        // 2. FALLBACK DATA (15-COLUMN TRILINGUAL SCHEMA)
+        // ==========================================
+        let placesData = [
+            {
+                category: "food",
+                walk_mins: 6,
+                name_zh: "又一村水餃麵食館",
+                name_en: "You Yi Cun Dumplings & Noodles",
+                tag_zh: "在地人氣水餃",
+                tag_en: "Local Dumplings",
+                desc_zh: "長安東路巷弄內的人氣眷村麵食，現包韭菜與高麗菜水餃皮薄餡多，搭配酸辣湯與滷味是絕配。",
+                desc_en: "Beloved neighborhood dumpling house serving freshly wrapped chive & cabbage dumplings and hot-and-sour soup.",
+                hours: "11:00 - 20:30 (週日公休)",
+                map_url: "https://www.google.com/maps/search/?api=1&query=又一村水餃麵食館+台北市中山區",
+                image_url: "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=800&q=80",
+                name_ja: "又一村水餃麺食館",
+                tag_ja: "地元人気水餃子",
+                desc_ja: "長安東路の路地裏にある人気の水餃子・麺食堂。手包みのジューシーな水餃子と酸辣湯が絶品です。",
+                show_in_local: true
+            },
+            {
+                category: "food",
+                walk_mins: 12,
+                name_zh: "阜杭豆漿（華山市場 2F）",
+                name_en: "Fuhang Soy Milk (Huashan Market 2F)",
+                tag_zh: "米其林必比登早餐",
+                tag_en: "Michelin Bib Gourmand",
+                desc_zh: "台北最具代表性的傳統中式早餐，厚燒餅夾蛋與鹹豆漿香氣十足。建議平日 07:30 前抵達避開排隊人潮。",
+                desc_en: "Taipei's iconic traditional breakfast spot famous for thick clay-oven flatbread with egg and savory soy milk.",
+                hours: "05:30 - 12:30 (週一公休)",
+                map_url: "https://www.google.com/maps/search/?api=1&query=阜杭豆漿+台北市中正區忠孝東路一段108號",
+                image_url: "https://images.unsplash.com/photo-1626804475297-41608ea09aeb?auto=format&fit=crop&w=800&q=80",
+                name_ja: "阜杭豆漿（華山市場 2F）",
+                tag_ja: "ミシュラン掲載朝食",
+                desc_ja: "台北を代表する伝統的な台湾朝食の名店。窯焼き厚燒餅と鹹豆漿（塩味豆乳スープ）が看板メニューです。",
+                show_in_local: true
+            },
+            {
+                category: "food",
+                walk_mins: 15,
+                name_zh: "寧夏觀光夜市",
+                name_en: "Ningxia Night Market",
+                tag_zh: "台北美食心臟",
+                tag_en: "Classic Night Market",
+                desc_zh: "匯集數十年老字號台灣小吃，必吃劉芋仔蛋黃芋餅、方家雞肉飯與圓環邊蚵仔煎。",
+                desc_en: "Compact, food-centric night market packed with decades-old stalls serving oyster omelets, taro balls, and chicken rice.",
+                hours: "17:00 - 00:00",
+                map_url: "https://www.google.com/maps/search/?api=1&query=寧夏夜市+台北市大同區",
+                image_url: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80",
+                name_ja: "寧夏観光夜市",
+                tag_ja: "台北グルメ夜市",
+                desc_ja: "老舗の台湾屋台グルメが集結する人気夜市。牡蠣オムレツ（蚵仔煎）やタロイモ団子が必食です。",
+                show_in_local: true
+            },
+            {
+                category: "culture",
+                walk_mins: 10,
+                name_zh: "心中山線形公園 & 赤峰街",
+                name_en: "Xinzhongshan Linear Park & Chifeng St.",
+                tag_zh: "文創選物與老宅",
+                tag_en: "Indie Shops & Cafes",
+                desc_zh: "昔日打鐵街轉型為台北最迷人的文創街區，充滿獨立書店、古著選物店與老宅改造甜點店。",
+                desc_en: "Former blacksmith alley turned vibrant cultural hub filled with indie boutiques, vintage shops, and retro cafes.",
+                hours: "11:00 - 21:00 (依各店家而異)",
+                map_url: "https://www.google.com/maps/search/?api=1&query=赤峰街+台北市大同區",
+                image_url: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80",
+                name_ja: "心中山線形公園＆赤峰街",
+                tag_ja: "雑貨・リノベ街散策",
+                desc_ja: "かつての金物屋街が台北屈指のおしゃれエリアに再生。レトロな建物に個性派ショップやカフェが並びます。",
+                show_in_local: true
+            },
+            {
+                category: "cafe",
+                walk_mins: 11,
+                name_zh: "卜卜商店 BuBu",
+                name_en: "BuBu Zakka & Cafe",
+                tag_zh: "老宅器物與手沖",
+                tag_en: "Vintage Tableware Cafe",
+                desc_zh: "隱身赤峰街二樓的日式老宅咖啡廳，結合台日生活器物選品，推薦招牌黑糖拿鐵與戚風蛋糕。",
+                desc_en: "Second-floor heritage cafe in Chifeng Street blending Japanese ceramic curation with brown sugar lattes.",
+                hours: "11:30 - 19:00",
+                map_url: "https://www.google.com/maps/search/?api=1&query=卜卜商店+台北市大同區赤峰街",
+                image_url: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80",
+                name_ja: "卜卜商店 BuBu",
+                tag_ja: "古民家カフェ＆器",
+                desc_ja: "赤峰街の2階に佇む古民家カフェ。日台の素敵な器と黒糖ラテ、シフォンケーキが楽しめます。",
+                show_in_local: true
+            },
+            {
+                category: "shopping",
+                walk_mins: 10,
+                name_zh: "誠品生活南西店",
+                name_en: "Eslite Spectrum Nanxi",
+                tag_zh: "設計選物與書店",
+                tag_en: "Design & Bookstore",
+                desc_zh: "中山站指標性生活百貨，集結台灣設計品牌、精選伴手禮、主題餐廳與頂樓誠品書店。",
+                desc_en: "Flagship lifestyle department store featuring Taiwanese design brands, souvenirs, cafes, and a curated bookstore.",
+                hours: "11:00 - 22:00 (週五六至 22:30)",
+                map_url: "https://www.google.com/maps/search/?api=1&query=誠品生活南西+台北市中山區南京西路14號",
+                image_url: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=800&q=80",
+                name_ja: "誠品生活南西店",
+                tag_ja: "デザイン雑貨＆書店",
+                desc_ja: "中山駅前のランドマーク。台湾発のデザイン雑貨、お土産、レストラン、最上階の誠品書店が揃います。",
+                show_in_local: true
+            },
+            {
+                category: "nightlife",
+                walk_mins: 8,
+                name_zh: "小山 BAR",
+                name_en: "Xiaoshan Bar",
+                tag_zh: "質感微醺酒吧",
+                tag_en: "Cozy Cocktail Bar",
+                desc_zh: "距離飯店步行僅 8 分鐘的靜謐酒吧，提供融入台灣茶香與在地水果的創意調酒，適合睡前小酌。",
+                desc_en: "Intimate neighborhood cocktail lounge crafting creative drinks infused with Taiwanese teas and seasonal fruits.",
+                hours: "19:00 - 02:00",
+                map_url: "https://www.google.com/maps/search/?api=1&query=小山BAR+台北市中山區",
+                image_url: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=800&q=80",
+                name_ja: "小山 BAR",
+                tag_ja: "隠れ家カクテルバー",
+                desc_ja: "ホテルから徒歩8分の落ち着いたバー。台湾茶や旬のフルーツを使ったオリジナルカクテルが楽しめます。",
+                show_in_local: true
+            },
+            {
+                category: "convenience",
+                walk_mins: 2,
+                name_zh: "7-ELEVEN & 全家便利商店",
+                name_en: "7-ELEVEN & FamilyMart",
+                tag_zh: "24H 便利生活",
+                tag_en: "24/7 Convenience",
+                desc_zh: "飯店轉角步行 2 分鐘即達，提供 ATM 提款、悠遊卡加值、現煮咖啡及多樣台灣零食飲品。",
+                desc_en: "Located 2 minutes around the corner with 24/7 ATMs, EasyCard top-up, freshly brewed coffee, and snacks.",
+                hours: "24 小時營業",
+                map_url: "https://www.google.com/maps/search/?api=1&query=7-ELEVEN+台北市中山區長安東路一段",
+                image_url: "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=800&q=80",
+                name_ja: "セブン-イレブン＆ファミリーマート",
+                tag_ja: "24時間コンビニ",
+                desc_ja: "ホテルの角を曲がって徒歩2分。ATM、悠遊カード（EasyCard）のチャージ、淹れたてコーヒーが利用可能です。",
+                show_in_local: true
+            }
+        ];
+
+        // ==========================================
+        // 3. HALF-DAY ITINERARIES DATA
+        // (Good Cho's replaced with Four Four South Village Museum & Simple Market)
+        // ==========================================
+        const itineraries = [
+            {
+                id: "chifeng",
+                duration: { zh: "約 3.5 小時 · 步行可達", en: "~3.5 hrs · Walkable", ja: "約3.5時間 · 徒歩圏内" },
+                title: { zh: "中山赤峰街文創散步", en: "Zhongshan & Chifeng Art Walk", ja: "中山・赤峰街カルチャー散歩" },
+                subtitle: { zh: "老宅咖啡、獨立選物與設計百貨", en: "Heritage cafes, indie shops & design", ja: "古民家カフェ・雑貨巡り" },
+                stops: [
+                    {
+                        time: "13:30",
+                        walk: { zh: "飯店出發步行 10 分鐘", en: "10 min walk from hotel", ja: "ホテルから徒歩10分" },
+                        name_zh: "心中山線形公園",
+                        name_en: "Xinzhongshan Linear Park",
+                        name_ja: "心中山線形公園",
+                        tag_zh: "林蔭散步大道",
+                        tag_en: "Green Promenade",
+                        tag_ja: "緑の遊歩道",
+                        desc_zh: "沿著捷運中山站至雙連站之間的綠廊漫步，週末常有文創市集與街頭音樂演出。",
+                        desc_en: "Stroll along the leafy urban park connecting Zhongshan and Shuanglian stations, often hosting weekend markets.",
+                        desc_ja: "中山駅から双連駅まで続く緑豊かな遊歩道。週末にはマーケットやストリートライブも開催されます。",
+                        hours: "24H",
+                        map_url: "https://www.google.com/maps/search/?api=1&query=心中山線形公園"
+                    },
+                    {
+                        time: "14:15",
+                        walk: { zh: "步行 3 分鐘", en: "3 min walk", ja: "徒歩3分" },
+                        name_zh: "赤峰街文創巷弄 & 卜卜商店",
+                        name_en: "Chifeng St. & BuBu Cafe",
+                        name_ja: "赤峰街＆卜卜商店",
+                        tag_zh: "老宅咖啡器物",
+                        tag_en: "Vintage Cafe",
+                        tag_ja: "古民家カフェ",
+                        desc_zh: "穿梭在舊汽車零件行改造的個性小店之間，登上卜卜商店二樓品嚐手沖咖啡與器物美學。",
+                        desc_en: "Explore indie boutiques tucked in converted auto-part shops and enjoy coffee upstairs at BuBu.",
+                        desc_ja: "かつての自動車部品街をリノベーションした路地を散策し、卜卜商店の2階で一息。",
+                        hours: "11:30 - 19:00",
+                        map_url: "https://www.google.com/maps/search/?api=1&query=卜卜商店+台北市大同區赤峰街"
+                    },
+                    {
+                        time: "16:00",
+                        walk: { zh: "步行 4 分鐘", en: "4 min walk", ja: "徒歩4分" },
+                        name_zh: "誠品生活南西店",
+                        name_en: "Eslite Spectrum Nanxi",
+                        name_ja: "誠品生活南西店",
+                        tag_zh: "伴手禮與書店",
+                        tag_en: "Souvenirs & Books",
+                        tag_ja: "お土産・書店",
+                        desc_zh: "挑選台灣原創設計伴手禮與茶葉禮盒，在頂樓挑高書店感受台北閱讀氛圍。",
+                        desc_en: "Browse Taiwanese designer gifts, tea boxes, and the iconic top-floor bookstore.",
+                        desc_ja: "台湾発のデザイン雑貨や台湾茶のお土産を選び、最上階の書店でゆったり過ごせます。",
+                        hours: "11:00 - 22:00",
+                        map_url: "https://www.google.com/maps/search/?api=1&query=誠品生活南西"
+                    }
+                ]
+            },
+            {
+                id: "ningxia",
+                duration: { zh: "約 3 小時 · 傍晚出發", en: "~3 hrs · Evening Tour", ja: "約3時間 · 夕方出発" },
+                title: { zh: "寧夏夜市老字號美食之旅", en: "Ningxia Night Market Feast", ja: "寧夏夜市グルメ食べ歩き" },
+                subtitle: { zh: "米其林必比登小吃一次收集", en: "Michelin Bib Gourmand street food", ja: "ミシュラン掲載の屋台グルメ" },
+                stops: [
+                    {
+                        time: "17:30",
+                        walk: { zh: "飯店步行 15 分鐘", en: "15 min walk from hotel", ja: "ホテルから徒歩15分" },
+                        name_zh: "寧夏觀光夜市（入口牌樓）",
+                        name_en: "Ningxia Night Market Entrance",
+                        name_ja: "寧夏観光夜市（入口）",
+                        tag_zh: "夜市美食起點",
+                        tag_en: "Food Street Start",
+                        tag_ja: "夜市スタート",
+                        desc_zh: "建議 17:30 攤商剛開張時抵達，能避開尖峰人潮輕鬆品嚐多道經典小吃。",
+                        desc_en: "Arrive right as stalls open at 17:30 to beat the crowds and sample multiple iconic dishes.",
+                        desc_ja: "屋台が開き始める17:30頃の到着がおすすめ。混雑を避けて人気グルメを堪能できます。",
+                        hours: "17:00 - 00:00",
+                        map_url: "https://www.google.com/maps/search/?api=1&query=寧夏夜市"
+                    },
+                    {
+                        time: "18:00",
+                        walk: { zh: "夜市內步行 1 分鐘", en: "1 min walk inside", ja: "夜市内で徒歩1分" },
+                        name_zh: "圓環邊蚵仔煎 & 方家雞肉飯",
+                        name_en: "Yuanhuanbian Oyster Omelet & Fang's Chicken Rice",
+                        name_ja: "圓環邊蚵仔煎＆方家雞肉飯",
+                        tag_zh: "必比登推薦",
+                        tag_en: "Bib Gourmand",
+                        tag_ja: "ビブグルマン選出",
+                        desc_zh: "現煎焦香的蚵仔煎搭配秘製甜辣醬，再來一碗油蔥香氣十足的雞肉飯。",
+                        desc_en: "Crispy-edged oyster omelet with savory sweet sauce paired with fragrant shredded chicken rice.",
+                        desc_ja: "外はカリッと中はプリプリの牡蠣オムレツと、香ばしい鶏肉飯の黄金コンビ。",
+                        hours: "17:00 - 23:30",
+                        map_url: "https://www.google.com/maps/search/?api=1&query=圓環邊蚵仔煎"
+                    },
+                    {
+                        time: "19:00",
+                        walk: { zh: "夜市內步行 2 分鐘", en: "2 min walk inside", ja: "夜市内で徒歩2分" },
+                        name_zh: "劉芋仔蛋黃芋餅 & 豆花莊",
+                        name_en: "Liu Yu Zai Taro Balls & Douhua Zhuang",
+                        name_ja: "劉芋仔タロイモ団子＆豆花莊",
+                        tag_zh: "經典台式甜點",
+                        tag_en: "Traditional Dessert",
+                        tag_ja: "伝統台湾スイーツ",
+                        desc_zh: "現炸酥脆的鹹蛋黃肉鬆芋餅，最後以一碗冰涼滑嫩的傳統豆花作為完美句點。",
+                        desc_en: "Freshly fried crispy taro balls filled with salted egg yolk, followed by silky traditional tofu pudding.",
+                        desc_ja: "揚げたてサクサクの塩卵入りタロイモ団子と、なめらかな伝統豆花で締めくくり。",
+                        hours: "17:00 - 01:00",
+                        map_url: "https://www.google.com/maps/search/?api=1&query=豆花莊+寧夏路"
+                    }
+                ]
+            },
+            {
+                id: "linjiang",
+                duration: { zh: "約 3.5 小時 · 捷運轉乘", en: "~3.5 hrs · Via MRT", ja: "約3.5時間 · MRT利用" },
+                title: { zh: "信義安和咖啡與臨江街夜市", en: "Xinyi Anhe Cafes & Linjiang Night Market", ja: "信義安和カフェ＆臨江街夜市" },
+                subtitle: { zh: "質感午後咖啡銜接在地通化夜市", en: "Artisan coffee to local Tonghua night market", ja: "洗練カフェからローカル夜市へ" },
+                stops: [
+                    {
+                        time: "15:00",
+                        walk: { zh: "捷運中山站搭淡水信義線至信義安和站", en: "MRT Red Line to Xinyi Anhe", ja: "MRT淡水信義線で信義安和駅へ" },
+                        name_zh: "信義安和巷弄精品咖啡",
+                        name_en: "Xinyi Anhe Specialty Cafes",
+                        name_ja: "信義安和スペシャルティカフェ",
+                        tag_zh: "冠軍手沖咖啡",
+                        tag_en: "Specialty Coffee",
+                        tag_ja: "自家焙煎カフェ",
+                        desc_zh: "信義安和站周邊聚集多家世界級咖啡館與法式甜點店，適合享受悠閒午後時光。",
+                        desc_en: "Explore award-winning pour-over coffee houses and patisseries tucked in quiet residential lanes.",
+                        desc_ja: "信義安和駅周辺の静かな路地には、実力派の自家焙煎カフェやパティスリーが点在しています。",
+                        hours: "12:00 - 19:00",
+                        map_url: "https://www.google.com/maps/search/?api=1&query=信義安和+咖啡廳"
+                    },
+                    {
+                        time: "17:30",
+                        walk: { zh: "步行 6 分鐘", en: "6 min walk", ja: "徒歩6分" },
+                        name_zh: "臨江街觀光夜市（通化夜市）",
+                        name_en: "Linjiang Street (Tonghua) Night Market",
+                        name_ja: "臨江街観光夜市（通化夜市）",
+                        tag_zh: "米其林小吃雲集",
+                        tag_en: "Local Night Market",
+                        tag_ja: "地元密着型夜市",
+                        desc_zh: "在地人最愛的晚餐廚房，必吃御品元冰火湯圓、梁記滷味與駱記小炒。",
+                        desc_en: "A local favorite packed with Michelin-recognized hot-and-cold sesame dumplings, braised snacks, and stir-fries.",
+                        desc_ja: "地元の人々で賑わう夜市。熱々の胡麻団子をかき氷にのせた「御品元冰火湯圓」は必食です。",
+                        hours: "17:00 - 00:00",
+                        map_url: "https://www.google.com/maps/search/?api=1&query=臨江街觀光夜市"
+                    }
+                ]
+            },
+            {
+                id: "sisinan",
+                duration: { zh: "約 3 小時 · 捷運直達", en: "~3 hrs · Direct MRT", ja: "約3時間 · MRT直通" },
+                title: { zh: "四四南村文創慢活半日遊", en: "Four Four South Village & Taipei 101", ja: "四四南村レトロ＆台北101散策" },
+                subtitle: { zh: "眷村紅磚老屋與台北 101 最佳合照點", en: "Historic military village & 101 views", ja: "歴史ある眷村と台北101の絶景スポット" },
+                stops: [
+                    {
+                        time: "14:00",
+                        walk: { zh: "捷運中山站搭淡水信義線至台北101/世貿站 2號出口", en: "MRT Red Line to Taipei 101/World Trade Center Exit 2", ja: "MRT淡水信義線で台北101/世貿駅2番出口へ" },
+                        name_zh: "四四南村眷村文物館 & Simple Market 簡單市集",
+                        name_en: "Four Four South Village Museum & Simple Market",
+                        name_ja: "四四南村眷村文物館＆シンプルマーケット",
+                        tag_zh: "眷村文化與手作市集",
+                        tag_en: "Heritage Village & Market",
+                        tag_ja: "レトロ建築＆手作り市集",
+                        desc_zh: "保留台北首座眷村低矮紅磚建築與草坡，與高聳的台北 101 形成強烈對比，是拍攝城市風景的絕佳地點（原好丘已歇業，可自由參觀文物館與假日手作市集）。",
+                        desc_en: "Taipei's first military dependents' village featuring preserved brick houses, grassy mounds, and iconic Taipei 101 photo angles (Note: Good Cho's has permanently closed; museum & weekend markets remain open).",
+                        desc_ja: "台北初の眷村（軍人村）の赤レンガ建築を保存した文化スポット。芝生の丘から台北101を一望できる絶好の撮影スポットです（※好丘は閉店しましたが、文物館や週末マーケットは散策可能です）。",
+                        hours: "09:00 - 17:00 (週一休館)",
+                        map_url: "https://www.google.com/maps/search/?api=1&query=四四南村+台北市信義區松勤街50號"
+                    },
+                    {
+                        time: "15:30",
+                        walk: { zh: "步行 5 分鐘", en: "5 min walk", ja: "徒歩5分" },
+                        name_zh: "台北 101 觀景台 & 購物中心",
+                        name_en: "Taipei 101 Observatory & Mall",
+                        name_ja: "台北101展望台＆ショッピングモール",
+                        tag_zh: "台北經典地標",
+                        tag_en: "Iconic Landmark",
+                        tag_ja: "台北のランドマーク",
+                        desc_zh: "搭乘超高速電梯登上 89 樓俯瞰大台北盆地全景，B1 美食街亦可品嚐鼎泰豐小籠包。",
+                        desc_en: "Ride the high-speed elevator to the 89th-floor observatory for 360-degree city views, or dine at Din Tai Fung on B1.",
+                        desc_ja: "超高速エレベーターで89階展望台へ上がり台北を一望。地下1階には鼎泰豊（ディンタイフォン）もあります。",
+                        hours: "11:00 - 21:30",
+                        map_url: "https://www.google.com/maps/search/?api=1&query=台北101"
+                    }
+                ]
+            }
+        ];
+
+        // ==========================================
+        // 4. UI TRANSLATIONS (ZH / EN / JA)
+        // ==========================================
+        const i18n = {
+            zh: {
+                subtitle: "台北喜瑞飯店 · 旅客專屬數位指南",
+                nav_local: "周邊步行地圖",
+                nav_itinerary: "精選半日遊行程",
+                nav_transfer: "機場接送預約",
+                nav_info: "飯店資訊與交通",
+                hotel_base: "出發起點：台北喜瑞飯店 (台北市中山區長安東路一段64號)",
+                open_hotel_map: "在 Google 地圖開啟飯店位置",
+                search_placeholder: "搜尋店名、美食類型、特色（如：牛肉麵、咖啡、夜市）...",
+                data_ready: "已載入精選名錄",
+                cat_all: "全部推薦",
+                cat_food: "🍜 在地美食",
+                cat_cafe: "☕ 咖啡甜點",
+                cat_culture: "🏛️ 散步文創",
+                cat_shopping: "🛍️ 購物伴手禮",
+                cat_nightlife: "🍸 夜間小酌",
+                cat_convenience: "🏪 便利生活",
+                no_results: "找不到符合條件的地點，請嘗試其他關鍵字。",
+                walk_prefix: "步行約",
+                walk_suffix: "分鐘",
+                navigate_btn: "Google 地圖導航",
+                itin_title: "精選半日遊散步路線",
+                itin_desc: "從喜瑞飯店出發，輕鬆體驗台北經典文創、夜市美食與潮流街區。",
+                export_csv: "匯出行程店家 CSV (15欄)",
+                rate_title: "透明固定車資表（單趟報價）",
+                sedan_title: "舒適四人座轎車",
+                sedan_desc: "建議 1–3 名旅客 + 2 件 28 吋行李",
+                van_title: "豪華九人座商旅車",
+                van_desc: "建議 4–7 名旅客 + 6 件 28 吋行李",
+                night_surcharge: "夜間加成時段（23:00 – 06:00）每趟加收 NT$ 100；偏遠山區或安全座椅需求請提前備註。",
+                booking_step_title: "快速預約方式",
+                lbl_direction: "接送方向",
+                lbl_car: "車型選擇",
+                lbl_date: "日期與航班時間",
+                lbl_guest: "訂房大名 / 聯絡方式",
+                btn_copy_booking: "複製預約訊息（傳送給櫃檯）",
+                btn_line_booking: "透過官方 LINE 聯繫禮賓部",
+                info_hotel_title: "台北喜瑞飯店 Ambience Hotel",
+                info_mrt_title: "周邊捷運站步行距離"
+            },
+            en: {
+                subtitle: "Ambience Hotel Taipei · Digital Concierge",
+                nav_local: "Local Walk Map",
+                nav_itinerary: "Half-Day Itineraries",
+                nav_transfer: "Airport Transfer",
+                nav_info: "Hotel Info & MRT",
+                hotel_base: "Starting Point: Ambience Hotel Taipei (No. 64, Sec. 1, Chang'an E. Rd.)",
+                open_hotel_map: "Open Hotel on Google Maps",
+                search_placeholder: "Search restaurants, cafes, night markets...",
+                data_ready: "Curated Directory Ready",
+                cat_all: "All Picks",
+                cat_food: "🍜 Local Food",
+                cat_cafe: "☕ Cafes & Sweets",
+                cat_culture: "🏛️ Culture & Art",
+                cat_shopping: "🛍️ Shopping",
+                cat_nightlife: "🍸 Bars & Lounges",
+                cat_convenience: "🏪 Convenience",
+                no_results: "No matching spots found. Please try another keyword.",
+                walk_prefix: "",
+                walk_suffix: "min walk",
+                navigate_btn: "Navigate via Maps",
+                itin_title: "Curated Half-Day Walking Tours",
+                itin_desc: "Start from Ambience Hotel to explore Taipei's creative alleys, night markets, and landmarks.",
+                export_csv: "Export Stops CSV (15-Col)",
+                rate_title: "Fixed One-Way Transfer Rates",
+                sedan_title: "4-Seater Comfort Sedan",
+                sedan_desc: "Up to 3 passengers + 2 large suitcases",
+                van_title: "9-Seater Executive Van",
+                van_desc: "Up to 7 passengers + 6 large suitcases",
+                night_surcharge: "Late-night surcharge (23:00 – 06:00): +NT$ 100 per trip. Child seats available upon request.",
+                booking_step_title: "Quick Reservation",
+                lbl_direction: "Transfer Direction",
+                lbl_car: "Vehicle Type",
+                lbl_date: "Date & Flight Number",
+                lbl_guest: "Guest Name / Room No.",
+                btn_copy_booking: "Copy Request for Front Desk",
+                btn_line_booking: "Message Concierge via LINE",
+                info_hotel_title: "Ambience Hotel Taipei",
+                info_mrt_title: "Nearby MRT Stations"
+            },
+            ja: {
+                subtitle: "アンビエンスホテル台北 · ゲスト専用デジタルガイド",
+                nav_local: "周辺徒歩マップ",
+                nav_itinerary: "おすすめ半日モデルコース",
+                nav_transfer: "空港送迎予約",
+                nav_info: "ホテル案内・アクセス",
+                hotel_base: "出発地点：台北喜瑞飯店（台北市中山区長安東路一段64号）",
+                open_hotel_map: "Googleマップでホテルを開く",
+                search_placeholder: "店名、グルメ、カフェ、夜市を検索...",
+                data_ready: "厳選ガイド読込完了",
+                cat_all: "すべて",
+                cat_food: "🍜 台湾グルメ",
+                cat_cafe: "☕ カフェ・スイーツ",
+                cat_culture: "🏛️ 散策・カルチャー",
+                cat_shopping: "🛍️ ショッピング・お土産",
+                cat_nightlife: "🍸 バー・ナイトライフ",
+                cat_convenience: "🏪 コンビニ・生活",
+                no_results: "条件に一致するスポットが見つかりませんでした。",
+                walk_prefix: "徒歩約",
+                walk_suffix: "分",
+                navigate_btn: "Googleマップで案内",
+                itin_title: "厳選半日モデルコース",
+                itin_desc: "ホテルから出発し、台北のレトロな街並みや夜市グルメを満喫するコースです。",
+                export_csv: "コース店舗CSV出力 (15列)",
+                rate_title: "空港送迎 定額料金表（片道）",
+                sedan_title: "4人乗りセダン",
+                sedan_desc: "目安：1〜3名様 ＋ スーツケース2個",
+                van_title: "9人乗り大型ワゴン車",
+                van_desc: "目安：4〜7名様 ＋ スーツケース6個",
+                night_surcharge: "深夜早朝割増（23:00 – 06:00）は1回につき +NT$ 100 となります。",
+                booking_step_title: "簡単予約フォーム",
+                lbl_direction: "送迎区間",
+                lbl_car: "車種選択",
+                lbl_date: "日時・フライト便名",
+                lbl_guest: "宿泊者名 / 部屋番号",
+                btn_copy_booking: "予約内容をコピー（フロントへ送信）",
+                btn_line_booking: "公式LINEでコンシェルジュに連絡",
+                info_hotel_title: "台北喜瑞飯店 (Ambience Hotel)",
+                info_mrt_title: "最寄りMRT駅までの徒歩時間"
+            }
         };
-        imgEl.onerror = () => {
-          imgEl.classList.add("hidden");
-          noImgEl.classList.remove("hidden");
-        };
-        imgEl.src = cleanImgUrl;
-        imgEl.alt = name;
-      } else {
-        imgEl.src = "";
-        imgEl.classList.add("hidden");
-        noImgEl.classList.remove("hidden");
-      }
 
-      document.getElementById("placeModal").classList.remove("hidden");
-      document.body.style.overflow = "hidden";
-    }
-
-    function copyPlaceInfo() {
-      if (!currentModalCopyText) return;
-      navigator.clipboard.writeText(currentModalCopyText);
-      const btnText = document.getElementById("copyBtnText");
-      btnText.textContent = I18N[currentLang].copiedBtn;
-      setTimeout(() => {
-        btnText.textContent = I18N[currentLang].copyBtn;
-      }, 1500);
-    }
-
-    function closePlaceModal() {
-      document.getElementById("placeModal").classList.add("hidden");
-      // 若半日遊視窗仍開啟，保持背景鎖定
-      if (document.getElementById("itineraryModal").classList.contains("hidden")) {
-        document.body.style.overflow = "";
-      }
-    }
-
-    // ==================== 接送機視窗開關與車資即時試算 ====================
-    function openTransferModal() {
-      syncTransferLanguage(currentLang);
-      const modal = document.getElementById("transferModal");
-      modal.classList.remove("hidden");
-      modal.classList.add("flex");
-      document.body.style.overflow = "hidden";
-    }
-
-    function closeTransferModal() {
-      const modal = document.getElementById("transferModal");
-      modal.classList.add("hidden");
-      modal.classList.remove("flex");
-      if (
-        document.getElementById("itineraryModal").classList.contains("hidden") &&
-        document.getElementById("placeModal").classList.contains("hidden")
-      ) {
-        document.body.style.overflow = "";
-      }
-    }
-
-    function resetAndCloseTransferModal() {
-      document.getElementById("transferForm").reset();
-      calculateTransferFare();
-      document.getElementById("transferSuccessView").classList.add("hidden");
-      document.getElementById("transferForm").classList.remove("hidden");
-      closeTransferModal();
-    }
-
-    function calculateTransferFare() {
-      const dict = TRANSFER_I18N[currentTransferLang] || TRANSFER_I18N.zh;
-      const carSelect = document.getElementById("tf_car");
-      const baseFare = parseInt(carSelect.value, 10) || 1300;
-      const timeVal = document.getElementById("tf_time").value;
-      
-      let nightSurcharge = 0;
-      if (timeVal) {
-        const hour = parseInt(timeVal.split(":")[0], 10);
-        if (hour >= 22 || hour < 6) {
-          nightSurcharge = 100;
+        // ==========================================
+        // 5. CSV PARSER & GOOGLE SHEETS SYNC (15 COLUMNS)
+        // ==========================================
+        function parseCSV(text) {
+            const rows = [];
+            const lines = text.split(/\r?\n/);
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                const row = [];
+                let inQuotes = false;
+                let current = '';
+                for (let j = 0; j < line.length; j++) {
+                    const char = line[j];
+                    if (char === '"') {
+                        if (inQuotes && line[j + 1] === '"') {
+                            current += '"';
+                            j++;
+                        } else {
+                            inQuotes = !inQuotes;
+                        }
+                    } else if (char === ',' && !inQuotes) {
+                        row.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                row.push(current.trim());
+                rows.push(row);
+            }
+            return rows;
         }
-      }
 
-      const total = baseFare + nightSurcharge;
-      document.getElementById("tf_total_fare").textContent = `NT$ ${total.toLocaleString()}`;
-      
-      const detailEl = document.getElementById("tf_fare_detail");
-      const template = nightSurcharge > 0 ? dict.fare_night : dict.fare_base;
-      detailEl.innerHTML = template.replace("{base}", baseFare.toLocaleString());
+        async function fetchFromGoogleSheets() {
+            if (!GOOGLE_SHEET_CSV_URL || GOOGLE_SHEET_CSV_URL.includes("https://docs.google.com/spreadsheets/d/e/2PACX-1vSWlyzIGNyylZRVgFo_33AIShQXGJngkbN7MqkbwlWk-X5jsKiqa81A73jttrRIETcxs1tzPnyjVvxM/pub?output=csv")) {
+                renderPlaces();
+                return;
+            }
+            try {
+                const res = await fetch(GOOGLE_SHEET_CSV_URL);
+                if (!res.ok) throw new Error("Network response was not ok");
+                const csvText = await res.text();
+                const rows = parseCSV(csvText);
 
-      return { baseFare, nightSurcharge, total };
-    }
+                if (rows.length > 1) {
+                    // Skip header row (index 0) and map exact 15 columns:
+                    // 0:category, 1:walk_mins, 2:name_zh, 3:name_en, 4:tag_zh, 5:tag_en,
+                    // 6:desc_zh, 7:desc_en, 8:hours, 9:map_url, 10:image_url,
+                    // 11:name_ja, 12:tag_ja, 13:desc_ja, 14:show_in_local
+                    const parsedPlaces = rows.slice(1)
+                        .filter(r => r.length >= 3 && r[2])
+                        .map(r => {
+                            const showFlag = (r[14] || 'TRUE').toString().trim().toUpperCase();
+                            const isVisible = !['FALSE', 'N', 'NO', '0', '否'].includes(showFlag);
+                            return {
+                                category: (r[0] || 'food').toLowerCase(),
+                                walk_mins: parseInt(r[1], 10) || 10,
+                                name_zh: r[2] || '',
+                                name_en: r[3] || r[2] || '',
+                                tag_zh: r[4] || '',
+                                tag_en: r[5] || r[4] || '',
+                                desc_zh: r[6] || '',
+                                desc_en: r[7] || r[6] || '',
+                                hours: r[8] || '',
+                                map_url: r[9] || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r[2])}`,
+                                image_url: r[10] || 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80',
+                                name_ja: r[11] || r[3] || r[2] || '',
+                                tag_ja: r[12] || r[5] || r[4] || '',
+                                desc_ja: r[13] || r[7] || r[6] || '',
+                                show_in_local: isVisible
+                            };
+                        })
+                        .filter(item => item.show_in_local);
 
-    function getStructuredTransferData() {
-      const type = document.getElementById("tf_type").value;
-      const carSelect = document.getElementById("tf_car");
-      const carLabel = carSelect.options[carSelect.selectedIndex].getAttribute("data-label");
-      const date = document.getElementById("tf_date").value;
-      const time = document.getElementById("tf_time").value;
-      const flight = document.getElementById("tf_flight").value.trim().toUpperCase();
-      const name = document.getElementById("tf_name").value.trim();
-      const email = document.getElementById("tf_email").value.trim();
-      const contact = document.getElementById("tf_contact").value.trim();
-      const pax = document.getElementById("tf_pax").value.trim();
-      const luggage = document.getElementById("tf_luggage").value.trim();
-      const bookingId = document.getElementById("tf_booking_id").value.trim() || "未提供 (Not Provided)";
-      const notes = document.getElementById("tf_notes").value.trim() || "無 (None)";
-      const fareInfo = calculateTransferFare();
-      const fareText = `NT$ ${fareInfo.total.toLocaleString()}${fareInfo.nightSurcharge > 0 ? " (含夜間加成 NT$100)" : ""}`;
+                    if (parsedPlaces.length > 0) {
+                        placesData = parsedPlaces;
+                        const statusEl = document.getElementById('syncStatus');
+                        if (statusEl) {
+                            statusEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span><span>Google Sheets 已同步 (${placesData.length})</span>`;
+                        }
+                    }
+                }
+            } catch (err) {
+                console.warn("Google Sheets sync skipped, using built-in fallback data:", err);
+            }
+            renderPlaces();
+        }
 
-      const summaryText = 
-`【喜瑞飯店 機場接送機預約明細 / Airport Transfer Summary】
-■ 服務類型 Service：${type}
-■ 用車日期 Date：${date}
-■ 航班/上車時間 Time：${time}
-■ 航班編號 Flight No.：${flight}
-■ 訂房大名 Guest Name：${name}
-■ 電子信箱 Email：${email}
-■ 聯絡方式 Contact：${contact}
-■ 訂房編號 Booking ID：${bookingId}
-■ 預約車型 Vehicle：${carLabel}
-■ 乘客人數 Passengers：${pax}
-■ 行李件數 Luggage：${luggage}
-■ 特殊備註 Notes：${notes}
-■ 預估車資 Estimated Fare：${fareText}`;
+        // ==========================================
+        // 6. HELPER FOR TRILINGUAL FIELDS
+        // ==========================================
+        function getLocalizedField(item, baseKey) {
+            if (currentLang === 'en') return item[`${baseKey}_en`] || item[`${baseKey}_zh`] || '';
+            if (currentLang === 'ja') return item[`${baseKey}_ja`] || item[`${baseKey}_en`] || item[`${baseKey}_zh`] || '';
+            return item[`${baseKey}_zh`] || '';
+        }
 
-      return {
-        type, carLabel, date, time, flight, name, email, contact, pax, luggage, bookingId, notes, fareText, summaryText
-      };
-    }
+        // ==========================================
+        // 7. RENDER PLACES (TAB 1)
+        // ==========================================
+        function renderPlaces() {
+            const grid = document.getElementById('placesGrid');
+            const emptyState = document.getElementById('emptyState');
+            const keyword = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
 
-    async function submitTransferDirect(event) {
-      event.preventDefault();
-      const dict = TRANSFER_I18N[currentTransferLang] || TRANSFER_I18N.zh;
-      const submitBtn = document.getElementById("tf_submit_btn");
-      const originalBtnHtml = submitBtn.innerHTML;
-      
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = `<span>${dict.btn_submitting}</span>`;
+            const filtered = placesData.filter(item => {
+                if (!item.show_in_local) return false;
+                const matchCat = currentCategory === 'all' || item.category === currentCategory;
+                if (!matchCat) return false;
+                if (!keyword) return true;
 
-      const data = getStructuredTransferData();
-      lastGeneratedReceipt = data.summaryText;
+                const searchable = [
+                    item.name_zh, item.name_en, item.name_ja,
+                    item.tag_zh, item.tag_en, item.tag_ja,
+                    item.desc_zh, item.desc_en, item.desc_ja
+                ].join(' ').toLowerCase();
 
-      const payload = {
-        _subject: `【接送機預約】${data.date} ${data.time} - ${data.name} (${data.flight})`,
-        _replyto: data.email,
-        _template: "table",
-        _captcha: "false",
-        "00_填單語系_Language": currentTransferLang.toUpperCase(),
-        "01_服務類型_Service": data.type,
-        "02_用車日期_Date": data.date,
-        "03_航班或上車時間_Time": data.time,
-        "04_航班編號_Flight": data.flight,
-        "05_訂房大名_GuestName": data.name,
-        "06_訂房編號_BookingID": data.bookingId,
-        "07_旅客信箱_Email": data.email,
-        "08_聯絡電話或LINE": data.contact,
-        "09_預約車型_Vehicle": data.carLabel,
-        "10_乘客人數_Passengers": data.pax,
-        "11_行李件數_Luggage": data.luggage,
-        "12_特殊備註_Notes": data.notes,
-        "13_預估車資_Fare": data.fareText
-      };
+                return searchable.includes(keyword);
+            });
 
-      try {
-        const response = await fetch(CONCIERGE_AJAX_ENDPOINT, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-          },
-          body: JSON.stringify(payload)
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            const dict = i18n[currentLang];
+
+            grid.innerHTML = filtered.map(place => {
+                const name = getLocalizedField(place, 'name');
+                const tag = getLocalizedField(place, 'tag');
+                const desc = getLocalizedField(place, 'desc');
+                const walkText = currentLang === 'en'
+                    ? `${place.walk_mins} ${dict.walk_suffix}`
+                    : `${dict.walk_prefix} ${place.walk_mins} ${dict.walk_suffix}`;
+
+                return `
+                    <article class="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-sm card-hover flex flex-col">
+                        <div class="relative h-44 bg-slate-200 overflow-hidden">
+                            <img src="${place.image_url}" alt="${name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80'" class="w-full h-full object-cover">
+                            <div class="absolute top-3 left-3 flex flex-wrap gap-1.5">
+                                <span class="px-2.5 py-1 rounded-full bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-semibold">
+                                    <i class="fa-solid fa-person-walking text-amber-400 mr-1"></i>${walkText}
+                                </span>
+                            </div>
+                            ${tag ? `<span class="absolute bottom-3 left-3 px-2.5 py-0.5 rounded-md bg-amber-500 text-slate-900 text-[11px] font-bold shadow-sm">${tag}</span>` : ''}
+                        </div>
+                        <div class="p-4 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-base leading-snug mb-1.5">${name}</h3>
+                                <p class="text-xs text-slate-600 leading-relaxed line-clamp-3 mb-3">${desc}</p>
+                            </div>
+                            <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                                <span class="text-[11px] text-slate-400 truncate max-w-[55%]">
+                                    <i class="fa-regular fa-clock mr-1"></i>${place.hours || '11:00 - 21:00'}
+                                </span>
+                                <a href="${place.map_url}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-semibold transition shrink-0">
+                                    <i class="fa-solid fa-diamond-turn-right"></i>
+                                    <span>${dict.navigate_btn}</span>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        function setCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if (btn.dataset.cat === cat) {
+                    btn.className = 'cat-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-slate-900 text-white shadow-sm whitespace-nowrap transition';
+                } else {
+                    btn.className = 'cat-btn px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 whitespace-nowrap transition';
+                }
+            });
+            renderPlaces();
+        }
+
+        function filterPlaces() {
+            renderPlaces();
+        }
+
+        // ==========================================
+        // 8. RENDER ITINERARIES (TAB 2)
+        // ==========================================
+        function renderItineraries() {
+            const selectorEl = document.getElementById('itinerarySelector');
+            const detailEl = document.getElementById('itineraryDetail');
+            const dict = i18n[currentLang];
+
+            selectorEl.innerHTML = itineraries.map((itin, idx) => {
+                const isActive = idx === activeItineraryIndex;
+                const title = itin.title[currentLang] || itin.title.zh;
+                const duration = itin.duration[currentLang] || itin.duration.zh;
+                return `
+                    <button onclick="selectItinerary(${idx})" class="text-left p-4 rounded-2xl border transition ${isActive ? 'bg-slate-900 text-white border-slate-900 shadow-md' : 'bg-white text-slate-800 border-slate-200 hover:border-amber-400'}">
+                        <span class="inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full mb-1.5 ${isActive ? 'bg-amber-500 text-slate-900' : 'bg-amber-50 text-amber-800'}">${duration}</span>
+                        <h3 class="font-bold text-sm leading-snug">${title}</h3>
+                    </button>
+                `;
+            }).join('');
+
+            const active = itineraries[activeItineraryIndex];
+            const activeTitle = active.title[currentLang] || active.title.zh;
+            const activeSub = active.subtitle[currentLang] || active.subtitle.zh;
+
+            detailEl.innerHTML = `
+                <div class="border-b border-slate-100 pb-4 mb-6">
+                    <h3 class="text-lg font-bold text-slate-900">${activeTitle}</h3>
+                    <p class="text-xs text-slate-500 mt-1">${activeSub}</p>
+                </div>
+                <div class="space-y-6">
+                    ${active.stops.map((stop, idx) => {
+                        const sName = getLocalizedField(stop, 'name');
+                        const sTag = getLocalizedField(stop, 'tag');
+                        const sDesc = getLocalizedField(stop, 'desc');
+                        const sWalk = stop.walk[currentLang] || stop.walk.zh;
+                        return `
+                            <div class="timeline-item flex gap-4">
+                                <div class="timeline-line flex flex-col items-center">
+                                    <div class="w-10 h-10 rounded-full bg-amber-500 text-slate-900 font-bold text-xs flex items-center justify-center shadow-sm z-10 shrink-0">
+                                        ${idx + 1}
+                                    </div>
+                                </div>
+                                <div class="flex-1 bg-slate-50/80 rounded-xl p-4 border border-slate-200/70">
+                                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs font-bold text-amber-700 bg-amber-100/80 px-2 py-0.5 rounded">${stop.time}</span>
+                                            <span class="text-[11px] text-slate-500"><i class="fa-solid fa-shoe-prints mr-1"></i>${sWalk}</span>
+                                        </div>
+                                        <span class="text-[11px] font-semibold text-slate-600 bg-white px-2.5 py-0.5 rounded-full border border-slate-200">${sTag}</span>
+                                    </div>
+                                    <h4 class="font-bold text-slate-900 text-base mb-1">${sName}</h4>
+                                    <p class="text-xs text-slate-600 leading-relaxed mb-3">${sDesc}</p>
+                                    <div class="flex items-center justify-between text-[11px]">
+                                        <span class="text-slate-400"><i class="fa-regular fa-clock mr-1"></i>${stop.hours}</span>
+                                        <a href="${stop.map_url}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-amber-700 hover:text-amber-900 font-bold">
+                                            <span>${dict.navigate_btn}</span>
+                                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        function selectItinerary(index) {
+            activeItineraryIndex = index;
+            renderItineraries();
+        }
+
+        // Export Itinerary Stops in exact 15-column Google Sheets Schema
+        function downloadItineraryCSV() {
+            const headers = [
+                "category", "walk_mins", "name_zh", "name_en", "tag_zh", "tag_en",
+                "desc_zh", "desc_en", "hours", "map_url", "image_url",
+                "name_ja", "tag_ja", "desc_ja", "show_in_local"
+            ];
+            const csvRows = [headers.join(",")];
+
+            itineraries.forEach(itin => {
+                itin.stops.forEach(stop => {
+                    const row = [
+                        "culture",
+                        "15",
+                        stop.name_zh,
+                        stop.name_en,
+                        stop.tag_zh,
+                        stop.tag_en,
+                        stop.desc_zh,
+                        stop.desc_en,
+                        stop.hours,
+                        stop.map_url,
+                        "",
+                        stop.name_ja || "",
+                        stop.tag_ja || "",
+                        stop.desc_ja || "",
+                        "TRUE"
+                    ].map(val => `"${String(val).replace(/"/g, '""')}"`);
+                    csvRows.push(row.join(","));
+                });
+            });
+
+            const blob = new Blob(["\uFEFF" + csvRows.join("\n")], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "ambience_itineraries_15col.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // ==========================================
+        // 9. AIRPORT TRANSFER HELPERS (TAB 3)
+        // ==========================================
+        function syncTransferLanguage() {
+            const titleEl = document.getElementById('transferTitle');
+            const subEl = document.getElementById('transferSubtitle');
+            if (!titleEl || !subEl) return;
+
+            if (currentLang === 'en') {
+                titleEl.textContent = "Taoyuan Airport (TPE) Private Chauffeur";
+                subEl.textContent = "Licensed luxury fleet partnered with Ambience Hotel Concierge. Meet & greet service included.";
+            } else if (currentLang === 'ja') {
+                titleEl.textContent = "桃園国際空港 (TPE) 専用車送迎サービス";
+                subEl.textContent = "ホテル提携の正規ハイヤーによる安心の空港送迎。到着ロビーでのネームボードお出迎え付き。";
+            } else {
+                titleEl.textContent = "桃園機場 (TPE) 專屬接送服務";
+                subEl.textContent = "飯店禮賓部合作合法租賃車隊，專人舉牌接機、直達飯店門口。";
+            }
+        }
+
+        function copyTransferMessage() {
+            const dir = document.getElementById('tfDirection').value;
+            const car = document.getElementById('tfCar').value;
+            const date = document.getElementById('tfDate').value || "未填寫";
+            const guest = document.getElementById('tfGuest').value || "未填寫";
+
+            const msg = `【台北喜瑞飯店 機場接送預約】\n• 方向：${dir}\n• 車型：${car}\n• 日期/航班：${date}\n• 旅客/房號：${guest}`;
+            navigator.clipboard.writeText(msg).then(() => {
+                const toast = document.getElementById('copyToast');
+                toast.classList.remove('hidden');
+                setTimeout(() => toast.classList.add('hidden'), 3500);
+            });
+        }
+
+        // ==========================================
+        // 10. NAVIGATION & LANGUAGE SWITCHING
+        // ==========================================
+        function switchMainTab(tabName) {
+            ['local', 'itinerary', 'transfer', 'info'].forEach(t => {
+                const view = document.getElementById(`view-${t}`);
+                const tab = document.getElementById(`tab-${t}`);
+                if (t === tabName) {
+                    view.classList.remove('hidden');
+                    tab.classList.add('tab-active');
+                } else {
+                    view.classList.add('hidden');
+                    tab.classList.remove('tab-active');
+                }
+            });
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            ['zh', 'en', 'ja'].forEach(l => {
+                const btn = document.getElementById(`btn-${l}`);
+                if (l === lang) {
+                    btn.className = "px-2.5 py-1 rounded-full text-xs font-medium transition bg-amber-500 text-slate-900";
+                } else {
+                    btn.className = "px-2.5 py-1 rounded-full text-xs font-medium transition text-slate-300 hover:text-white";
+                }
+            });
+
+            const dict = i18n[lang];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key] !== undefined) el.textContent = dict[key];
+            });
+
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (dict[key] !== undefined) el.placeholder = dict[key];
+            });
+
+            syncTransferLanguage();
+            renderPlaces();
+            renderItineraries();
+        }
+
+        // ==========================================
+        // 11. INITIALIZE APP
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', () => {
+            setLanguage('zh');
+            fetchFromGoogleSheets();
         });
-
-        if (response.ok) {
-          document.getElementById("transferForm").classList.add("hidden");
-          document.getElementById("transferReceiptBox").textContent = data.summaryText;
-          document.getElementById("transferSuccessView").classList.remove("hidden");
-        } else {
-          throw new Error("Server returned non-OK status");
-        }
-      } catch (error) {
-        alert(dict.alert_fallback);
-        navigator.clipboard.writeText(data.summaryText);
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalBtnHtml;
-      }
-    }
-
-    function copyTransferSummaryOnly() {
-      const dict = TRANSFER_I18N[currentTransferLang] || TRANSFER_I18N.zh;
-      const form = document.getElementById("transferForm");
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-      }
-      const data = getStructuredTransferData();
-      navigator.clipboard.writeText(data.summaryText).then(() => {
-        alert(dict.alert_copied);
-      });
-    }
-
-    function copyLastReceipt() {
-      const dict = TRANSFER_I18N[currentTransferLang] || TRANSFER_I18N.zh;
-      if (!lastGeneratedReceipt) return;
-      navigator.clipboard.writeText(lastGeneratedReceipt).then(() => {
-        alert(dict.alert_copied);
-      });
-    }
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        const transferModal = document.getElementById("transferModal");
-        if (!transferModal.classList.contains("hidden")) {
-          closeTransferModal();
-          return;
-        }
-        const placeModal = document.getElementById("placeModal");
-        if (!placeModal.classList.contains("hidden")) {
-          closePlaceModal();
-          return;
-        }
-        closeItineraryModal();
-        document.getElementById("setupModal").classList.add("hidden");
-      }
-    });
-
-    function parseCSV(text) {
-      const rows = [];
-      let currentRow = [];
-      let currentCell = "";
-      let inQuotes = false;
-
-      for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        const nextChar = text[i + 1];
-
-        if (char === '"' && inQuotes && nextChar === '"') {
-          currentCell += '"';
-          i++;
-        } else if (char === '"') {
-          inQuotes = !inQuotes;
-        } else if (char === ',' && !inQuotes) {
-          currentRow.push(currentCell.trim());
-          currentCell = "";
-        } else if ((char === '
-' || (char === '' && nextChar === '
-')) && !inQuotes) {
-          if (char === '') i++;
-          currentRow.push(currentCell.trim());
-          if (currentRow.some(c => c !== "")) rows.push(currentRow);
-          currentRow = [];
-          currentCell = "";
-        } else {
-          currentCell += char;
-        }
-      }
-      if (currentCell !== "" || currentRow.length > 0) {
-        currentRow.push(currentCell.trim());
-        if (currentRow.some(c => c !== "")) rows.push(currentRow);
-      }
-      return rows;
-    }
-
-    async function fetchSheetData(url) {
-      const fetchUrl = url + (url.includes("?") ? "&" : "?") + "_t=" + Math.floor(Date.now() / 60000);
-      const res = await fetch(fetchUrl);
-      if (!res.ok) throw new Error("Network response was not ok");
-      const csvText = await res.text();
-      const rows = parseCSV(csvText);
-      if (rows.length < 2) throw new Error("CSV has no data rows");
-
-      const headers = rows[0].map(h => h.replace(/^﻿/, "").toLowerCase().trim());
-      return rows.slice(1).map(row => {
-        const obj = {};
-        headers.forEach((h, idx) => {
-          obj[h] = (row[idx] || "").trim();
-        });
-        return obj;
-      }).filter(item => item.name_zh || item.name_en || item.name_ja);
-    }
-
-    function mapRowToItinerary(row) {
-      const stops = [];
-      for (let i = 1; i <= 4; i++) {
-        const spotZh = row[`stop${i}_spot_zh`] || "";
-        const spotEn = row[`stop${i}_spot_en`] || "";
-        const spotJa = row[`stop${i}_spot_ja`] || "";
-        if (spotZh || spotEn || spotJa) {
-          stops.push({
-            time: row[`stop${i}_time`] || "",
-            spot_zh: spotZh,
-            spot_en: spotEn,
-            spot_ja: spotJa,
-            spot_desc_zh: row[`stop${i}_desc_zh`] || "",
-            spot_desc_en: row[`stop${i}_desc_en`] || "",
-            spot_desc_ja: row[`stop${i}_desc_ja`] || "",
-            food_zh: row[`stop${i}_food_zh`] || "",
-            food_en: row[`stop${i}_food_en`] || "",
-            food_ja: row[`stop${i}_food_ja`] || "",
-            map_url: row[`stop${i}_map_url`] || ""
-          });
-        }
-      }
-      return {
-        category: row.category || "culture",
-        duration_zh: row.duration_zh || "",
-        duration_en: row.duration_en || "",
-        duration_ja: row.duration_ja || "",
-        name_zh: row.name_zh || "",
-        name_en: row.name_en || "",
-        name_ja: row.name_ja || "",
-        tag_zh: row.tag_zh || "",
-        tag_en: row.tag_en || "",
-        tag_ja: row.tag_ja || "",
-        desc_zh: row.desc_zh || "",
-        desc_en: row.desc_en || "",
-        desc_ja: row.desc_ja || "",
-        stops
-      };
-    }
-
-    async function loadAllSheets() {
-      const badge = document.getElementById("dataSourceBadge");
-
-      if (LOCAL_SHEET_CSV_URL) {
-        try {
-          const parsedLocal = await fetchSheetData(LOCAL_SHEET_CSV_URL);
-          if (parsedLocal.length > 0) {
-            localPlacesData = parsedLocal;
-            localSyncStatus = `已同步 Google 試算表 (${parsedLocal.length} 筆)`;
-          }
-        } catch (e) {
-          localSyncStatus = "目前顯示內建備援資料";
-        }
-      }
-
-      if (ITINERARY_SHEET_CSV_URL) {
-        try {
-          const parsedItinRows = await fetchSheetData(ITINERARY_SHEET_CSV_URL);
-          if (parsedItinRows.length > 0) {
-            itineraryPlacesData = parsedItinRows.map(mapRowToItinerary);
-            itinerarySyncStatus = `已同步半日遊試算表 (${itineraryPlacesData.length} 條)`;
-          }
-        } catch (e) {
-          itinerarySyncStatus = `精選半日遊路線 (${itineraryPlacesData.length} 條)`;
-        }
-      }
-
-      if (TOUR_SHEET_CSV_URL) {
-        try {
-          const parsedTour = await fetchSheetData(TOUR_SHEET_CSV_URL);
-          if (parsedTour.length > 0) {
-            tourPlacesData = parsedTour;
-            tourSyncStatus = `已同步包車試算表 (${parsedTour.length} 筆)`;
-          }
-        } catch (e) {
-          tourSyncStatus = `精選包車路線 (${tourPlacesData.length} 條)`;
-        }
-      }
-
-      if (currentMode === "local") badge.textContent = localSyncStatus;
-      else if (currentMode === "itinerary") badge.textContent = itinerarySyncStatus;
-      else badge.textContent = tourSyncStatus;
-
-      renderPlaces();
-    }
-
-    function reloadAllSheets() {
-      loadAllSheets();
-      toggleSetupModal();
-    }
-
-    function toggleSetupModal() {
-      document.getElementById("setupModal").classList.toggle("hidden");
-    }
-
-    function downloadItineraryCSV() {
-      const baseHeaders = ["category", "duration_zh", "duration_en", "duration_ja", "name_zh", "name_en", "name_ja", "tag_zh", "tag_en", "tag_ja", "desc_zh", "desc_en", "desc_ja"];
-      const stopHeaders = [];
-      for (let i = 1; i <= 4; i++) {
-        stopHeaders.push(
-          `stop${i}_time`,
-          `stop${i}_spot_zh`, `stop${i}_spot_en`, `stop${i}_spot_ja`,
-          `stop${i}_desc_zh`, `stop${i}_desc_en`, `stop${i}_desc_ja`,
-          `stop${i}_food_zh`, `stop${i}_food_en`, `stop${i}_food_ja`,
-          `stop${i}_map_url`
-        );
-      }
-      const allHeaders = [...baseHeaders, ...stopHeaders];
-
-      const csvLines = [
-        allHeaders.join(","),
-        ...itineraryPlacesData.map(item => {
-          const rowObj = { ...item };
-          (item.stops || []).forEach((s, idx) => {
-            const n = idx + 1;
-            rowObj[`stop${n}_time`] = s.time || "";
-            rowObj[`stop${n}_spot_zh`] = s.spot_zh || "";
-            rowObj[`stop${n}_spot_en`] = s.spot_en || "";
-            rowObj[`stop${n}_spot_ja`] = s.spot_ja || "";
-            rowObj[`stop${n}_desc_zh`] = s.spot_desc_zh || "";
-            rowObj[`stop${n}_desc_en`] = s.spot_desc_en || "";
-            rowObj[`stop${n}_desc_ja`] = s.spot_desc_ja || "";
-            rowObj[`stop${n}_food_zh`] = s.food_zh || "";
-            rowObj[`stop${n}_food_en`] = s.food_en || "";
-            rowObj[`stop${n}_food_ja`] = s.food_ja || "";
-            rowObj[`stop${n}_map_url`] = s.map_url || "";
-          });
-          return allHeaders.map(h => `"${String(rowObj[h] || "").replace(/"/g, '""')}"`).join(",");
-        })
-      ];
-
-      const blob = new Blob(["﻿" + csvLines.join("
-")], { type: "text/csv;charset=utf-8;" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "ambience_hotel_halfday_trips.csv";
-      link.click();
-    }
-
-    // 啟動初始化
-    applyItineraryTabVisibility();
-    syncTransferLanguage(currentLang);
-    renderCategoryTabs();
-    renderPlaces();
-    loadAllSheets();
-  </script>
+    </script>
 </body>
 </html>

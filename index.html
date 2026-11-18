@@ -160,7 +160,7 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- 獨立頻道區塊：✈️ 桃園機場專屬接送機預約（切換至「機場接送」分頁時顯示） -->
+    <!-- 獨立頻道區塊：✈️ 桃園機場專屬接送機預約（FormSubmit 背景直接寄信） -->
     <!-- ========================================================================= -->
     <section id="airport-transfer-section" class="hidden max-w-3xl mx-auto my-2">
       <div class="bg-white border border-stone-200 rounded-2xl shadow-sm overflow-hidden">
@@ -265,14 +265,31 @@
 
           <!-- 送出按鈕區 -->
           <div class="pt-2 flex flex-col sm:flex-row gap-3">
-            <button type="submit" class="flex-1 bg-[#1E293B] hover:bg-slate-800 text-white font-bold py-3 px-5 rounded-xl shadow transition flex items-center justify-center gap-2 cursor-pointer">
-              <span data-i18n="tf_submit_btn">✉️ 整理資料並發送信件至櫃檯確認</span>
+            <button type="submit" id="tf_submit_button" class="flex-1 bg-[#1E293B] hover:bg-slate-800 text-white font-bold py-3 px-5 rounded-xl shadow transition flex items-center justify-center gap-2 cursor-pointer">
+              <span data-i18n="tf_submit_btn">✉️ 立即送出預約至飯店櫃檯</span>
             </button>
             <button type="button" onclick="copyTransferSummary()" class="sm:w-auto bg-stone-100 hover:bg-stone-200 text-slate-800 font-bold py-3 px-4 rounded-xl border border-stone-300 transition flex items-center justify-center gap-1.5 cursor-pointer">
               <span data-i18n="tf_copy_btn">📋 複製文字傳 LINE</span>
             </button>
           </div>
         </form>
+
+        <!-- 送出成功提示畫面（背景寄信成功後自動切換） -->
+        <div id="tf_success_box" class="hidden p-6 sm:p-8 text-center space-y-3.5 bg-emerald-50/70">
+          <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl font-bold mx-auto shadow-xs">✓</div>
+          <h3 class="text-lg font-bold text-slate-900" data-i18n="tf_success_title">預約資料已成功傳送至喜瑞飯店櫃檯！</h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-md mx-auto" data-i18n="tf_success_desc">
+            櫃檯服務人員收到信件後將盡快與您聯繫確認派車細節。若您有急件需求，亦可直接複製下方明細傳送至飯店官方 LINE。
+          </p>
+          <div class="pt-2 flex flex-wrap justify-center gap-2.5">
+            <button type="button" onclick="copyLastSubmittedSummary()" class="px-4 py-2.5 rounded-xl bg-white border border-stone-300 hover:bg-stone-50 text-xs font-bold text-slate-800 transition cursor-pointer">
+              <span data-i18n="tf_copy_submitted_btn">📋 複製剛剛的預約明細</span>
+            </button>
+            <button type="button" onclick="resetTransferFormUI()" class="px-4 py-2.5 rounded-xl bg-[#1E293B] hover:bg-slate-800 text-xs font-bold text-white transition cursor-pointer">
+              <span data-i18n="tf_new_booking_btn">再次填寫新預約</span>
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -389,8 +406,8 @@
         <button onclick="toggleSetupModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold">✕</button>
       </div>
       <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
-        <p><strong>1. 半日遊分頁開關：</strong>目前 <code>ENABLE_ITINERARY_TAB = true</code>（設為 <code>false</code> 可隱藏）。</p>
-        <p><strong>2. 機場接送機價目試算表：</strong>在試算表建立「接送機價目」分頁並發布為 CSV，填入程式碼中的 <code>TRANSFER_SHEET_CSV_URL</code>，即可隨時修改車型價格、夜間加成時段（<code>night_start</code> / <code>night_end</code>）、夜間加成金額與嬰兒座椅單價。</p>
+        <p><strong>1. FormSubmit 背景寄信啟用：</strong>首次部署後請送出一筆測試預約，並至 <code>ambience@taipeiinn.com.tw</code> 點擊「Activate Form」完成信箱啟用。</p>
+        <p><strong>2. 機場接送機價目試算表：</strong>在試算表建立「接送機價目」分頁並發布為 CSV，填入程式碼中的 <code>TRANSFER_SHEET_CSV_URL</code>，即可隨時修改車型價格、夜間加成時段與嬰兒座椅單價。</p>
       </div>
       <div class="pt-2 flex flex-wrap gap-2">
         <button onclick="downloadItineraryCSV()" class="px-3.5 py-2 bg-stone-100 hover:bg-stone-200 text-slate-700 rounded-lg text-xs font-medium transition cursor-pointer">
@@ -430,13 +447,16 @@
     // =========================================================================
     // 4. 機場接送機價目 CSV 網址（選填：發布 Google 試算表「接送機價目」分頁為 CSV 後貼於此處）
     // =========================================================================
-    const TRANSFER_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWlyzIGNyylZRVgFo_33AIShQXGJngkbN7MqkbwlWk-X5jsKiqa81A73jttrRIETcxs1tzPnyjVvxM/pub?gid=729206365&single=true&output=csv";
+    const TRANSFER_SHEET_CSV_URL = "";
 
     // =========================================================================
-    // 5. 喜瑞飯店官方 LINE 預約網址與櫃檯信箱
+    // 5. FormSubmit 背景寄信設定（啟用信箱後可將信箱換成 FormSubmit 提供的隨機 Hash 字串）
     // =========================================================================
+    const FORMSUBMIT_RECIPIENT = "ambience@taipeiinn.com.tw";
+    const FORMSUBMIT_AJAX_URL = `https://formsubmit.co/ajax/${FORMSUBMIT_RECIPIENT}`;
+
+    // 喜瑞飯店官方 LINE 預約網址
     const HOTEL_LINE_URL = "https://line.me/";
-    const HOTEL_CONCIERGE_EMAIL = "ambience@taipeiinn.com.tw";
 
     // 機場接送機預設費率設定（若已綁定 TRANSFER_SHEET_CSV_URL 會自動由試算表覆寫）
     const DEFAULT_TRANSFER_CONFIG = {
@@ -464,6 +484,7 @@
     };
 
     let transferConfig = JSON.parse(JSON.stringify(DEFAULT_TRANSFER_CONFIG));
+    let lastSubmittedSummaryBody = "";
 
     // 飯店周邊預設備援資料
     const DEFAULT_LOCAL_PLACES = [
@@ -1105,12 +1126,17 @@
         tf_lbl_notes: "備註 Notes（舉牌需求 / 航廈資訊等）",
         tf_fare_heading: "💰 預估單趟車資 Estimated Fare",
         tf_pay_note: "現場支付現金或由櫃檯代收",
-        tf_submit_btn: "✉️ 整理資料並發送信件至櫃檯確認",
+        tf_submit_btn: "✉️ 立即送出預約至飯店櫃檯",
+        tf_sending_btn: "⏳ 預約資料傳送中，請稍候...",
         tf_copy_btn: "📋 複製文字傳 LINE",
         tf_fare_base_text: "基本車資 NT$ {base}（{start}–{end} 夜間時段加收 NT$ {night}）",
         tf_fare_night_badge: "夜間加成 +NT$ {night}（{start}–{end}）",
         tf_fare_seat_badge: "嬰兒座椅 {n} 張 +NT$ {seatTotal}",
-        tf_copied_alert: "✅ 已複製完整接送機預約明細！\n請直接貼上至「喜瑞飯店官方 LINE」傳送給櫃檯人員確認。"
+        tf_copied_alert: "✅ 已複製完整接送機預約明細！\n請直接貼上至「喜瑞飯店官方 LINE」傳送給櫃檯人員確認。",
+        tf_success_title: "預約資料已成功傳送至喜瑞飯店櫃檯！",
+        tf_success_desc: "櫃檯服務人員收到信件後將盡快與您聯繫確認派車細節。若您有急件需求，亦可直接複製下方明細傳送至飯店官方 LINE。",
+        tf_copy_submitted_btn: "📋 複製剛剛的預約明細",
+        tf_new_booking_btn: "再次填寫新預約"
       },
       en: {
         originTag: "Origin: No. 64, Sec. 1, Chang'an E. Rd., Zhongshan Dist.",
@@ -1171,12 +1197,17 @@
         tf_lbl_notes: "Notes (Paging Board / Terminal Info, etc.)",
         tf_fare_heading: "💰 Estimated One-Way Fare",
         tf_pay_note: "Pay in cash to driver or at Front Desk",
-        tf_submit_btn: "✉️ Compose Email to Front Desk",
+        tf_submit_btn: "✉️ Submit Booking to Front Desk",
+        tf_sending_btn: "⏳ Sending booking details...",
         tf_copy_btn: "📋 Copy for LINE",
         tf_fare_base_text: "Base fare NT$ {base} (+NT$ {night} night surcharge during {start}–{end})",
         tf_fare_night_badge: "Night Surcharge +NT$ {night} ({start}–{end})",
         tf_fare_seat_badge: "{n} Baby Seat(s) +NT$ {seatTotal}",
-        tf_copied_alert: "✅ Reservation summary copied!\nPlease paste and send it to Ambience Hotel's Official LINE account."
+        tf_copied_alert: "✅ Reservation summary copied!\nPlease paste and send it to Ambience Hotel's Official LINE account.",
+        tf_success_title: "Booking Sent to Ambience Hotel Front Desk!",
+        tf_success_desc: "Our concierge team has received your request and will contact you shortly to confirm your driver details. You may also copy the summary below for LINE.",
+        tf_copy_submitted_btn: "📋 Copy Submitted Summary",
+        tf_new_booking_btn: "Make Another Booking"
       },
       ja: {
         originTag: "出発地：台北市中山区長安東路一段64号（アンビエンスホテル）",
@@ -1237,12 +1268,17 @@
         tf_lbl_notes: "備考 Notes（ネームボード希望・ターミナル等）",
         tf_fare_heading: "💰 片道料金目安 Estimated Fare",
         tf_pay_note: "ドライバーへ現金払い、またはフロントにてお支払い",
-        tf_submit_btn: "✉️ 予約内容をメールでフロントへ送信",
+        tf_submit_btn: "✉️ 予約内容をフロントへ直接送信",
+        tf_sending_btn: "⏳ 送信中です。少々お待ちください...",
         tf_copy_btn: "📋 LINE用にテキストをコピー",
         tf_fare_base_text: "基本料金 NT$ {base}（{start}〜{end}の深夜早朝は +NT$ {night}）",
         tf_fare_night_badge: "深夜早朝割増 +NT$ {night}（{start}–{end}）",
         tf_fare_seat_badge: "チャイルドシート {n}台 +NT$ {seatTotal}",
-        tf_copied_alert: "✅ 空港送迎の予約内容をコピーしました！\n「喜瑞飯店（アンビエンスホテル）公式LINE」に貼り付けて送信してください。"
+        tf_copied_alert: "✅ 空港送迎の予約内容をコピーしました！\n「喜瑞飯店（アンビエンスホテル）公式LINE」に貼り付けて送信してください。",
+        tf_success_title: "ご予約内容をフロントへ送信しました！",
+        tf_success_desc: "フロントスタッフにて内容を確認のうえ、折り返しご連絡いたします。お急ぎの場合は下のボタンから内容をコピーして公式LINEへお送りください。",
+        tf_copy_submitted_btn: "📋 送信した予約内容をコピー",
+        tf_new_booking_btn: "新しい予約を入力する"
       }
     };
 
@@ -1312,7 +1348,6 @@
       const clickTip = document.getElementById("clickTipText");
 
       if (mode === "transfer") {
-        // 獨立「機場接送」頻道顯示模式
         filterStickyBar.classList.add("hidden");
         charterBanner.classList.add("hidden");
         listCountWrapper.classList.add("hidden");
@@ -1325,7 +1360,6 @@
         return;
       }
 
-      // 恢復一般卡片列表頻道
       filterStickyBar.classList.remove("hidden");
       listCountWrapper.classList.remove("hidden");
       placesGrid.classList.remove("hidden");
@@ -1896,7 +1930,7 @@
     });
 
     // =========================================================================
-    // 機場接送機預約邏輯（支援 Google 試算表動態價目、夜間時段、嬰兒座椅試算）
+    // 機場接送機預約邏輯（FormSubmit 背景寄信 + Google 試算表動態價目）
     // =========================================================================
     function renderTransferOptions() {
       const carSelect = document.getElementById("tf_car");
@@ -1912,7 +1946,6 @@
         carSelect.selectedIndex = prevCarIdx;
       }
 
-      // 渲染嬰兒座椅選項
       const seatSelect = document.getElementById("tf_baby_seat");
       const prevSeatVal = seatSelect.value || "0";
       const seatUnitPrice = Number(transferConfig.baby_seat_price) || 200;
@@ -1943,10 +1976,8 @@
       const e = timeToMinutes(endStr);
       if (t === null || s === null || e === null) return false;
       if (s > e) {
-        // 跨午夜時段（例如 22:00 至 06:00）
         return t >= s || t < e;
       }
-      // 同日內時段（例如 00:00 至 06:00）
       return t >= s && t < e;
     }
 
@@ -2054,14 +2085,74 @@ Thank you for your assistance!
 旅客敬上 / Best regards,
 ${name}`;
 
-      return { subject, body };
+      return {
+        subject,
+        body,
+        fields: {
+          type, date, time, flight, name, bookingId, contact,
+          carLabel, pax, luggage, seatText, notes,
+          totalFare: `NT$ ${fareInfo.total.toLocaleString()} ${fareBreakdownNote}`.trim()
+        }
+      };
     }
 
-    function handleTransferSubmit(event) {
+    // FormSubmit AJAX 背景直接寄信
+    async function handleTransferSubmit(event) {
       event.preventDefault();
-      const { subject, body } = buildTransferSummaryText();
-      const mailtoUrl = `mailto:${HOTEL_CONCIERGE_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      window.location.href = mailtoUrl;
+
+      const submitBtn = document.getElementById("tf_submit_button");
+      submitBtn.disabled = true;
+      submitBtn.classList.add("opacity-70", "cursor-not-allowed");
+      submitBtn.innerHTML = `<span>${I18N[currentLang].tf_sending_btn}</span>`;
+
+      const { subject, body, fields } = buildTransferSummaryText();
+      lastSubmittedSummaryBody = body;
+
+      // 整理成 FormSubmit 表格化結構欄位，櫃檯收信時一目了然
+      const formPayload = {
+        _subject: subject,
+        _template: "table",
+        _captcha: "false",
+        "1_服務類型_Service": fields.type,
+        "2_用車日期_Date": fields.date,
+        "3_航班時間_Time": fields.time,
+        "4_航班編號_Flight": fields.flight,
+        "5_訂房大名_Guest_Name": fields.name,
+        "6_訂房編號_Booking_ID": fields.bookingId,
+        "7_聯絡方式_Contact": fields.contact,
+        "8_預約車型_Vehicle": fields.carLabel,
+        "9_乘客人數_Passengers": fields.pax,
+        "10_行李件數_Luggage": fields.luggage,
+        "11_嬰兒座椅_Baby_Seat": fields.seatText,
+        "12_特殊備註_Notes": fields.notes,
+        "13_預估車資_Estimated_Fare": fields.totalFare
+      };
+
+      try {
+        const response = await fetch(FORMSUBMIT_AJAX_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(formPayload)
+        });
+
+        const result = await response.json();
+        if (response.ok && (result.success === "true" || result.success === true)) {
+          document.getElementById("transferForm").classList.add("hidden");
+          document.getElementById("tf_success_box").classList.remove("hidden");
+        } else {
+          throw new Error(result.message || "FormSubmit delivery failed");
+        }
+      } catch (error) {
+        alert("⚠️ 網路連線異常或信箱尚未完成首次啟用，系統將為您開啟郵件備援視窗！");
+        window.location.href = `mailto:${FORMSUBMIT_RECIPIENT}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove("opacity-70", "cursor-not-allowed");
+        submitBtn.innerHTML = `<span data-i18n="tf_submit_btn">${I18N[currentLang].tf_submit_btn}</span>`;
+      }
     }
 
     function copyTransferSummary() {
@@ -2074,6 +2165,21 @@ ${name}`;
       navigator.clipboard.writeText(body).then(() => {
         alert(I18N[currentLang].tf_copied_alert);
       });
+    }
+
+    function copyLastSubmittedSummary() {
+      if (!lastSubmittedSummaryBody) return;
+      navigator.clipboard.writeText(lastSubmittedSummaryBody).then(() => {
+        alert(I18N[currentLang].tf_copied_alert);
+      });
+    }
+
+    function resetTransferFormUI() {
+      document.getElementById("transferForm").reset();
+      document.getElementById("tf_date").valueAsDate = new Date();
+      calculateTransferFare();
+      document.getElementById("tf_success_box").classList.add("hidden");
+      document.getElementById("transferForm").classList.remove("hidden");
     }
 
     // =========================================================================

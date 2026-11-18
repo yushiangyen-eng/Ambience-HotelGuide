@@ -1644,9 +1644,11 @@
           currentRow.push(currentCell.trim());
           currentCell = "";
         } else if ((char === '
-' || (char === '' && nextChar === '
+' || (char === '
+' && nextChar === '
 ')) && !inQuotes) {
-          if (char === '') i++;
+          if (char === '
+') i++;
           currentRow.push(currentCell.trim());
           if (currentRow.some(c => c !== "")) rows.push(currentRow);
           currentRow = [];

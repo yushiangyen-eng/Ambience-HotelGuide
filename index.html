@@ -456,7 +456,7 @@
     // =========================================================================
     // 5. FormSubmit 背景寄信設定（啟用信箱後可將信箱換成 FormSubmit 提供的隨機 Hash 字串）
     // =========================================================================
-    const FORMSUBMIT_RECIPIENT = "ambience@taipeiinn.com.tw";
+    const FORMSUBMIT_RECIPIENT = "ec42c0bcadee276f2970f214989e64f6";
     const FORMSUBMIT_AJAX_URL = `https://formsubmit.co/ajax/${FORMSUBMIT_RECIPIENT}`;
 
     // 喜瑞飯店官方 LINE 預約網址
@@ -2123,8 +2123,9 @@
           throw new Error(result.message || "FormSubmit delivery failed");
         }
       } catch (error) {
-        alert("⚠️ 網路連線異常或信箱尚未完成首次啟用，系統將為您開啟郵件備援視窗！");
-        window.location.href = `mailto:${FORMSUBMIT_RECIPIENT}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        navigator.clipboard?.writeText(body);
+        alert("⚠️ 網路連線異常，系統已自動為您複製預約明細！請點擊確定後貼上至飯店官方 LINE 傳送。");
+        window.open(HOTEL_LINE_URL, "_blank", "noopener,noreferrer");
       } finally {
         submitBtn.disabled = false;
         submitBtn.classList.remove("opacity-70", "cursor-not-allowed");

@@ -197,7 +197,7 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_date">用車日期 Date *</label>
-              <input type="date" id="tf_date" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+              <input type="date" id="tf_date" onchange="calculateTransferFare()" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
             </div>
             <div>
               <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_time">航班 / 上車時間 Time *</label>
@@ -464,20 +464,32 @@
 
     // 機場接送機預設費率設定（若已綁定 TRANSFER_SHEET_CSV_URL 會自動由試算表覆寫）
     const DEFAULT_TRANSFER_CONFIG = {
+     const DEFAULT_TRANSFER_CONFIG = {
       vehicles: [
         {
           id: "sedan",
-          name_zh: "1–4 人座（一般轎車／休旅）",
-          name_en: "1–4 Pax (Sedan / SUV)",
-          name_ja: "1〜4名乗り（セダン／SUV）",
+          name_zh: "1–2 人座（一般轎車／休旅）",
+          name_en: "1–2 Pax (Sedan / SUV)",
+          name_ja: "1〜2名乗り（セダン／SUV）",
           price: 1300
         },
         {
           id: "van",
-          name_zh: "5–8 人座（商務九人座）",
-          name_en: "5–8 Pax (Business Van)",
-          name_ja: "5〜8名乗り（ビジネスワゴン）",
+          name_zh: "4–6 人座（商務九人座）",
+          name_en: "4–6 Pax (Business Van)",
+          name_ja: "4〜6名乗り（ビジネスワゴン）",
           price: 1600
+        }
+      ],
+      // 特殊日期區間費率設定（可自由增減多組區間；surcharge 為加價金額，亦可改用 override_price 直接指定該區間單趟價）
+      seasonal_rates: [
+        {
+          start_date: "2027-02-05",
+          end_date: "2027-02-10",
+          label_zh: "春節期間加成",
+          label_en: "Lunar New Year Surcharge",
+          label_ja: "春節期間割増",
+          surcharge: 500
         }
       ],
       night_start: "22:00",
@@ -1985,26 +1997,47 @@
       return t >= s && t < e;
     }
 
+   function getSeasonalAdjustment(dateStr) {
+      if (!dateStr || !Array.isArray(transferConfig.seasonal_rates)) return null;
+      return transferConfig.seasonal_rates.find(rule =>
+        rule.start_date && rule.end_date && dateStr >= rule.start_date && dateStr <= rule.end_date
+      ) || null;
+    }
+
     function calculateTransferFare() {
       const carSelect = document.getElementById("tf_car");
       const baseFare = parseInt(carSelect.value, 10) || 1300;
+      const dateVal = document.getElementById("tf_date").value;
       const timeVal = document.getElementById("tf_time").value;
       const seatCount = parseInt(document.getElementById("tf_baby_seat").value, 10) || 0;
 
+      // 1. 判斷特殊日期區間加價
+      const seasonRule = getSeasonalAdjustment(dateVal);
+      const seasonalSurcharge = seasonRule ? (Number(seasonRule.surcharge) || 0) : 0;
+      const seasonLabel = seasonRule ? getLocalizedField(seasonRule, "label") : "";
+
+      // 2. 判斷夜間時段加價
       const nightStart = transferConfig.night_start || "22:00";
       const nightEnd = transferConfig.night_end || "06:00";
       const nightRate = Number(transferConfig.night_surcharge) || 100;
-      const seatUnitPrice = Number(transferConfig.baby_seat_price) || 200;
-
       const nightSurcharge = isNightTime(timeVal, nightStart, nightEnd) ? nightRate : 0;
+
+      // 3. 判斷嬰兒座椅加價
+      const seatUnitPrice = Number(transferConfig.baby_seat_price) || 200;
       const seatTotal = seatCount * seatUnitPrice;
-      const total = baseFare + nightSurcharge + seatTotal;
+
+      const total = baseFare + seasonalSurcharge + nightSurcharge + seatTotal;
 
       document.getElementById("tf_total_fare").textContent = `NT$ ${total.toLocaleString()}`;
 
       const detailEl = document.getElementById("tf_fare_detail");
       const extras = [];
 
+      if (seasonalSurcharge > 0) {
+        extras.push(`<span class="text-rose-700 font-bold">${I18N[currentLang].tf_fare_season_badge
+          .replace("{label}", seasonLabel)
+          .replace("{fee}", seasonalSurcharge.toLocaleString())}</span>`);
+      }
       if (nightSurcharge > 0) {
         extras.push(`<span class="text-amber-700 font-bold">${I18N[currentLang].tf_fare_night_badge
           .replace("{night}", nightSurcharge.toLocaleString())
@@ -2027,7 +2060,7 @@
           .replace("{night}", nightRate.toLocaleString());
       }
 
-      return { baseFare, nightSurcharge, seatCount, seatTotal, total, nightStart, nightEnd };
+      return { baseFare, seasonalSurcharge, seasonLabel, nightSurcharge, seatCount, seatTotal, total, nightStart, nightEnd };
     }
 
     function buildTransferSummaryText() {
@@ -2051,6 +2084,7 @@
         : "不需要 (0)";
 
       const extraFareNotes = [];
+      if (fareInfo.seasonalSurcharge > 0) extraFareNotes.push(`含${fareInfo.seasonLabel} NT$${fareInfo.seasonalSurcharge}`);
       if (fareInfo.nightSurcharge > 0) extraFareNotes.push(`含夜間加成 NT$${fareInfo.nightSurcharge}`);
       if (fareInfo.seatTotal > 0) extraFareNotes.push(`含嬰兒座椅 ${fareInfo.seatCount} 張 NT$${fareInfo.seatTotal}`);
       const fareBreakdownNote = extraFareNotes.length > 0 ? `(${extraFareNotes.join("、")})` : "";
@@ -2246,8 +2280,18 @@
           if (!isNaN(price) && price >= 0) nightSurcharge = price;
         } else if (type === "baby_seat") {
           if (!isNaN(price) && price >= 0) babySeatPrice = price;
+        } else if (type === "season") {
+          if (r.start_date && r.end_date && !isNaN(price)) {
+            seasonalRates.push({
+              start_date: r.start_date,
+              end_date: r.end_date,
+              label_zh: r.name_zh || "特殊日期加成",
+              label_en: r.name_en || r.name_zh || "Seasonal Surcharge",
+              label_ja: r.name_ja || r.name_en || r.name_zh || "特別期間割増",
+              surcharge: price
+            });
+          }
         }
-      });
 
       if (vehicles.length > 0) {
         transferConfig.vehicles = vehicles;

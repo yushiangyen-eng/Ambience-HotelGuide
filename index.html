@@ -1961,7 +1961,7 @@
     // =========================================================================
     function getEffectiveVehiclePrice(vehicle, dateStr) {
       let effectivePrice = Number(vehicle.price) || 1300;
-      const effectiveDate = vehicle.future_effective_date || "2027-01-01";
+      const effectiveDate = vehicle.future_effective_date || "2026-12-01";
       const futurePrice = Number(vehicle.future_price);
 
       if (dateStr && effectiveDate && dateStr >= effectiveDate && !isNaN(futurePrice) && futurePrice > 0) {
@@ -2470,10 +2470,10 @@
     function downloadTransferCSV() {
       const headers = ["item_type", "id", "name_zh", "name_en", "name_ja", "price", "effective_date", "future_price", "night_start", "night_end", "start_date", "end_date"];
       const sampleRows = [
-        ["vehicle", "sedan", "1–2 人座（一般轎車／休旅）", "1–2 Pax (Sedan / SUV)", "1〜2名乗り（セダン／SUV）", "1300", "2027-01-01", "1400", "", "", "", ""],
-        ["vehicle", "van", "4–6 人座（商務九人座）", "4–6 Pax (Business Van)", "4〜6名乗り（ビジネスワゴン）", "1600", "2027-01-01", "1600", "", "", "", ""],
+        ["vehicle", "sedan", "1–2 人座（一般轎車／休旅）", "1–2 Pax (Sedan / SUV)", "1〜2名乗り（セダン／SUV）", "1300", "2026-12-01", "1400", "", "", "", ""],
+        ["vehicle", "van", "4–6 人座（商務九人座）", "4–6 Pax (Business Van)", "4〜6名乗り（ビジネスワゴン）", "1600", "2026-12-01", "1600", "", "", "", ""],
         ["season", "cny_2027", "春節期間加成", "Lunar New Year Surcharge", "春節期間割増", "500", "", "", "", "", "2027-02-05", "2027-02-10"],
-        ["night", "night_fee", "夜間時段加成", "Night Surcharge", "深夜早朝割増", "100", "", "", "22:00", "06:00", "", ""],
+        ["night", "night_fee", "夜間時段加成", "Night Surcharge", "深夜早朝割増", "100", "", "", "22:00", "08:00", "", ""],
         ["baby_seat", "seat_fee", "嬰兒座椅（單張）", "Baby Seat (Per Seat)", "チャイルドシート（1台）", "200", "", "", "", "", "", ""]
       ];
       const csvLines = [

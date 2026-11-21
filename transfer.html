@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>喜瑞飯店 Ambience Hotel｜桃園機場專屬接送機預約 Airport Transfer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans TC', 'Noto Sans JP', sans-serif;
+      background-color: #FAF9F6;
+      color: #1E293B;
+      -webkit-tap-highlight-color: transparent;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-[#B48A5A] selection:text-white">
+
+  <!-- 頂部品牌視覺區（精簡專注版） -->
+  <header class="bg-[#1E293B] text-white pt-5 pb-6 sm:pt-7 sm:pb-8 px-4 sm:px-6 relative overflow-hidden">
+    <div class="max-w-3xl mx-auto relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3.5">
+      <div>
+        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-[#B48A5A]/20 border border-[#B48A5A]/40 text-[#E6C79C] text-[11px] font-medium mb-2">
+          <span>AMBIENCE HOTEL TAIPEI</span>
+          <span>•</span>
+          <span>CONCIERGE SERVICE</span>
+        </div>
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight" data-i18n="headerTitle">
+          喜瑞飯店｜桃園機場專屬接送機預約
+        </h1>
+        <p class="text-slate-300 text-xs sm:text-sm mt-1 leading-relaxed" data-i18n="headerSubtitle">
+          桃園國際機場（TPE）⇄ 台北喜瑞飯店（長安東路一段64號）24 小時專車直達
+        </p>
+      </div>
+
+      <!-- 三語切換按鈕組（繁中 / EN / 日本語） -->
+      <div class="self-start sm:self-center inline-flex rounded-xl bg-white/10 p-1 border border-white/15 shrink-0">
+        <button onclick="setLanguage('zh')" data-lang="zh" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#B48A5A] text-white transition cursor-pointer">
+          繁中
+        </button>
+        <button onclick="setLanguage('en')" data-lang="en" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-200 hover:text-white transition cursor-pointer">
+          EN
+        </button>
+        <button onclick="setLanguage('ja')" data-lang="ja" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-200 hover:text-white transition cursor-pointer">
+          日本語
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主要預約表單區 -->
+  <main class="flex-1 max-w-3xl w-full mx-auto px-4 sm:px-6 py-5 sm:py-7">
+    <div class="flex items-center justify-between mb-3">
+      <a href="./index.html" class="inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-[#B48A5A] transition">
+        <span>←</span>
+        <span data-i18n="backToGuide">查看飯店周邊美食與旅遊指南</span>
+      </a>
+      <span id="dataSourceBadge" class="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-medium">正在同步價目...</span>
+    </div>
+
+    <section class="bg-white border border-stone-200 rounded-2xl shadow-sm overflow-hidden">
+      <!-- 頂部標題列 -->
+      <div class="bg-[#1E293B] text-white px-5 sm:px-6 py-4 border-b-4 border-[#B48A5A] flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <span class="text-[11px] font-bold tracking-widest text-[#E6C79C] uppercase">TAOYUAN AIRPORT (TPE) PRIVATE TRANSFER</span>
+          <h2 class="text-base sm:text-lg font-bold mt-0.5" data-i18n="tf_title">✈️ 填寫機場接送預約資料</h2>
+        </div>
+        <span class="text-xs bg-white/10 px-3 py-1 rounded-full text-[#E6C79C] font-semibold" data-i18n="tf_badge24h">24H 專車接送</span>
+      </div>
+
+      <!-- 表單本體 -->
+      <form id="transferForm" class="p-5 sm:p-6 space-y-4 text-sm text-slate-700" onsubmit="handleTransferSubmit(event)">
+        <input type="text" name="_honey" id="tf_honey" style="display:none" tabindex="-1" autocomplete="off" />
+
+        <!-- 1. 服務類型與車型 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_type">服務類型 Service Type *</label>
+            <select id="tf_type" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]">
+              <option value="接機 Pick-up (桃園機場 TPE ➔ 喜瑞飯店)" data-i18n="tf_opt_pickup">接機 Pick-up（桃園機場 TPE ➔ 喜瑞飯店）</option>
+              <option value="送機 Drop-off (喜瑞飯店 ➔ 桃園機場 TPE)" data-i18n="tf_opt_dropoff">送機 Drop-off（喜瑞飯店 ➔ 桃園機場 TPE）</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_car">選擇車型 Vehicle Type *</label>
+            <select id="tf_car" onchange="calculateTransferFare()" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]"></select>
+          </div>
+        </div>
+
+        <!-- 2. 日期、時間與航班編號 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_date">用車日期 Date *</label>
+            <input type="date" id="tf_date" onchange="handleTransferDateChange()" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+          </div>
+          <div>
+            <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_time">航班 / 上車時間 Time *</label>
+            <input type="time" id="tf_time" onchange="calculateTransferFare()" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+          </div>
+          <div>
+            <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_flight">航班編號 Flight No. *</label>
+            <input type="text" id="tf_flight" placeholder="例：BR198 / JX800" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+          </div>
+        </div>
+
+        <!-- 3. 訂房大名、聯繫 Email 與聯絡方式 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_name">訂房大名（同護照）Guest Name *</label>
+            <input type="text" id="tf_name" placeholder="例：WANG XIAO-MING" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+          </div>
+          <div>
+            <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_email">聯繫 Email *</label>
+            <input type="email" id="tf_email" placeholder="例：guest@example.com" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+          </div>
+          <div>
+            <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_contact">聯絡電話（含國碼）Contact *</label>
+            <input type="text" id="tf_contact" placeholder="例：+886-912-345-678 / LINE" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+          </div>
+        </div>
+
+        <!-- 4. 人數、行李與嬰兒座椅選項 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_pax">乘客人數 Passengers *</label>
+            <input type="text" id="tf_pax" placeholder="例：2 大 1 小" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+          </div>
+          <div>
+            <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_luggage">行李件數與尺寸 Luggage *</label>
+            <input type="text" id="tf_luggage" placeholder="例：28吋×2、20吋×1" required class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+          </div>
+          <div>
+            <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_seat">嬰兒座椅 Baby Seat</label>
+            <select id="tf_baby_seat" onchange="calculateTransferFare()" class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]"></select>
+          </div>
+        </div>
+
+        <!-- 5. 訂房編號與特殊需求備註 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_booking">訂房編號 Booking ID（選填）</label>
+            <input type="text" id="tf_booking_id" placeholder="例：TPI2611..." class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+          </div>
+          <div class="md:col-span-2">
+            <label class="block font-bold text-slate-800 mb-1" data-i18n="tf_lbl_notes">備註 Notes（航廈資訊等）</label>
+            <input type="text" id="tf_notes" placeholder="例：第二航廈入境" class="w-full border border-stone-300 rounded-xl px-3.5 py-2.5 bg-[#FAF9F6] focus:outline-none focus:border-[#B48A5A]" />
+          </div>
+        </div>
+
+        <!-- 即時車資試算提示框 -->
+        <div class="bg-[#FAF9F6] border border-[#B48A5A]/40 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <p class="text-xs font-bold text-slate-800" data-i18n="tf_fare_heading">💰 預估單趟車資 Estimated Fare</p>
+            <p id="tf_fare_detail" class="text-[11px] text-slate-500 mt-0.5 leading-relaxed"></p>
+          </div>
+          <div class="text-right shrink-0">
+            <span id="tf_total_fare" class="text-xl font-bold text-[#B48A5A]">NT$ 1,300</span>
+            <span class="block text-[10px] text-slate-400" data-i18n="tf_pay_note">支付現金</span>
+          </div>
+        </div>
+
+        <!-- 注意事項摘要 -->
+        <div class="bg-stone-50 border border-stone-200/80 rounded-xl p-3.5 text-[11px] text-slate-500 space-y-1 leading-relaxed">
+          <p class="font-bold text-slate-700" data-i18n="tf_notice_title">📌 預約須知 Notices：</p>
+          <p data-i18n="tf_notice_1">1. 本接送服務僅限現金支付（Cash only），上車或抵達飯店時直接支付予司機。</p>
+          <p data-i18n="tf_notice_2">2. 接機司機將依班機實際抵達時間免費等候 90 分鐘，逾時每小時加收 NT$ 500。</p>
+          <p data-i18n="tf_notice_3">3. 若於班機實際抵達前 3 小時內取消或變更，將收取單趟車資之 50% 作為手續費。</p>
+        </div>
+
+        <!-- 送出按鈕區 -->
+        <div class="pt-1 flex flex-col sm:flex-row gap-3">
+          <button type="submit" id="tf_submit_button" class="flex-1 bg-[#1E293B] hover:bg-slate-800 text-white font-bold py-3 px-5 rounded-xl shadow transition flex items-center justify-center gap-2 cursor-pointer">
+            <span data-i18n="tf_submit_btn">✉️ 立即送出預約至飯店櫃檯</span>
+          </button>
+          <button type="button" onclick="copyTransferSummary()" class="sm:w-auto bg-stone-100 hover:bg-stone-200 text-slate-800 font-bold py-3 px-4 rounded-xl border border-stone-300 transition flex items-center justify-center gap-1.5 cursor-pointer">
+            <span data-i18n="tf_copy_btn">📋 複製文字傳 LINE</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- 送出成功提示畫面 -->
+      <div id="tf_success_box" class="hidden p-5 sm:p-7 space-y-4 bg-emerald-50/70">
+        <div class="text-center space-y-2">
+          <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl font-bold mx-auto shadow-xs">✓</div>
+          <h3 class="text-lg font-bold text-slate-900" data-i18n="tf_success_title">預約資料已成功傳送至喜瑞飯店櫃檯！</h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-md mx-auto" data-i18n="tf_success_desc">
+            櫃檯服務人員收到信件後將盡快與您聯繫確認派車細節。以下為本次預約的詳細明細與確認內容：
+          </p>
+        </div>
+
+        <div class="bg-white border border-stone-200 rounded-xl p-4 text-left shadow-xs">
+          <div class="flex items-center justify-between mb-2 pb-2 border-b border-stone-100">
+            <span class="text-xs font-bold text-slate-700">📄 預約確認明細（Reservation Confirmation Draft）</span>
+            <button type="button" onclick="copyConfirmationLetter()" class="text-xs font-semibold text-[#B48A5A] hover:underline cursor-pointer">
+              📋 複製確認信內容
+            </button>
+          </div>
+          <pre id="tf_confirmation_preview" class="text-xs text-slate-600 whitespace-pre-wrap font-sans leading-relaxed select-all"></pre>
+        </div>
+
+        <div class="pt-1 flex flex-wrap justify-center gap-2.5">
+          <button type="button" onclick="copyConfirmationLetter()" class="px-4 py-2.5 rounded-xl bg-white border border-stone-300 hover:bg-stone-50 text-xs font-bold text-slate-800 transition cursor-pointer">
+            <span data-i18n="tf_copy_submitted_btn">📋 複製預約確認信</span>
+          </button>
+          <button type="button" onclick="resetTransferFormUI()" class="px-4 py-2.5 rounded-xl bg-[#1E293B] hover:bg-slate-800 text-xs font-bold text-white transition cursor-pointer">
+            <span data-i18n="tf_new_booking_btn">再次填寫新預約</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 頁尾 -->
+  <footer class="bg-white border-t border-stone-200/80 py-5 px-4 sm:px-6 mt-8">
+    <div class="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-400">
+      <p>© 2026 喜瑞飯店 Ambience Hotel Taipei. All rights reserved.</p>
+      <p class="text-[11px] text-slate-400">Tel: +886-2-2541-0077｜No. 64, Sec. 1, Chang'an E. Rd., Taipei</p>
+    </div>
+  </footer>
+
+  <script>
+    const TRANSFER_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWlyzIGNyylZRVgFo_33AIShQXGJngkbN7MqkbwlWk-X5jsKiqa81A73jttrRIETcxs1tzPnyjVvxM/pub?gid=729206365&single=true&output=csv";
+    const FORMSUBMIT_RECIPIENT = "ec42c0bcadee276f2970f214989e64f6";
+    const FORMSUBMIT_AJAX_URL = `https://formsubmit.co/ajax/${FORMSUBMIT_RECIPIENT}`;
+    const HOTEL_LINE_URL = "https://lin.ee/nSZAeFK";
+
+    const DEFAULT_TRANSFER_CONFIG = {
+      vehicles: [
+        {
+          id: "sedan",
+          name_zh: "1–2 人座（一般轎車／休旅）",
+          name_en: "1-2 Pax (Sedan / SUV)",
+          name_ja: "1〜2名乗り（セダン／SUV）",
+          price: 1300,
+          future_effective_date: "2027-01-01",
+          future_price: 1400
+        },
+        {
+          id: "van",
+          name_zh: "4–6 人座（商務九人座）",
+          name_en: "4-6 Pax (Business Van)",
+          name_ja: "4〜6名乗り（ビジネスワゴン）",
+          price: 1600,
+          future_effective_date: "2027-01-01",
+          future_price: 1600
+        }
+      ],
+      seasonal_rates: [
+        {
+          start_date: "2027-02-05",
+          end_date: "2027-02-10",
+          label_zh: "春節期間加成",
+          label_en: "Lunar New Year Surcharge",
+          label_ja: "春節期間割増",
+          surcharge: 500
+        }
+      ],
+      night_start: "23:00",
+      night_end: "07:00",
+      night_surcharge: 100,
+      baby_seat_price: 200,
+      max_baby_seats: 2
+    };
+
+    const I18N = {
+      zh: {
+        headerTitle: "喜瑞飯店｜桃園機場專屬接送機預約",
+        headerSubtitle: "桃園國際機場（TPE）⇄ 台北喜瑞飯店（長安東路一段64號）24 小時專車直達",
+        backToGuide: "查看飯店周邊美食與旅遊指南",
+        tf_title: "✈️ 填寫機場接送預約資料",
+        tf_badge24h: "24H 專車接送",
+        tf_lbl_type: "服務類型 Service Type *",
+        tf_opt_pickup: "接機 Pick-up（桃園機場 TPE ➔ 喜瑞飯店）",
+        tf_opt_dropoff: "送機 Drop-off（喜瑞飯店 ➔ 桃園機場 TPE）",
+        tf_lbl_car: "選擇車型 Vehicle Type *",
+        tf_lbl_date: "用車日期 Date *",
+        tf_lbl_time: "航班 / 上車時間 Time *",
+        tf_lbl_flight: "航班編號 Flight No. *",
+        tf_lbl_name: "訂房大名（同護照）Guest Name *",
+        tf_lbl_email: "聯繫 Email *",
+        tf_lbl_contact: "聯絡電話（含國碼）Contact *",
+        tf_lbl_pax: "乘客人數 Passengers *",
+        tf_lbl_luggage: "行李件數與尺寸 Luggage *",
+        tf_lbl_seat: "嬰兒座椅 Baby Seat",
+        tf_seat_none: "0 張（不需要）",
+        tf_seat_item: "{n} 張（+NT$ {total}）",
+        tf_lbl_booking: "訂房編號 Booking ID（選填）",
+        tf_lbl_notes: "備註 Notes（航廈資訊等）",
+        tf_fare_heading: "💰 預估單趟車資 Estimated Fare",
+        tf_pay_note: "支付現金",
+        tf_notice_title: "📌 預約須知 Notices：",
+        tf_notice_1: "1. 本接送服務僅限現金支付（Cash only），上車或抵達飯店時直接支付予司機。",
+        tf_notice_2: "2. 接機司機將依班機實際抵達時間免費等候 90 分鐘，逾時每小時加收 NT$ 500。",
+        tf_notice_3: "3. 若於班機實際抵達前 3 小時內取消或變更，將收取單趟車資之 50% 作為手續費。",
+        tf_submit_btn: "✉️ 立即送出預約至飯店櫃檯",
+        tf_sending_btn: "⏳ 預約資料傳送中，請稍候...",
+        tf_copy_btn: "📋 複製文字傳 LINE",
+        tf_fare_base_text: "基本車資 NT$ {base}（{start}–{end} 夜間時段加收 NT$ {night}）",
+        tf_fare_season_badge: "{label} +NT$ {fee}",
+        tf_fare_night_badge: "夜間加成 +NT$ {night}（{start}–{end}）",
+        tf_fare_seat_badge: "嬰兒座椅 {n} 張 +NT$ {seatTotal}",
+        tf_copied_alert: "✅ 已複製完整確認信與預約明細！",
+        tf_success_title: "預約資料已成功傳送至喜瑞飯店櫃檯！",
+        tf_success_desc: "櫃檯服務人員收到信件後將盡快與您聯繫確認派車細節。以下為本次預約的確認明細：",
+        tf_copy_submitted_btn: "📋 複製預約確認信",
+        tf_new_booking_btn: "再次填寫新預約"
+      },
+      en: {
+        headerTitle: "Ambience Hotel｜Taoyuan Airport Private Transfer",
+        headerSubtitle: "24/7 Direct Private Car Transfer: Taoyuan Airport (TPE) ⇄ Ambience Hotel Taipei",
+        backToGuide: "Explore Neighborhood Food & Travel Guide",
+        tf_title: "✈️ Airport Transfer Reservation Form",
+        tf_badge24h: "24H Private Service",
+        tf_lbl_type: "Service Type *",
+        tf_opt_pickup: "Pick-up (Taoyuan Airport TPE ➔ Ambience Hotel)",
+        tf_opt_dropoff: "Drop-off (Ambience Hotel ➔ Taoyuan Airport TPE)",
+        tf_lbl_car: "Vehicle Type *",
+        tf_lbl_date: "Date *",
+        tf_lbl_time: "Flight / Time *",
+        tf_lbl_flight: "Flight No. *",
+        tf_lbl_name: "Guest Name (As on Passport) *",
+        tf_lbl_email: "Email *",
+        tf_lbl_contact: "Contact Number (with Country Code) *",
+        tf_lbl_pax: "Passengers *",
+        tf_lbl_luggage: "Luggage Count & Sizes *",
+        tf_lbl_seat: "Baby / Child Seat",
+        tf_seat_none: "0 (Not Required)",
+        tf_seat_item: "{n} Seat(s) (+NT$ {total})",
+        tf_lbl_booking: "Booking ID (Optional)",
+        tf_lbl_notes: "Notes (Terminal Info, etc.)",
+        tf_fare_heading: "💰 Estimated One-Way Fare",
+        tf_pay_note: "Cash only",
+        tf_notice_title: "📌 Notices for Reserving the Transfer Service:",
+        tf_notice_1: "1. This service is cash only, payable directly to the driver.",
+        tf_notice_2: "2. The pickup driver will wait for 90 minutes based on actual flight arrival time (NTD 500/hr overtime thereafter).",
+        tf_notice_3: "3. A 50% penalty applies for cancellations or changes made less than 3 hours before actual landing time.",
+        tf_submit_btn: "✉️ Submit Booking to Front Desk",
+        tf_sending_btn: "⏳ Sending booking details...",
+        tf_copy_btn: "📋 Copy for LINE",
+        tf_fare_base_text: "Base fare NT$ {base} (+NT$ {night} night surcharge during {start}–{end})",
+        tf_fare_season_badge: "{label} +NT$ {fee}",
+        tf_fare_night_badge: "Night Surcharge +NT$ {night} ({start}–{end})",
+        tf_fare_seat_badge: "{n} Baby Seat(s) +NT$ {seatTotal}",
+        tf_copied_alert: "✅ Reservation confirmation details copied!",
+        tf_success_title: "Booking Sent to Ambience Hotel Front Desk!",
+        tf_success_desc: "Our concierge team has received your request and will reply shortly to confirm your reservation. Below is a copy of your transfer details:",
+        tf_copy_submitted_btn: "📋 Copy Confirmation Details",
+        tf_new_booking_btn: "Make Another Booking"
+      },
+      ja: {
+        headerTitle: "アンビエンスホテル｜桃園国際空港 専用車送迎予約",
+        headerSubtitle: "桃園国際空港（TPE）⇄ アンビエンスホテル台北 24時間専用車送迎",
+        backToGuide: "ホテル周辺グルメ＆観光ガイドを見る",
+        tf_title: "✈️ 空港送迎予約フォーム",
+        tf_badge24h: "24時間対応",
+        tf_lbl_type: "ご利用内容 Service Type *",
+        tf_opt_pickup: "お迎え Pick-up（桃園空港 TPE ➔ アンビエンスホテル）",
+        tf_opt_dropoff: "お送り Drop-off（アンビエンスホテル ➔ 桃園空港 TPE）",
+        tf_lbl_car: "車種選択 Vehicle Type *",
+        tf_lbl_date: "ご利用日 Date *",
+        tf_lbl_time: "フライト Time *",
+        tf_lbl_flight: "便名 Flight No. *",
+        tf_lbl_name: "ご宿泊者名（パスポート表記）Guest Name *",
+        tf_lbl_email: "連絡先 Email *",
+        tf_lbl_contact: "電話番号（国番号含む）Contact *",
+        tf_lbl_pax: "ご乗車人数 Passengers *",
+        tf_lbl_luggage: "お荷物個数・サイズ Luggage *",
+        tf_lbl_seat: "チャイルドシート Baby Seat",
+        tf_seat_none: "0台（不要）",
+        tf_seat_item: "{n}台（+NT$ {total}）",
+        tf_lbl_booking: "予約番号 Booking ID（任意）",
+        tf_lbl_notes: "備考 Notes（ターミナル情報など）",
+        tf_fare_heading: "💰 片道料金目安 Estimated Fare",
+        tf_pay_note: "現金払いのみ",
+        tf_notice_title: "📌 ご利用上の注意事項：",
+        tf_notice_1: "1. お支払いは現金のみ（ドライバーへ直接お支払いください）。",
+        tf_notice_2: "2. お迎えの無料待機時間は実際のフライト到着時刻から90分間です（超過は1時間あたりNT$ 500）。",
+        tf_notice_3: "3. 実際の到着時刻の3時間前を過ぎての変更・キャンセルは料金の50%を申し受けます。",
+        tf_submit_btn: "✉️ 予約内容をフロントへ直接送信",
+        tf_sending_btn: "⏳ 送信中です。少々お待ちください...",
+        tf_copy_btn: "📋 LINE用にテキストをコピー",
+        tf_fare_base_text: "基本料金 NT$ {base}（{start}〜{end}の深夜早朝は +NT$ {night}）",
+        tf_fare_season_badge: "{label} +NT$ {fee}",
+        tf_fare_night_badge: "深夜早朝割増 +NT$ {night}（{start}–{end}）",
+        tf_fare_seat_badge: "チャイルドシート {n}台 +NT$ {seatTotal}",
+        tf_copied_alert: "✅ 空港送迎の予約内容をコピーしました！",
+        tf_success_title: "ご予約内容をフロントへ送信しました！",
+        tf_success_desc: "フロントスタッフにて内容を確認のうえ、折り返しご連絡いたします。以下は送信されたご予約内容の控えです：",
+        tf_copy_submitted_btn: "📋 予約確認明細をコピー",
+        tf_new_booking_btn: "新しい予約を入力する"
+      }
+    };
+
+    let currentLang = "zh";
+    let transferConfig = JSON.parse(JSON.stringify(DEFAULT_TRANSFER_CONFIG));
+    let lastConfirmationLetter = "";
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll(".lang-btn").forEach(btn => {
+        const isActive = btn.getAttribute("data-lang") === lang;
+        btn.className = isActive
+          ? "lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#B48A5A] text-white transition cursor-pointer"
+          : "lang-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-200 hover:text-white transition cursor-pointer";
+      });
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (I18N[currentLang][key]) {
+          el.textContent = I18N[currentLang][key];
+        }
+      });
+
+      renderTransferOptions();
+      calculateTransferFare();
+    }
+
+    function getLocalizedField(item, fieldBase) {
+      if (currentLang === "ja") return item[`${fieldBase}_ja`] || item[`${fieldBase}_en`] || item[`${fieldBase}_zh`] || "";
+      if (currentLang === "en") return item[`${fieldBase}_en`] || item[`${fieldBase}_zh`] || "";
+      return item[`${fieldBase}_zh`] || item[`${fieldBase}_en`] || "";
+    }
+
+    function getEffectiveVehiclePrice(vehicle, dateStr) {
+      let effectivePrice = Number(vehicle.price) || 1300;
+      const effectiveDate = vehicle.future_effective_date || "2027-01-01";
+      const futurePrice = Number(vehicle.future_price);
+      if (dateStr && effectiveDate && dateStr >= effectiveDate && !isNaN(futurePrice) && futurePrice > 0) {
+        effectivePrice = futurePrice;
+      }
+      return effectivePrice;
+    }
+
+    function renderTransferOptions() {
+      const carSelect = document.getElementById("tf_car");
+      const prevCarIdx = carSelect.selectedIndex >= 0 ? carSelect.selectedIndex : 0;
+      const selectedDate = document.getElementById("tf_date")?.value || "";
+
+      carSelect.innerHTML = transferConfig.vehicles.map(v => {
+        const label = getLocalizedField(v, "name");
+        const bilingualLabel = v.name_zh !== v.name_en ? `${v.name_zh} (${v.name_en})` : v.name_zh;
+        const unitPrice = getEffectiveVehiclePrice(v, selectedDate);
+        return `<option value="${unitPrice}" data-label="${bilingualLabel}" data-en-label="${v.name_en || v.name_zh}">${label} — NT$ ${unitPrice.toLocaleString()}</option>`;
+      }).join("");
+
+      if (prevCarIdx < carSelect.options.length) {
+        carSelect.selectedIndex = prevCarIdx;
+      }
+
+      const seatSelect = document.getElementById("tf_baby_seat");
+      const prevSeatVal = seatSelect.value || "0";
+      const seatUnitPrice = Number(transferConfig.baby_seat_price) || 200;
+      const maxSeats = Number(transferConfig.max_baby_seats) || 2;
+
+      let seatOptionsHtml = `<option value="0">${I18N[currentLang].tf_seat_none}</option>`;
+      for (let i = 1; i <= maxSeats; i++) {
+        const totalSeatCost = i * seatUnitPrice;
+        const text = I18N[currentLang].tf_seat_item.replace("{n}", i).replace("{total}", totalSeatCost.toLocaleString());
+        seatOptionsHtml += `<option value="${i}">${text}</option>`;
+      }
+      seatSelect.innerHTML = seatOptionsHtml;
+      seatSelect.value = prevSeatVal;
+    }
+
+    function handleTransferDateChange() {
+      renderTransferOptions();
+      calculateTransferFare();
+    }
+
+    function timeToMinutes(hhmm) {
+      if (!hhmm || !hhmm.includes(":")) return null;
+      const [h, m] = hhmm.split(":").map(Number);
+      return isNaN(h) || isNaN(m) ? null : h * 60 + m;
+    }
+
+    function isNightTime(timeVal, startStr, endStr) {
+      const t = timeToMinutes(timeVal);
+      const s = timeToMinutes(startStr);
+      const e = timeToMinutes(endStr);
+      if (t === null || s === null || e === null) return false;
+      return s > e ? (t >= s || t < e) : (t >= s && t < e);
+    }
+
+    function getSeasonalAdjustment(dateStr) {
+      if (!dateStr || !Array.isArray(transferConfig.seasonal_rates)) return null;
+      return transferConfig.seasonal_rates.find(rule =>
+        rule.start_date && rule.end_date && dateStr >= rule.start_date && dateStr <= rule.end_date
+      ) || null;
+    }
+
+    function calculateTransferFare() {
+      const carSelect = document.getElementById("tf_car");
+      const baseFare = parseInt(carSelect.value, 10) || 1300;
+      const dateVal = document.getElementById("tf_date").value;
+      const timeVal = document.getElementById("tf_time").value;
+      const seatCount = parseInt(document.getElementById("tf_baby_seat").value, 10) || 0;
+
+      const seasonRule = getSeasonalAdjustment(dateVal);
+      const seasonalSurcharge = seasonRule ? (Number(seasonRule.surcharge) || 0) : 0;
+      const seasonLabel = seasonRule ? getLocalizedField(seasonRule, "label") : "";
+
+      const nightStart = transferConfig.night_start || "23:00";
+      const nightEnd = transferConfig.night_end || "07:00";
+      const nightRate = Number(transferConfig.night_surcharge) || 100;
+      const nightSurcharge = isNightTime(timeVal, nightStart, nightEnd) ? nightRate : 0;
+
+      const seatUnitPrice = Number(transferConfig.baby_seat_price) || 200;
+      const seatTotal = seatCount * seatUnitPrice;
+      const total = baseFare + seasonalSurcharge + nightSurcharge + seatTotal;
+
+      document.getElementById("tf_total_fare").textContent = `NT$ ${total.toLocaleString()}`;
+
+      const detailEl = document.getElementById("tf_fare_detail");
+      const extras = [];
+
+      if (seasonalSurcharge > 0) {
+        extras.push(`<span class="text-rose-700 font-bold">${I18N[currentLang].tf_fare_season_badge.replace("{label}", seasonLabel).replace("{fee}", seasonalSurcharge.toLocaleString())}</span>`);
+      }
+      if (nightSurcharge > 0) {
+        extras.push(`<span class="text-amber-700 font-bold">${I18N[currentLang].tf_fare_night_badge.replace("{night}", nightSurcharge.toLocaleString()).replace("{start}", nightStart).replace("{end}", nightEnd)}</span>`);
+      }
+      if (seatTotal > 0) {
+        extras.push(`<span class="text-amber-700 font-bold">${I18N[currentLang].tf_fare_seat_badge.replace("{n}", seatCount).replace("{seatTotal}", seatTotal.toLocaleString())}</span>`);
+      }
+
+      if (extras.length > 0) {
+        detailEl.innerHTML = `NT$ ${baseFare.toLocaleString()} + ${extras.join(" + ")}`;
+      } else {
+        detailEl.textContent = I18N[currentLang].tf_fare_base_text
+          .replace("{base}", baseFare.toLocaleString())
+          .replace("{start}", nightStart)
+          .replace("{end}", nightEnd)
+          .replace("{night}", nightRate.toLocaleString());
+      }
+
+      return { baseFare, seasonalSurcharge, seasonLabel, nightSurcharge, seatCount, seatTotal, total };
+    }
+
+    function buildConfirmationLetter(data) {
+      const isDropoff = data.type.includes("Drop-off") || data.type.includes("送機");
+      const serviceHeader = isDropoff
+        ? "One-way Airport Transfer Service from Ambience Hotel"
+        : "One-way Airport Transfer Service to Ambience Hotel";
+      const dateLabel = isDropoff ? "Departure Date" : "Flight Arrival Date";
+      const timeLabel = isDropoff ? "Pick-up Time" : "Flight Arrival Time";
+
+      const vehicleDisplay = data.seatCount > 0
+        ? `${data.carEnLabel} + ${data.seatCount} Baby Seat(s)`
+        : data.carEnLabel;
+
+      const fareNoteParts = [];
+      if (data.seasonalSurcharge > 0) fareNoteParts.push(`incl. Seasonal Surcharge NTD ${data.seasonalSurcharge}`);
+      if (data.nightSurcharge > 0) fareNoteParts.push(`incl. Late Night Surcharge NTD ${data.nightSurcharge}`);
+      if (data.seatTotal > 0) fareNoteParts.push(`incl. Baby Seat NTD ${data.seatTotal}`);
+      const fareBreakdown = fareNoteParts.length > 0 ? ` (${fareNoteParts.join(", ")})` : "";
+      const notesLine = data.notes && data.notes !== "無 (None)" ? `\nNotes: ${data.notes}` : "";
+
+      return `Please kindly check your airport transfer service with the details below. Once receiving your reply, we will reserve the car for you.
+
+
+${serviceHeader}
+Guest Name: ${data.name}
+Contact number(with country code): ${data.contact}
+No. of Passengers: ${data.pax}
+No. of Luggage: ${data.luggage}
+Flight Number: ${data.flight}
+${dateLabel}: ${data.date}
+${timeLabel}: ${data.time}
+Vehicle type: ${vehicleDisplay}
+Fare: NTD ${data.total.toLocaleString()}${fareBreakdown}${notesLine}
+※The late night surcharge remains at NTD 100 from 23:00 to 7:00 each journey(based on the actual landing time).
+Status: To Be Confirmed
+Please kindly note that this service is cash only.
+
+Notices for reserving the transfer service:
+1. In case that you could not find the driver by arrival, please do either go to the information desk or use a payphone to contact us on . 02-2541-0077
+2.The pickup driver will wait for 90 minutes based on the actual arrival time of the flight. If the waiting time exceeds this limit, an overtime fee of NTD 500 per hour will be charged.
+3. Please note that there will be penalty charged which is half of the fare as above stated, if any cancellation or change less than 3 hours before the actual landing time.`;
+    }
+
+    function buildTransferSummaryText() {
+      const type = document.getElementById("tf_type").value;
+      const carSelect = document.getElementById("tf_car");
+      const selectedOption = carSelect.options[carSelect.selectedIndex];
+      const carLabel = selectedOption?.getAttribute("data-label") || "";
+      const carEnLabel = selectedOption?.getAttribute("data-en-label") || carLabel;
+      const date = document.getElementById("tf_date").value;
+      const time = document.getElementById("tf_time").value;
+      const flight = document.getElementById("tf_flight").value.trim().toUpperCase();
+      const name = document.getElementById("tf_name").value.trim();
+      const email = document.getElementById("tf_email").value.trim();
+      const contact = document.getElementById("tf_contact").value.trim();
+      const pax = document.getElementById("tf_pax").value.trim();
+      const luggage = document.getElementById("tf_luggage").value.trim();
+      const bookingId = document.getElementById("tf_booking_id").value.trim() || "未提供 (Not Provided)";
+      const notes = document.getElementById("tf_notes").value.trim() || "無 (None)";
+      const fareInfo = calculateTransferFare();
+
+      const seatText = fareInfo.seatCount > 0 ? `${fareInfo.seatCount} 張 (+NT$ ${fareInfo.seatTotal.toLocaleString()})` : "不需要 (0)";
+      const extraFareNotes = [];
+      if (fareInfo.seasonalSurcharge > 0) extraFareNotes.push(`含${fareInfo.seasonLabel} NT$${fareInfo.seasonalSurcharge}`);
+      if (fareInfo.nightSurcharge > 0) extraFareNotes.push(`含夜間加成 NT$${fareInfo.nightSurcharge}`);
+      if (fareInfo.seatTotal > 0) extraFareNotes.push(`含嬰兒座椅 ${fareInfo.seatCount} 張 NT$${fareInfo.seatTotal}`);
+      const fareBreakdownNote = extraFareNotes.length > 0 ? `(${extraFareNotes.join("、")})` : "";
+
+      const confirmationLetter = buildConfirmationLetter({
+        type, carEnLabel, date, time, flight, name, contact, pax, luggage, notes, ...fareInfo
+      });
+
+      const subject = `[機場接送專屬頁預約] ${date} ${time} - ${name} (${flight})`;
+      const body =
+`房客已透過「喜瑞飯店 機場接送專屬預約頁」提交預約，明細如下：
+
+========================================
+【喜瑞飯店 機場接送機預約單】
+========================================
+■ 服務類型 Service：${type}
+■ 用車日期 Date：${date}
+■ 航班/上車時間 Time：${time}
+■ 航班編號 Flight No.：${flight}
+----------------------------------------
+■ 訂房大名 Guest Name：${name}
+■ 訂房編號 Booking ID：${bookingId}
+■ 聯繫信箱 Email：${email}
+■ 聯絡方式 Contact：${contact}
+----------------------------------------
+■ 預約車型 Vehicle：${carLabel}
+■ 乘客人數 Passengers：${pax}
+■ 行李件數 Luggage：${luggage}
+■ 嬰兒座椅 Baby Seat：${seatText}
+■ 特殊備註 Notes：${notes}
+----------------------------------------
+■ 預估單趟車資 Estimated Fare：NT$ ${fareInfo.total.toLocaleString()} ${fareBreakdownNote}
+========================================
+
+【可直接回覆房客之英文確認信草稿 Reply Draft】
+----------------------------------------
+${confirmationLetter}`;
+
+      return { subject, body, email, confirmationLetter };
+    }
+
+    async function handleTransferSubmit(event) {
+      event.preventDefault();
+      const submitBtn = document.getElementById("tf_submit_button");
+      submitBtn.disabled = true;
+      submitBtn.classList.add("opacity-70", "cursor-not-allowed");
+      submitBtn.innerHTML = `<span>${I18N[currentLang].tf_sending_btn}</span>`;
+
+      const { subject, body, email, confirmationLetter } = buildTransferSummaryText();
+      lastConfirmationLetter = confirmationLetter;
+
+      const formPayload = {
+        _subject: subject,
+        _replyto: email,
+        _template: "basic",
+        _captcha: "false",
+        _honey: document.getElementById("tf_honey").value,
+        "預約單與確認信內容": body
+      };
+
+      try {
+        const response = await fetch(FORMSUBMIT_AJAX_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify(formPayload)
+        });
+        const result = await response.json();
+        if (response.ok && (result.success === "true" || result.success === true)) {
+          document.getElementById("tf_confirmation_preview").textContent = confirmationLetter;
+          document.getElementById("transferForm").classList.add("hidden");
+          document.getElementById("tf_success_box").classList.remove("hidden");
+        } else {
+          throw new Error("FormSubmit failed");
+        }
+      } catch (error) {
+        navigator.clipboard?.writeText(confirmationLetter);
+        alert("⚠️ 網路連線異常，系統已自動為您複製預約確認明細！請點擊確定後貼上至飯店官方 LINE 傳送。");
+        window.open(HOTEL_LINE_URL, "_blank", "noopener,noreferrer");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove("opacity-70", "cursor-not-allowed");
+        submitBtn.innerHTML = `<span data-i18n="tf_submit_btn">${I18N[currentLang].tf_submit_btn}</span>`;
+      }
+    }
+
+    function copyTransferSummary() {
+      const form = document.getElementById("transferForm");
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      const { confirmationLetter } = buildTransferSummaryText();
+      navigator.clipboard.writeText(confirmationLetter).then(() => {
+        alert(I18N[currentLang].tf_copied_alert);
+      });
+    }
+
+    function copyConfirmationLetter() {
+      if (!lastConfirmationLetter) return;
+      navigator.clipboard.writeText(lastConfirmationLetter).then(() => {
+        alert(I18N[currentLang].tf_copied_alert);
+      });
+    }
+
+    function resetTransferFormUI() {
+      document.getElementById("transferForm").reset();
+      document.getElementById("tf_date").valueAsDate = new Date();
+      renderTransferOptions();
+      calculateTransferFare();
+      document.getElementById("tf_success_box").classList.add("hidden");
+      document.getElementById("transferForm").classList.remove("hidden");
+    }
+
+    // CSV 解析與同步
+    function parseCSV(text) {
+      const rows = [];
+      let currentRow = [], currentCell = "", inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i], nextChar = text[i + 1];
+        if (char === '"' && inQuotes && nextChar === '"') { currentCell += '"'; i++; }
+        else if (char === '"') { inQuotes = !inQuotes; }
+        else if (char === ',' && !inQuotes) { currentRow.push(currentCell.trim()); currentCell = ""; }
+        else if ((char === '\n' || (char === '\r' && nextChar === '\n')) && !inQuotes) {
+          if (char === '\r') i++;
+          currentRow.push(currentCell.trim());
+          if (currentRow.some(c => c !== "")) rows.push(currentRow);
+          currentRow = []; currentCell = "";
+        } else { currentCell += char; }
+      }
+      if (currentCell !== "" || currentRow.length > 0) {
+        currentRow.push(currentCell.trim());
+        if (currentRow.some(c => c !== "")) rows.push(currentRow);
+      }
+      return rows;
+    }
+
+    function normalizeSheetDate(raw) {
+      if (!raw) return "";
+      const parts = String(raw).trim().replace(/\//g, "-").split("-");
+      if (parts.length !== 3) return String(raw).trim();
+      const [y, m, d] = parts;
+      return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+    }
+
+    async function loadTransferRates() {
+      const badge = document.getElementById("dataSourceBadge");
+      try {
+        const fetchUrl = TRANSFER_SHEET_CSV_URL + "&_t=" + Math.floor(Date.now() / 60000);
+        const res = await fetch(fetchUrl);
+        if (!res.ok) throw new Error("Fetch failed");
+        const rows = parseCSV(await res.text());
+        const headers = rows[0].map(h => h.replace(/^\uFEFF/, "").toLowerCase().trim());
+        const objects = rows.slice(1).map(row => {
+          const obj = {};
+          headers.forEach((h, idx) => { obj[h] = (row[idx] || "").trim(); });
+          return obj;
+        });
+
+        const vehicles = [];
+        const seasonalRates = [];
+        objects.forEach(r => {
+          const type = (r.item_type || r.type || "").toLowerCase();
+          const price = Number(r.price);
+          if (type === "vehicle" && !isNaN(price) && price > 0) {
+            const def = DEFAULT_TRANSFER_CONFIG.vehicles.find(dv => dv.id === r.id);
+            const effDate = normalizeSheetDate(r.effective_date);
+            const futPrice = Number(r.future_price);
+            vehicles.push({
+              id: r.id || `v_${vehicles.length + 1}`,
+              name_zh: r.name_zh || r.name_en || "專車接送",
+              name_en: r.name_en || r.name_zh || "Private Car",
+              name_ja: r.name_ja || r.name_en || r.name_zh || "専用車",
+              price,
+              future_effective_date: effDate || (def ? def.future_effective_date : ""),
+              future_price: (!isNaN(futPrice) && futPrice > 0) ? futPrice : (def ? def.future_price : price)
+            });
+          } else if (type === "season") {
+            const s = normalizeSheetDate(r.start_date), e = normalizeSheetDate(r.end_date);
+            if (s && e && !isNaN(price)) {
+              seasonalRates.push({
+                start_date: s, end_date: e,
+                label_zh: r.name_zh || "特殊日期加成",
+                label_en: r.name_en || r.name_zh || "Seasonal Surcharge",
+                label_ja: r.name_ja || r.name_en || r.name_zh || "特別期間割増",
+                surcharge: price
+              });
+            }
+          } else if (type === "night") {
+            if (r.night_start) transferConfig.night_start = r.night_start;
+            if (r.night_end) transferConfig.night_end = r.night_end;
+            if (!isNaN(price) && price >= 0) transferConfig.night_surcharge = price;
+          } else if (type === "baby_seat") {
+            if (!isNaN(price) && price >= 0) transferConfig.baby_seat_price = price;
+          }
+        });
+
+        if (vehicles.length > 0) transferConfig.vehicles = vehicles;
+        if (objects.some(r => (r.item_type || r.type || "").toLowerCase() === "season")) {
+          transferConfig.seasonal_rates = seasonalRates;
+        }
+        renderTransferOptions();
+        calculateTransferFare();
+        badge.textContent = "已同步最新接送價目";
+      } catch (e) {
+        badge.textContent = "標準接送機價目表";
+      }
+    }
+
+    // 支援網址參數 ?lang=en 或 ?lang=ja 自動切換預設語系
+    const urlParams = new URLSearchParams(window.location.search);
+    const initLang = urlParams.get("lang");
+    document.getElementById("tf_date").valueAsDate = new Date();
+    if (initLang && I18N[initLang]) {
+      setLanguage(initLang);
+    } else {
+      renderTransferOptions();
+      calculateTransferFare();
+    }
+    loadTransferRates();
+  </script>
+</body>
+</html>

@@ -259,7 +259,7 @@
         }
       ],
       night_start: "23:00",
-      night_end: "07:00",
+      night_end: "08:00",
       night_surcharge: 100,
       baby_seat_price: 200,
       max_baby_seats: 2
@@ -503,7 +503,7 @@
       const seasonLabel = seasonRule ? getLocalizedField(seasonRule, "label") : "";
 
       const nightStart = transferConfig.night_start || "23:00";
-      const nightEnd = transferConfig.night_end || "07:00";
+      const nightEnd = transferConfig.night_end || "08:00";
       const nightRate = Number(transferConfig.night_surcharge) || 100;
       const nightSurcharge = isNightTime(timeVal, nightStart, nightEnd) ? nightRate : 0;
 
@@ -571,7 +571,7 @@ ${dateLabel}: ${data.date}
 ${timeLabel}: ${data.time}
 Vehicle type: ${vehicleDisplay}
 Fare: NTD ${data.total.toLocaleString()}${fareBreakdown}${notesLine}
-※The late night surcharge remains at NTD 100 from 23:00 to 7:00 each journey(based on the actual landing time).
+※The late night surcharge remains at NTD 100 from 23:00 to 8:00 each journey(based on the actual landing time).
 Status: To Be Confirmed
 Please kindly note that this service is cash only.
 
